@@ -14,20 +14,20 @@ Este proyecto tiene como finalidad la creación de una app/website para ayudar a
 ```bash
   git clone https://github.com/sebas-tian18/APP-Agenda-Mayor
   
-  cd APP-Agenda-Mayor             #(Moverse al directorio APP-Agenda-Mayor)
+  cd APP-Agenda-Mayor            #(Moverse al directorio APP-Agenda-Mayor)
 ```
 
 2. Instalar dependencias para frontend:
 
 ```bash
-  cd app/                         #(moverse al directorio app/)
+  cd frontend/                   #(moverse al directorio frontend/)
   npm install
 ```
 
 3. Instalar dependencias para backend:
 
 ```bash
-  cd frontend/                    #(Moverse al directorio frontend/)
+  cd backend/                    #(Moverse al directorio backend/)
   npm install
 ```
 
@@ -38,3 +38,11 @@ Para iniciar react estando en el directorio frontend/:
 ```bash
   npm run dev
 ```
+
+Para iniciar express estando en el directorio backend/:
+
+```bash
+  node --watch server.js
+```
+
+
