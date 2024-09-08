@@ -4,8 +4,13 @@ Este proyecto tiene como finalidad la creación de una app/website para ayudar a
 
 ## Requisitos
 
+### Backend/Frontend:
 - Node.js
 - npm
+
+### Aplicacion Flutter
+- flutter
+- android studio (emulador)
 
 ## Instalación
 
@@ -31,6 +36,13 @@ Este proyecto tiene como finalidad la creación de una app/website para ayudar a
   npm install
 ```
 
+4. Instalar dependencias para la aplicacion movil (de ser necesario):
+
+```bash
+  cd mobile/
+  flutter pub get
+```
+
 ## Uso
 
 Para iniciar react estando en el directorio frontend/:
@@ -43,6 +55,12 @@ Para iniciar express estando en el directorio backend/:
 
 ```bash
   node --watch server.js
+```
+
+Parar iniciar la aplicacion en el directorio mobile/ (con el emulador de android studio activo):
+
+```bash
+  flutter run
 ```
 
 
