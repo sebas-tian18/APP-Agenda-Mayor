@@ -62,4 +62,10 @@ Parar iniciar la aplicacion en el directorio mobile/ (con el emulador de android
   flutter run
 ```
 
+Parar iniciar la aplicacion en el directorio mobile/ (con el emulador de android studio activo):
+
+```bash
+  flutter run
+```
+
 

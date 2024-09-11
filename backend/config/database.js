@@ -11,3 +11,10 @@ const pool = mysql.createPool({
 });
 
 module.exports = pool.promise();
+
+const promisePool = pool.promise();
+promisePool.query(`SELECT 1`).then(([rows, fields]) => {
+  console.log('DB connected');
+}).catch(err => {
+  console.error('DB connection error:', err);
+});
