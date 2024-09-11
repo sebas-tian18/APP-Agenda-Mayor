@@ -10,4 +10,14 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
+
+const promisePool = pool.promise();
+promisePool.query(`SELECT 1`).then(([rows, fields]) => {
+  console.log('DB connected');
+}).catch(err => {
+  console.error('DB connection error:', err);
+});
+
+
+
 module.exports = pool.promise();
