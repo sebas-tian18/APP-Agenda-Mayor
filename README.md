@@ -1,4 +1,3 @@
-# AgendaMayor
 
 Este proyecto tiene como finalidad la creación de una app/website para ayudar a la población de adultos mayores. 
 
@@ -51,10 +50,10 @@ Para iniciar react estando en el directorio frontend/:
   npm run dev
 ```
 
-Para iniciar express estando en el directorio backend/:
+Para iniciar el servidor express estando en el directorio backend/:
 
 ```bash
-  node --watch server.js
+  npm start
 ```
 
 Parar iniciar la aplicacion en el directorio mobile/ (con el emulador de android studio activo):
