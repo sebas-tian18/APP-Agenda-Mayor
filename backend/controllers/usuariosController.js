@@ -1,10 +1,30 @@
-const Usuarios = require('../models/usuarios');
+const db = require('../config/database');
 
-exports.getAllUsuarios = async (req, res) => {
-  try {
-    const usuarios = await Usuarios.getAll();
-    res.json(usuarios);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+class UsuariosController{
+    constructor(){
+
+    }
+
+    consultarUsuarios(req, res){
+        res.json({msg: 'Consulta de usuarios'});
+    }
+
+    crearUsuario(req, res){
+        res.json({msg: 'Creación de usuario'});
+    }
+
+    consultarUsuario(req, res){
+        const {id} = req.params;
+        res.json({msg: `Consulta de usuario con id: ${id}`});
+    }
+    
+    actualizarUsuario(req, res){
+        res.json({msg: 'Actualización de usuario'});
+    }
+
+    eliminarUsuario(req, res){
+        res.json({msg: 'Eliminación de usuario'});
+    } 
   }
-};
+
+  module.exports = new UsuariosController();

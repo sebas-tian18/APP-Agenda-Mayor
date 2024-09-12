@@ -1,11 +1,8 @@
 const express = require('express');
 const app = express();
-const usuariosRoutes = require('./routes/usuarios');
+const usuariosRoutes = require('./routes/usuariosRoutes.js');
 
-
-app.use(express.json());
-
-app.use('/api/usuarios', usuariosRoutes);
+app.use("/usuarios", usuariosRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
