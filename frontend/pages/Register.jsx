@@ -2,19 +2,19 @@ import { useState } from "react";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    nombres: '',
-    apellidoP: '',
-    apellidoM: '',
+    nombre_usuario: '',
+    apellido_paterno: '',
+    apellido_materno: '',
     rut: '',
     archivo: null,
-    correo: '',
+    email: '',
     contrasena: '',
     Rcontrasena: '',
     telefono: '',
     direccion: '',
     sexo: 'M',
     nacionalidad: 'CL',
-    movilidad: 'No',
+    movilidad: false,
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -42,21 +42,17 @@ const Register = () => {
       return;
     }
   
-    const body = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (formData[key] !== null && formData[key] !== undefined) {
-        body.append(key, formData[key]);
-      }
-    });
-  
     try {
       const response = await fetch('http://localhost:3000/usuarios', {
         method: 'POST',
-        body: body, // No es necesario especificar 'Content-Type'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
   
       const data = await response.json();
-      
+  
       if (response.ok) {
         setSuccess(`Usuario registrado con éxito con ID: ${data.id_usuario}`);
         setError(null);
@@ -69,7 +65,6 @@ const Register = () => {
       setSuccess(null);
     }
   };
-  
 
   return (
     <div
@@ -90,13 +85,13 @@ const Register = () => {
               <form className="p-2" onSubmit={handleSubmit}>
                 {/* Campo Nombres */}
                 <div className="mb-4">
-                  <label className="block text-gray-700">Nombres:</label>
+                  <label className="block text-gray-700">Nombre Usuario:</label>
                   <input
                     type="text"
-                    name="nombres"
+                    name="nombre_usuario"
                     className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                    placeholder="Nombre1 Nombre2 Nombre3"
-                    value={formData.nombres}
+                    placeholder="Nombre Usuario"
+                    value={formData.nombre_usuario}
                     onChange={handleChange}
                   />
                 </div>
@@ -107,10 +102,10 @@ const Register = () => {
                     <label className="block text-gray-700">Apellido Paterno:</label>
                     <input
                       type="text"
-                      name="apellidoP"
+                      name="apellido_paterno"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="Apellido Paterno"
-                      value={formData.apellidoP}
+                      value={formData.apellido_paterno}
                       onChange={handleChange}
                     />
                   </div>
@@ -118,10 +113,10 @@ const Register = () => {
                     <label className="block text-gray-700">Apellido Materno:</label>
                     <input
                       type="text"
-                      name="apellidoM"
+                      name="apellido_materno"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="Apellido Materno"
-                      value={formData.apellidoM}
+                      value={formData.apellido_materno}
                       onChange={handleChange}
                     />
                   </div>
@@ -157,10 +152,10 @@ const Register = () => {
                     <label className="block text-gray-700">Correo:</label>
                     <input
                       type="email"
-                      name="correo"
+                      name="email"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="correo@ejemplo.com"
-                      value={formData.correo}
+                      value={formData.email}
                       onChange={handleChange}
                     />
                   </div>
