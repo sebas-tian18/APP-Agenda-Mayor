@@ -10,7 +10,22 @@ class UsuariosController{
     }
 
     crearUsuario(req, res){
-        res.json({msg: 'Creación de usuario'});
+        try {
+            const {rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento, 
+                telefono, email, password_hash, sexo, nacionalidad} = req.body;
+            db.query(`INSERT INTO usuario 
+                (id_usuario, rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento, 
+                telefono, email, password_hash, sexo, nacionalidad) VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, 
+            [rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento, 
+                telefono, email, password_hash, sexo, nacionalidad], (err, rows) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    res.status(201).json({id_usuario:rows.insertId});
+                });
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
     }
 
     consultarUsuario(req, res){
