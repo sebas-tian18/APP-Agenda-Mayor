@@ -1,4 +1,76 @@
+import { useState } from "react";
+
 const Register = () => {
+  const [formData, setFormData] = useState({
+    nombres: '',
+    apellidoP: '',
+    apellidoM: '',
+    rut: '',
+    archivo: null,
+    correo: '',
+    contrasena: '',
+    Rcontrasena: '',
+    telefono: '',
+    direccion: '',
+    sexo: 'M',
+    nacionalidad: 'CL',
+    movilidad: 'No',
+  });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    if (type === "file") {
+      setFormData({
+        ...formData,
+        [name]: files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (formData.contrasena !== formData.Rcontrasena) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+  
+    const body = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== null && formData[key] !== undefined) {
+        body.append(key, formData[key]);
+      }
+    });
+  
+    try {
+      const response = await fetch('http://localhost:3000/usuarios', {
+        method: 'POST',
+        body: body, // No es necesario especificar 'Content-Type'
+      });
+  
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSuccess(`Usuario registrado con éxito con ID: ${data.id_usuario}`);
+        setError(null);
+      } else {
+        setError(data.error || "Error al registrar el usuario");
+        setSuccess(null);
+      }
+    } catch (err) {
+      setError(err.message);
+      setSuccess(null);
+    }
+  };
+  
+
   return (
     <div
       className="min-h-screen w-full bg-cover bg-center text-wrap text-3xl"
@@ -7,7 +79,6 @@ const Register = () => {
       }}
     >
       <div className="min-h-screen bg-black bg-opacity-50 flex items-center">
-        {/* Aquí ajustamos la estructura según el tamaño de pantalla */}
         <div className="w-full max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row bg-white shadow-lg min-h-[600px]">
             <div className="bg-gradient-to-b from-emerald-500 to-indigo-500 basis-full md:basis-1/3"></div>
@@ -16,7 +87,7 @@ const Register = () => {
               <h2 className="text-2xl font-bold mb-6 text-center md:text-left">
                 Registrarse en la plataforma
               </h2>
-              <form className="p-2">
+              <form className="p-2" onSubmit={handleSubmit}>
                 {/* Campo Nombres */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Nombres:</label>
@@ -25,6 +96,8 @@ const Register = () => {
                     name="nombres"
                     className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                     placeholder="Nombre1 Nombre2 Nombre3"
+                    value={formData.nombres}
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -34,18 +107,22 @@ const Register = () => {
                     <label className="block text-gray-700">Apellido Paterno:</label>
                     <input
                       type="text"
-                      name="ApellidoP"
+                      name="apellidoP"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="Apellido Paterno"
+                      value={formData.apellidoP}
+                      onChange={handleChange}
                     />
                   </div>
                   <div>
                     <label className="block text-gray-700">Apellido Materno:</label>
                     <input
                       type="text"
-                      name="ApellidoM"
+                      name="apellidoM"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="Apellido Materno"
+                      value={formData.apellidoM}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -59,6 +136,8 @@ const Register = () => {
                       name="rut"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="123456789-0"
+                      value={formData.rut}
+                      onChange={handleChange}
                     />
                   </div>
                   <div>
@@ -67,6 +146,7 @@ const Register = () => {
                       type="file"
                       name="archivo"
                       className="block w-full text-sm border-gray-300 cursor-pointer outline-none"
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -80,6 +160,8 @@ const Register = () => {
                       name="correo"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="correo@ejemplo.com"
+                      value={formData.correo}
+                      onChange={handleChange}
                     />
                   </div>
                   <div>
@@ -89,6 +171,8 @@ const Register = () => {
                       name="contrasena"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="***************"
+                      value={formData.contrasena}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -102,6 +186,8 @@ const Register = () => {
                       name="Rcontrasena"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="***************"
+                      value={formData.Rcontrasena}
+                      onChange={handleChange}
                     />
                   </div>
                   <div>
@@ -111,6 +197,8 @@ const Register = () => {
                       name="telefono"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="+569 XXXXXXXX"
+                      value={formData.telefono}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -124,6 +212,8 @@ const Register = () => {
                       name="direccion"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="Calle falsa 123"
+                      value={formData.direccion}
+                      onChange={handleChange}
                     />
                   </div>
                   <div>
@@ -131,6 +221,8 @@ const Register = () => {
                     <select
                       name="sexo"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                      value={formData.sexo}
+                      onChange={handleChange}
                     >
                       <option value="M">Masculino</option>
                       <option value="F">Femenino</option>
@@ -145,6 +237,8 @@ const Register = () => {
                     <select
                       name="nacionalidad"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                      value={formData.nacionalidad}
+                      onChange={handleChange}
                     >
                       <option value="CL">Chilena</option>
                       <option value="Ex">Extranjero</option>
@@ -155,6 +249,8 @@ const Register = () => {
                     <select
                       name="movilidad"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                      value={formData.movilidad}
+                      onChange={handleChange}
                     >
                       <option value="Si">Sí</option>
                       <option value="No">No</option>
@@ -172,6 +268,8 @@ const Register = () => {
                   </button>
                 </div>
               </form>
+              {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+              {success && <p className="text-green-500 text-center mt-4">{success}</p>}
             </div>
           </div>
         </div>
