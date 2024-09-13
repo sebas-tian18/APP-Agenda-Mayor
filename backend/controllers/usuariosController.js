@@ -6,7 +6,18 @@ class UsuariosController{
     }
 
     consultarUsuarios(req, res){
-        res.json({msg: 'Consulta de usuarios'});
+        try{
+            db.query('SELECT * FROM usuario', 
+                (err, rows) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    res.status(200).json(rows);
+                });
+
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
     }
 
     crearUsuario(req, res){
@@ -30,7 +41,18 @@ class UsuariosController{
 
     consultarUsuario(req, res){
         const {id} = req.params;
-        res.json({msg: `Consulta de usuario con id: ${id}`});
+        try{
+            db.query('SELECT * FROM usuario WHERE id_usuario = ?', [id],
+                (err, rows) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    res.status(200).json(rows[0]);
+                });
+
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
     }
     
     actualizarUsuario(req, res){
