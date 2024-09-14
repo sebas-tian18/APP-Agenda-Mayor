@@ -1,24 +1,25 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { FontSizeContext } from "../Components/FontSizeContext";
+import { toast } from "sonner";
 
 const Register = () => {
+  const { fontSize, increaseFontSize, decreaseFontSize } =
+    useContext(FontSizeContext);
   const [formData, setFormData] = useState({
-    nombre_usuario: '',
-    apellido_paterno: '',
-    apellido_materno: '',
-    rut: '',
+    nombre_usuario: "",
+    apellido_paterno: "",
+    apellido_materno: "",
+    rut: "",
     archivo: null,
-    email: '',
-    contrasena: '',
-    Rcontrasena: '',
-    telefono: '',
-    direccion: '',
-    sexo: 'M',
-    nacionalidad: 'CL',
+    email: "",
+    contrasena: "",
+    Rcontrasena: "",
+    telefono: "",
+    direccion: "",
+    sexo: "M",
+    nacionalidad: "CL",
     movilidad: false,
   });
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
@@ -36,41 +37,41 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (formData.contrasena !== formData.Rcontrasena) {
-      setError("Las contraseñas no coinciden");
+      toast.error("Las contraseñas no coinciden");
       return;
     }
-  
+
     try {
-      const response = await fetch('http://localhost:3000/usuarios', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/usuarios", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
-        setSuccess(`Usuario registrado con éxito con ID: ${data.id_usuario}`);
-        setError(null);
+        toast.success(
+          `Usuario registrado con éxito con ID: ${data.id_usuario}`
+        );
       } else {
-        setError(data.error || "Error al registrar el usuario");
-        setSuccess(null);
+        toast.warning(data.error || "Error al registrar el usuario");
       }
     } catch (err) {
-      setError(err.message);
-      setSuccess(null);
+      toast.error(err.message);
     }
   };
 
   return (
     <div
-      className="min-h-screen w-full bg-cover bg-center text-wrap text-3xl"
+      className="min-h-screen w-full bg-cover bg-center text-wrap"
       style={{
         backgroundImage: "url('https://picsum.photos/seed/picsum/200/300')",
+        fontSize: `${fontSize}px`,
       }}
     >
       <div className="min-h-screen bg-black bg-opacity-50 flex items-center">
@@ -99,7 +100,9 @@ const Register = () => {
                 {/* Campos Apellidos */}
                 <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-gray-700">Apellido Paterno:</label>
+                    <label className="block text-gray-700">
+                      Apellido Paterno:
+                    </label>
                     <input
                       type="text"
                       name="apellido_paterno"
@@ -110,7 +113,9 @@ const Register = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700">Apellido Materno:</label>
+                    <label className="block text-gray-700">
+                      Apellido Materno:
+                    </label>
                     <input
                       type="text"
                       name="apellido_materno"
@@ -136,7 +141,9 @@ const Register = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700">Registro Social de Hogares:</label>
+                    <label className="block text-gray-700">
+                      Registro Social de Hogares:
+                    </label>
                     <input
                       type="file"
                       name="archivo"
@@ -175,7 +182,9 @@ const Register = () => {
                 {/* Repetir Contraseña y Teléfono */}
                 <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-gray-700">Repetir Contraseña:</label>
+                    <label className="block text-gray-700">
+                      Repetir Contraseña:
+                    </label>
                     <input
                       type="password"
                       name="Rcontrasena"
@@ -240,7 +249,9 @@ const Register = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-gray-700">Problemas de Movilidad:</label>
+                    <label className="block text-gray-700">
+                      Problemas de Movilidad:
+                    </label>
                     <select
                       name="movilidad"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
@@ -254,7 +265,7 @@ const Register = () => {
                 </div>
 
                 {/* Botón Registrarse */}
-                <div className="flex justify-center">
+                <div className="flex justify-center mb-4">
                   <button
                     type="submit"
                     className="w-full md:w-auto bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-700"
@@ -262,9 +273,25 @@ const Register = () => {
                     Registrarse
                   </button>
                 </div>
+
+                {/* Controles para cambiar el tamaño de la fuente */}
+                <div className="flex justify-center space-x-4">
+                  <button
+                    type="button"
+                    onClick={decreaseFontSize}
+                    className="bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400"
+                  >
+                    -
+                  </button>
+                  <button
+                    type="button"
+                    onClick={increaseFontSize}
+                    className="bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400"
+                  >
+                    +
+                  </button>
+                </div>
               </form>
-              {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-              {success && <p className="text-green-500 text-center mt-4">{success}</p>}
             </div>
           </div>
         </div>
