@@ -1,4 +1,5 @@
 const db = require('../config/database');
+const argon2 = require('argon2');
 
 class UsuariosController{
     constructor(){
@@ -20,15 +21,32 @@ class UsuariosController{
         }
     }
 
-    crearUsuario(req, res){
+    async crearUsuario(req, res){
         try {
             const {rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento, 
-                telefono, email, password_hash, sexo, nacionalidad} = req.body;
-            db.query(`INSERT INTO usuario 
-                (id_usuario, rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento, 
-                telefono, email, password_hash, sexo, nacionalidad) VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, 
-            [rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento, 
-                telefono, email, password_hash, sexo, nacionalidad], (err, rows) => {
+                telefono, email, contrasena, sexo, nacionalidad} = req.body;
+
+            //hashear password
+            let hashedPassword;
+            try {
+                hashedPassword = await argon2.hash(contrasena, {  //se pueden ajustar acorde a la capacidad del server
+                    type: argon2.argon2id, //version de argon2
+                    memoryCost: 2 ** 16, //64MB de memoria a utilizar (2*16kb)
+                    hashLength: 50, //tamano del hash producido en bytes
+                    timeCost: 10,   //numero de iteraciones para reforzar
+                    parallelism: 4, //numero de threads a usar
+                });
+            } catch (err) {
+                console.error('Error al hashear la contrasena:', err);
+                return res.status(500).json({ error: 'Error al procesar la contrasena' });
+            }
+
+            db.query(`INSERT INTO usuario
+                (id_usuario, rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento,
+                telefono, email, password_hash, sexo, nacionalidad)
+                VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                [rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento,
+                telefono, email, hashedPassword, sexo, nacionalidad], (err, rows) => {
                     if(err){
                         res.status(400).send(err);
                     }
