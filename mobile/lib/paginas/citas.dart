@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/paginas/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,6 +22,17 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('CITAS'),
         backgroundColor: Colors.grey[300],
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+            );
+          },
+          color: Colors.black,
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.account_circle),
@@ -61,30 +73,65 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        child: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 15.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: Icon(Icons.home, size: 40),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.calendar_today, size: 40),
-                onPressed: () {},
-              ),
-              SizedBox(width: 40), // espacio para el FAB
-              IconButton(
-                icon: Icon(Icons.settings, size: 40),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.admin_panel_settings, size: 40),
-                onPressed: () {},
-              ),
-            ],
+        child: SizedBox(
+          height: 92,
+          child: BottomAppBar(
+            shape: CircularNotchedRectangle(),
+            notchMargin: 15.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.home, size: 30),
+                        onPressed: () {},
+                      ),
+                      Text('Citas', style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.calendar_today, size: 30),
+                        onPressed: () {},
+                      ),
+                      Text('Calendario', style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 40), // espacio para el FAB
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.book, size: 30),
+                        onPressed: () {},
+                      ),
+                      Text('Administrar', style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.settings, size: 30),
+                        onPressed: () {},
+                      ),
+                      Text('Ajustes', style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
