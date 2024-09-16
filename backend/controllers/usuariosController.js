@@ -57,6 +57,35 @@ class UsuariosController{
         }
     }
 
+    async authUsuario(req,res){
+        const {correo,contrasena} = req.body;
+        try {
+            // query
+            const [rows] = await db.promise().query(`SELECT password_hash FROM usuario WHERE email = ?`,[correo]);
+
+            // si no se encuentra el usuario
+            if (rows.length === 0 ) {
+                return res.status(404).json({ message: 'Correo no registrado' });
+            }
+
+            // obtener el hash en la tabla segun el correo ingresado
+            const hash = rows[0].password_hash;
+            try {
+                // verificar la passwd con el hash
+                if (await argon2.verify(hash, contrasena)) {
+                    return res.status(200).json({ message: 'Autenticacion exitosa' });
+                    // TODO: generar token JWT para manejar sesion?
+                } else {
+                    return res.status(403).json({ message: 'Contrasena incorrecta' });
+                }
+            } catch (err) {
+                return res.status(500).send(err.message);
+            }
+        } catch (error) {
+            res.status(500).send(error.message);
+        }
+    }
+
     consultarUsuario(req, res){
         const {id} = req.params;
         try{
