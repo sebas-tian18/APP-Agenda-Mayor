@@ -1,9 +1,50 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FontSizeContext } from "../Components/FontSizeContext.jsx";
+import { toast } from "sonner";
 
 const Login = () => {
   const { fontSize, increaseFontSize, decreaseFontSize } =
     useContext(FontSizeContext);
+
+  // manejar estado de correo y la contrasena
+  const [correo, setCorreo] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // manejar envio de formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // evita que se recargue
+  
+    setLoading(true); // iniciar estado de carga
+  
+    try {
+      // realiza POST al backend
+      const response = await fetch("http://localhost:3000/usuarios/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          correo,
+          contrasena,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Autenticacion exitosa!");
+        // TODO: redirigir usuario y almacenar token JWT
+      } else {
+        setError(data.message); // error si credenciales son incorrectas
+        toast.warning(data.message || "Error al autenticar usuario");
+      }
+    } catch (err) {
+      toast.error(err.message || "Error al Autenticar.");
+    }
+      setLoading(false); // Termina carga
+  };
 
   return (
     <div
@@ -24,13 +65,14 @@ const Login = () => {
             <h2 className="font-bold mb-10 text-center">
               Ingresar a la plataforma
             </h2>
-            <form>
+            <form onSubmit={handleSubmit}>
               {/* Campo de Correo */}
               <div className="mb-8">
                 <label className="block text-gray-700">Correo:</label>
                 <input
                   type="email"
                   name="correo"
+                  onChange={(e) => setCorreo(e.target.value)} // Maneja el cambio
                   className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                   placeholder="correo@ejemplo.com"
                 />
@@ -42,6 +84,7 @@ const Login = () => {
                 <input
                   type="password"
                   name="contrasena"
+                  onChange={(e) => setContrasena(e.target.value)} // Maneja el cambio
                   className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                   placeholder="***************"
                 />
@@ -62,8 +105,9 @@ const Login = () => {
                 <button
                   type="submit"
                   className="w-full md:w-auto bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-700"
+                  disabled={loading} // Desactiva el botón si está cargando
                 >
-                  Ingresar
+                  {loading ? "Cargando..." : "Ingresar"}
                 </button>
               </div>
             </form>

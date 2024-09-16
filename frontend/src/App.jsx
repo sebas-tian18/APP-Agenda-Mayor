@@ -10,7 +10,7 @@ function App() {
     <FontSizeProvider>
 
     <div className="App">
-      <Toaster duration={3000} />  {/* Duracion del toaster */}
+      <Toaster richColors duration={3000} />  {/* Duracion del toaster */}
         <Router>
           <Routes>
             <Route path="/register" element={<Register />} />
