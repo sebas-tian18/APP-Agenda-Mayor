@@ -4,18 +4,24 @@ import Login from "../pages/Login";
 import "./App.css";
 import { FontSizeProvider } from "../Components/FontSizeContext";
 import { Toaster } from "sonner";
+import Navbar from "../Components/Navbar"; // Importa el Navbar
+import Footer from "../Components/Footer";  // Importa el Footer
 
 function App() {
   return (
+
+    
     <FontSizeProvider>
 
     <div className="App">
       <Toaster richColors duration={3000} />  {/* Duracion del toaster */}
         <Router>
+        <Navbar />
           <Routes>
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
           </Routes>
+          <Footer /> 
         </Router>
     </div>
     </FontSizeProvider>
