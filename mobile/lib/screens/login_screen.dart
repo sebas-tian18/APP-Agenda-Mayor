@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/paginas/citas.dart';
+import 'package:mobile/screens/home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -59,7 +59,7 @@ class LoginScreen extends StatelessWidget {
             ],
           ),
           Positioned(
-            top: 150, // Ajusta la posición vertical si es necesario
+            top: 150, // Ajusta la posicion vertical si es necesario
             left: 0,
             right: 0,
             child: Text(
@@ -72,7 +72,7 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 250, // Ajusta según la nueva posición del texto
+            top: 250, // Ajusta segun la nueva posicion del texto
             left: 0,
             right: 0,
             bottom: 100,
@@ -119,7 +119,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                           child: const TextField(
                             decoration: InputDecoration(
-                              hintText: "Usuario",
+                              hintText: "Correo",
                               hintStyle: TextStyle(fontWeight: FontWeight.w300),
                               border: InputBorder.none,
                             ),
