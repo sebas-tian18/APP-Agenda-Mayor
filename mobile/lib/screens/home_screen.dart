@@ -1,19 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/paginas/login.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-    );
-  }
-}
+import 'package:mobile/screens/login_screen.dart';
+import 'package:mobile/widgets/service_button.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -42,7 +29,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Container(
-        margin: const EdgeInsets.only(right: 20, left: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: GridView.count(
           crossAxisCount: 2,
           crossAxisSpacing: 20,
@@ -139,35 +126,6 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Icon(Icons.add, size: 40),
-      ),
-    );
-  }
-}
-
-class ServiceButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  ServiceButton({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
-        padding: EdgeInsets.all(20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-      ),
-      onPressed: () {},
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 80, color: Colors.white),
-          SizedBox(height: 10),
-          Text(label, style: TextStyle(color: Colors.white, fontSize: 23)),
-        ],
       ),
     );
   }
