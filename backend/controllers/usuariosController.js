@@ -73,10 +73,10 @@ class UsuariosController{
             try {
                 // verificar la passwd con el hash
                 if (await argon2.verify(hash, contrasena)) {
-                    return res.status(200).json({ message: 'Autenticacion exitosa' });
+                    return res.status(200).json({ message: 'Autenticación exitosa' });
                     // TODO: generar token JWT para manejar sesion?
                 } else {
-                    return res.status(403).json({ message: 'Contrasena incorrecta' });
+                    return res.status(401).json({ message: 'Contraseña incorrecta' });
                 }
             } catch (err) {
                 return res.status(500).send(err.message);

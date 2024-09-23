@@ -1,8 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/screens/home_screen.dart';
+import 'package:mobile/services/auth_service.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  @override
+  LoginScreenState createState() => LoginScreenState();
+}
+
+class LoginScreenState extends State<LoginScreen> {
+  bool _isLoading = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Limpiar controladores cuando se elimina el widget
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true; // Spinner de carga
+    });
+
+    try {
+      AuthResponse authResponse = await userLogin(
+          _emailController.text, _passwordController.text); // llamar a la API
+
+      if (!mounted) return; // Verificar si el widget sigue montado
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(authResponse.message) //Mostrar el mensaje de error
+            ),
+      );
+
+      if (authResponse.isAuthenticated) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      // Si hay error inesperado mostrar un mensaje
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ocurrió un error: ${e.toString()}'),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +172,8 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: const TextField(
+                          child: TextField(
+                            controller: _emailController, //controller
                             decoration: InputDecoration(
                               hintText: "Correo",
                               hintStyle: TextStyle(fontWeight: FontWeight.w300),
@@ -140,39 +196,18 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: const TextField(
+                          child: TextField(
+                            controller: _passwordController, //controller
+                            obscureText: true,
                             decoration: InputDecoration(
-                              hintText: "Email",
+                              hintText: "Contraseña",
                               hintStyle: TextStyle(fontWeight: FontWeight.w300),
                               border: InputBorder.none,
                             ),
                           ),
                         ),
                         const SizedBox(height: 60),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 50, vertical: 15),
-                          ),
-                          child: const Text(
-                            'Ingresar',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
+                        loginButton(context), //contructor del boton
                       ],
                     ),
                   ),
@@ -182,6 +217,35 @@ class LoginScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget loginButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: _isLoading ? null : _login,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+      ),
+      child: _isLoading
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 4,
+                color: Colors.white,
+              ),
+            )
+          : const Text(
+              'Ingresar',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
     );
   }
 }
