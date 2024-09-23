@@ -44,81 +44,87 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(5, 1),
-              blurRadius: 5,
-              spreadRadius: 10,
-              color: Colors.black.withOpacity(.5),
-            ),
-          ],
-        ),
-        child: SizedBox(
-          height: 92,
-          child: BottomAppBar(
-            shape: CircularNotchedRectangle(),
-            notchMargin: 15.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.home, size: 30),
-                        onPressed: () {},
-                      ),
-                      Text('Citas', style: TextStyle(fontSize: 13)),
-                    ],
-                  ),
+      bottomNavigationBar: SizedBox(
+        height: 95,
+        child: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          notchMargin: 10.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.home, size: 35),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      },
+                    ),
+                    Text('Citas', style: TextStyle(fontSize: 13)),
+                  ],
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.calendar_today, size: 30),
-                        onPressed: () {},
-                      ),
-                      Text('Calendario', style: TextStyle(fontSize: 13)),
-                    ],
-                  ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.calendar_today, size: 35),
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => CalendarioScreen()),
+                        // );
+                      },
+                    ),
+                    Text('Calendario', style: TextStyle(fontSize: 13)),
+                  ],
                 ),
-                SizedBox(width: 40), // espacio para el FAB
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.book, size: 30),
-                        onPressed: () {},
-                      ),
-                      Text('Administrar', style: TextStyle(fontSize: 13)),
-                    ],
-                  ),
+              ),
+              SizedBox(width: 60), // Espacio para el FAB
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.book, size: 35),
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => AdministrarScreen()),
+                        // );
+                      },
+                    ),
+                    Text('Administrar', style: TextStyle(fontSize: 13)),
+                  ],
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.settings, size: 30),
-                        onPressed: () {},
-                      ),
-                      Text('Ajustes', style: TextStyle(fontSize: 13)),
-                    ],
-                  ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.settings, size: 35),
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => AjustesScreen()),
+                        // );
+                      },
+                    ),
+                    Text('Ajustes', style: TextStyle(fontSize: 13)),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
