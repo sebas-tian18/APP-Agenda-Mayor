@@ -258,8 +258,8 @@ const Register = () => {
                       value={formData.movilidad}
                       onChange={handleChange}
                     >
-                      <option value="Si">Sí</option>
                       <option value="No">No</option>
+                      <option value="Si">Sí</option>
                     </select>
                   </div>
                 </div>
