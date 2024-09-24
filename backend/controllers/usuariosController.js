@@ -107,8 +107,21 @@ class UsuariosController{
     }
 
     eliminarUsuario(req, res){
-        res.json({msg: 'Eliminación de usuario'});
-    } 
-  }
+        const {id} = req.params;
+        try{
+            db.query('DELETE FROM usuario WHERE id_usuario = ?', [id],
+                (err, rows) => {
+                    if(err){
+                        res.status(400).send(err);
+                    }
+                    if (rows.affectedRows == 1) {
+                        res.status(200).json({ message: 'Usuario eliminado' });
+                    }  
+                })
+        } catch (err) {
+            res.status(500).send(err.message);            
+        } 
+    }
 
+}
   module.exports = new UsuariosController();
