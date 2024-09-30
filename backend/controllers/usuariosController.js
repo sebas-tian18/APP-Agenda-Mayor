@@ -1,5 +1,6 @@
 const db = require('../config/database');
-const argon2 = require('argon2');
+const { crearUsuarioBD } = require('../services/usuariosService');
+const { authUsuario } = require('../services/authService');
 
 class UsuariosController{
     constructor(){
@@ -22,67 +23,29 @@ class UsuariosController{
     }
 
     async crearUsuario(req, res){
-        try {
-            const {rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento, 
-                telefono, email, contrasena, sexo, nacionalidad} = req.body;
-
-            //hashear password
-            let hashedPassword;
-            try {
-                hashedPassword = await argon2.hash(contrasena, {  //se pueden ajustar acorde a la capacidad del server
-                    type: argon2.argon2id, //version de argon2
-                    memoryCost: 2 ** 16, //64MB de memoria a utilizar (2*16kb)
-                    hashLength: 50, //tamano del hash producido en bytes
-                    timeCost: 10,   //numero de iteraciones para reforzar
-                    parallelism: 4, //numero de threads a usar
-                });
-            } catch (err) {
-                console.error('Error al hashear la contrasena:', err);
-                return res.status(500).json({ error: 'Error al procesar la contrasena' });
-            }
-
-            db.query(`INSERT INTO usuario
-                (id_usuario, rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento,
-                telefono, email, password_hash, sexo, nacionalidad)
-                VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-                [rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento,
-                telefono, email, hashedPassword, sexo, nacionalidad], (err, rows) => {
-                    if(err){
-                        res.status(400).send(err);
-                    }
-                    res.status(201).json({id_usuario:rows.insertId});
-                });
-        } catch (err) {
-            res.status(500).send(err.message);
-        }
+      //TODO: Mejorar codigos http
+      try {
+          const result = await crearUsuarioBD(req.body);
+          res.status(201).json(result);
+      } catch (error) {
+          console.error('Error al crear usuario:', error.message); // Mostrar el error en consola
+          res.status(500).json({ error: error.message }); // Mostrar el mensaje del error en la respuesta
+      }
     }
 
     async authUsuario(req,res){
         const {correo,contrasena} = req.body;
         try {
-            // query
-            const [rows] = await db.promise().query(`SELECT password_hash FROM usuario WHERE email = ?`,[correo]);
-
-            // si no se encuentra el usuario
-            if (rows.length === 0 ) {
-                return res.status(404).json({ message: 'Correo no registrado' });
-            }
-
-            // obtener el hash en la tabla segun el correo ingresado
-            const hash = rows[0].password_hash;
-            try {
-                // verificar la passwd con el hash
-                if (await argon2.verify(hash, contrasena)) {
-                    return res.status(200).json({ message: 'Autenticación exitosa' });
-                    // TODO: generar token JWT para manejar sesion?
-                } else {
-                    return res.status(401).json({ message: 'Contraseña incorrecta' });
-                }
-            } catch (err) {
-                return res.status(500).send(err.message);
+            // Ejecuta la autenticacion asincrona
+            const result = await authUsuario(correo, contrasena);
+            // Si las credenciales son correctas
+            if (result.success) {
+                res.status(200).json({ message: result.message /*, token: result.token */ });
+            } else {
+                res.status(401).json({ message: result.message });
             }
         } catch (error) {
-            res.status(500).send(error.message);
+            res.status(500).json({ error: 'Error en la autenticación' });
         }
     }
 
