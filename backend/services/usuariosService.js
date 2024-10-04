@@ -42,14 +42,14 @@ const crearUsuarioBD = async (userData) => {
       const id_usuario = resultUsuario.insertId; // Obtener id del nuevo usuario
 
       // Insertar en la tabla `direcciones`
-      const [resultDireccion] = await connection.query(`INSERT INTO direcciones 
+      const [resultDireccion] = await connection.query(`INSERT INTO direccion 
           (id_direccion, direccion, nombre_sector, tipo_domicilio, zona_rural) 
           VALUES (NULL, ?, ?, ?, ?)`, 
           [userData.direccion, userData.nombre_sector, userData.tipo_domicilio, userData.zona_rural]);
 
       const id_direccion = resultDireccion.insertId; // Obtener id de la nueva direccion
 
-      // Calcular la edad
+      // Calcular la edad //mover a utils
       const fechaNacimiento = new Date(userData.fecha_nacimiento);  // Obtener fecha nacimiento
       const fechaHoy = new Date();
       var edadCalculada = fechaHoy.getFullYear() - fechaNacimiento.getFullYear(); // Calcular edad segun año
