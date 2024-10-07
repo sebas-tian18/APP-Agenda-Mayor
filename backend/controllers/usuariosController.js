@@ -35,12 +35,18 @@ class UsuariosController{
 
     async authUsuario(req,res){
         const {correo,contrasena} = req.body;
+
+        // Verificar que el correo y contrasena son validos
+        if (!correo || !contrasena) {
+          return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
+        }
+
         try {
             // Ejecuta la autenticacion asincrona
             const result = await authUsuario(correo, contrasena);
             // Si las credenciales son correctas
             if (result.success) {
-                res.status(200).json({ message: result.message /*, token: result.token */ });
+                res.status(200).json({ message: result.message});
             } else {
                 res.status(401).json({ message: result.message });
             }
