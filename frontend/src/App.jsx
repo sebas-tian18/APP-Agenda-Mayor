@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Servicios from "../pages/Servicios";
+import EditarPerfil from "../pages/EditarPerfil";
 import "./App.css";
 import { FontSizeProvider } from "../Components/FontSizeContext";
 import { Toaster } from "sonner";
@@ -22,6 +23,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/servicios" element={<Servicios />} />
+            <Route path="/editar-perfil" element={<EditarPerfil />} />
           </Routes>
           <Footer /> 
         </Router>
