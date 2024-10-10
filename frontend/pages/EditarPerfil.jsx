@@ -63,9 +63,6 @@ function EditarPerfil() {
     const { name, value } = e.target
     let newValue = value
 
-    if (name === 'telefono') {
-      newValue = value.startsWith('+56') ? value : '+56' + value.replace(/^\+56/, '')
-    }
 
     setProfile(prev => ({ ...prev, [name]: newValue }))
   }
