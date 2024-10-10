@@ -1,19 +1,44 @@
-import React from "react";
-import { Link } from "react-router-dom"; // Importa Link
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { Calendar, Clipboard, Settings, LogOut, CalendarCog } from 'lucide-react'
 
-const Navbar = () => {
+function Navbar() {
   return (
-    <nav className="bg-blue-500 p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-white text-3xl font-bold">Logo</h1>
-        <ul className="flex space-x-4">
-          <li><Link to="/" className="text-white text-lg font-bold hover:text-gray-300">Inicio</Link></li>
-          <li><Link to="/login" className="text-white text-lg font-bold hover:text-gray-300">Login</Link></li>
-          <li><Link to="/register" className="text-white text-lg font-bold hover:text-gray-300">Registro</Link></li>
-        </ul>
+    <nav className="bg-green-600 text-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            <span className="font-bold text-xl">MiApp</span>
+          </div>
+          <div className="flex">
+            <NavItem to="/servicios" icon={<Clipboard size={20} />} text="Citas" />
+            <NavItem to="/calendario" icon={<Calendar size={20} />} text="Calendario" />
+            <NavItem to="/administrar" icon={<CalendarCog size={20} />} text="Administrar" />
+            <NavItem to="/ajustes" icon={<Settings size={20} />} text="Ajustes" />
+            <button
+              onClick={() => console.log('Cerrar sesión')}
+              className="flex items-center px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition duration-150 ease-in-out"
+            >
+              <LogOut size={20} className="mr-1" />
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+function NavItem({ to, icon, text }) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition duration-150 ease-in-out"
+    >
+      {icon}
+      <span className="ml-1">{text}</span>
+    </Link>
+  )
+}
+
+export default Navbar
