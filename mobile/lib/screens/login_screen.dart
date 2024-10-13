@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/screens/home_screen.dart';
+import 'package:mobile/widgets/navigation_bar.dart';
 import 'package:mobile/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -40,7 +40,7 @@ class LoginScreenState extends State<LoginScreen> {
       if (authResponse.isAuthenticated) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => NavigationMenu()),
         );
       }
     } catch (e) {
@@ -128,7 +128,7 @@ class LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Positioned(
-            top: 250, // Ajusta segun la nueva posicion del texto
+            top: 280, // Ajusta segun la nueva posicion del texto
             left: 0,
             right: 0,
             bottom: 100,
@@ -141,9 +141,9 @@ class LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          offset: const Offset(2, 2),
-                          blurRadius: 5,
-                          spreadRadius: 2,
+                          offset: const Offset(1, 1),
+                          blurRadius: 3,
+                          spreadRadius: 1,
                           color: Colors.black.withOpacity(.5),
                         ),
                       ],
@@ -160,7 +160,6 @@ class LoginScreenState extends State<LoginScreen> {
                             height:
                                 50), // Espacio reservado para el texto movido
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Color.fromARGB(255, 224, 224, 224),
@@ -175,16 +174,19 @@ class LoginScreenState extends State<LoginScreen> {
                           ),
                           child: TextField(
                             controller: _emailController, //controller
+                            keyboardType: TextInputType.emailAddress,
+                            autocorrect: false,
                             decoration: InputDecoration(
-                              hintText: "Correo",
-                              hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                              border: InputBorder.none,
-                            ),
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                labelText: "Correo",
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.w300),
+                                prefixIcon: Icon(Icons.mail)),
                           ),
                         ),
                         const SizedBox(height: 30),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Color.fromARGB(255, 224, 224, 224),
@@ -201,10 +203,10 @@ class LoginScreenState extends State<LoginScreen> {
                             controller: _passwordController, //controller
                             obscureText: true,
                             decoration: InputDecoration(
-                              hintText: "Contraseña",
-                              hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                              border: InputBorder.none,
-                            ),
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                labelText: "Contraseña",
+                                prefixIcon: Icon(Icons.lock)),
                           ),
                         ),
                         const SizedBox(height: 60),

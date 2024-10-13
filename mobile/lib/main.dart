@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/screens/login_screen.dart';
+// import 'package:mobile/widgets/navigation_bar.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           scaffoldBackgroundColor: Colors.grey.shade200),
       home: LoginScreen(),
+      // home: NavigationMenu(),
     );
   }
 }
