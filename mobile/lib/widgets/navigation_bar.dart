@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/appointment_screen.dart';
 import 'package:mobile/screens/calendar_screen.dart';
-import 'package:mobile/screens/settings_screen.dart';
+import 'package:mobile/screens/profile_screen.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({super.key});
@@ -42,7 +42,8 @@ class NavigationMenu extends StatelessWidget {
                 label: 'Calendario',
               ),
               IconButton(
-                icon: Icon(Icons.add, size: 50),
+                icon: const Icon(Icons.add_circle_outlined, size: 65),
+                color: Colors.green,
                 onPressed: () {},
               ),
               NavigationDestination(
@@ -50,8 +51,8 @@ class NavigationMenu extends StatelessWidget {
                 label: 'Administrar',
               ),
               NavigationDestination(
-                icon: Icon(Icons.settings, size: 40),
-                label: 'Ajustes',
+                icon: Icon(Icons.person_outline, size: 40),
+                label: 'Perfil',
               ),
             ],
           ),
@@ -70,6 +71,6 @@ class NavigationController extends GetxController {
     CalendarScreen(),
     Container(color: Colors.orange),
     AppointmentScreen(),
-    SettingsScreen(),
+    ProfileScreen(),
   ];
 }

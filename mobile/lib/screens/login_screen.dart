@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/widgets/navigation_bar.dart';
 import 'package:mobile/services/auth_service.dart';
+import 'package:mobile/widgets/login_design.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -62,13 +63,15 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset:
+          false, // Permite ajustar la vista cuando el teclado aparece
       body: Stack(
         children: [
           Column(
             children: [
               SizedBox(
-                height: 400,
+                height: MediaQuery.of(context).size.height *
+                    0.4, // Hace el tamaño dinámico
                 child: Stack(
                   children: [
                     Positioned(
@@ -150,68 +153,32 @@ class LoginScreenState extends State<LoginScreen> {
                     ),
                     width: 350,
                     padding: const EdgeInsets.only(top: 20),
-                    child: ListView(
-                      padding: const EdgeInsets.only(
-                        right: 40,
-                        left: 40,
-                      ),
-                      children: [
-                        const SizedBox(
-                            height:
-                                50), // Espacio reservado para el texto movido
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color.fromARGB(255, 224, 224, 224),
-                            boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(0, 5),
-                                blurRadius: 5,
-                                spreadRadius: 1,
-                                color: Colors.black.withOpacity(.1),
-                              ),
-                            ],
-                          ),
-                          child: TextField(
-                            controller: _emailController, //controller
+                    child: SingleChildScrollView(
+                      // Uso de SingleChildScrollView para evitar problemas con el teclado
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 50),
+                          CustomTextField(
+                            controller:
+                                _emailController, // referencia al controlador
+                            labelText: 'Correo',
+                            icon: Icons.mail,
+                            obscureText: false,
                             keyboardType: TextInputType.emailAddress,
-                            autocorrect: false,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                filled: true,
-                                labelText: "Correo",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
-                                prefixIcon: Icon(Icons.mail)),
                           ),
-                        ),
-                        const SizedBox(height: 30),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color.fromARGB(255, 224, 224, 224),
-                            boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(0, 5),
-                                blurRadius: 5,
-                                spreadRadius: 1,
-                                color: Colors.black.withOpacity(.1),
-                              ),
-                            ],
-                          ),
-                          child: TextField(
-                            controller: _passwordController, //controller
+                          const SizedBox(height: 30),
+                          CustomTextField(
+                            controller:
+                                _passwordController, // referencia al controlador
+                            labelText: 'Contraseña',
+                            icon: Icons.lock,
                             obscureText: true,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                filled: true,
-                                labelText: "Contraseña",
-                                prefixIcon: Icon(Icons.lock)),
                           ),
-                        ),
-                        const SizedBox(height: 60),
-                        loginButton(context), //contructor del boton
-                      ],
+                          const SizedBox(height: 60),
+                          loginButton(context), // Botón de login
+                        ],
+                      ),
                     ),
                   ),
                 ),
