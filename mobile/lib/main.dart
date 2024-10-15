@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/screens/login_screen.dart';
-// import 'package:mobile/widgets/navigation_bar.dart';
+// import 'package:mobile/screens/login_screen.dart';
+import 'package:mobile/widgets/navigation_bar.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF012e26)),
           useMaterial3: true,
           scaffoldBackgroundColor: Colors.grey.shade200),
-      home: LoginScreen(),
-      // home: NavigationMenu(),
+      //   home: LoginScreen(),
+      home: NavigationMenu(),
     );
   }
 }
