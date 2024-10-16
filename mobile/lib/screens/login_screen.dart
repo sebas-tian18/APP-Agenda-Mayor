@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/widgets/navigation_bar.dart';
 import 'package:mobile/services/auth_service.dart';
 import 'package:mobile/widgets/login_design.dart';
+import 'package:mobile/colors.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -62,26 +63,25 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset:
-          false, // Permite ajustar la vista cuando el teclado aparece
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height *
-                    0.4, // Hace el tamaño dinámico
+                height: size.height * 0.4, // Hace el tamaño dinámico
                 child: Stack(
                   children: [
                     Positioned(
-                      left: -100,
-                      right: -100,
+                      left: -size.width * 0.3,
+                      right: -size.width * 0.3,
                       child: Container(
                         width: double.infinity,
-                        height: 400,
+                        height: size.height * 0.4,
                         decoration: const BoxDecoration(
-                          color: Colors.green,
+                          color: AppColors.primaryColor,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(1000),
                             bottomRight: Radius.circular(1000),
@@ -118,7 +118,7 @@ class LoginScreenState extends State<LoginScreen> {
             ],
           ),
           Positioned(
-            top: 150, // Ajusta la posicion vertical si es necesario
+            top: size.height * 0.15,
             left: 0,
             right: 0,
             child: Text(
@@ -131,10 +131,10 @@ class LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Positioned(
-            top: 280, // Ajusta segun la nueva posicion del texto
+            top: size.height * 0.35,
             left: 0,
             right: 0,
-            bottom: 100,
+            bottom: size.height * 0.1,
             child: Column(
               children: [
                 Expanded(
@@ -151,32 +151,30 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    width: 350,
-                    padding: const EdgeInsets.only(top: 20),
+                    width: size.width * 0.9,
+                    padding: EdgeInsets.only(top: size.height * 0.02),
                     child: SingleChildScrollView(
-                      // Uso de SingleChildScrollView para evitar problemas con el teclado
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.1),
                       child: Column(
                         children: [
-                          const SizedBox(height: 50),
+                          SizedBox(height: size.height * 0.05),
                           CustomTextField(
-                            controller:
-                                _emailController, // referencia al controlador
+                            controller: _emailController,
                             labelText: 'Correo',
                             icon: Icons.mail,
                             obscureText: false,
                             keyboardType: TextInputType.emailAddress,
                           ),
-                          const SizedBox(height: 30),
+                          SizedBox(height: size.height * 0.03),
                           CustomTextField(
-                            controller:
-                                _passwordController, // referencia al controlador
+                            controller: _passwordController,
                             labelText: 'Contraseña',
                             icon: Icons.lock,
                             obscureText: true,
                           ),
-                          const SizedBox(height: 60),
-                          loginButton(context), // Botón de login
+                          SizedBox(height: size.height * 0.06),
+                          loginButton(context),
                         ],
                       ),
                     ),
@@ -194,7 +192,7 @@ class LoginScreenState extends State<LoginScreen> {
     return ElevatedButton(
       onPressed: _isLoading ? null : _login,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
         ),

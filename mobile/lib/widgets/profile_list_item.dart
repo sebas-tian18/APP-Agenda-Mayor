@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/colors.dart';
 
 class ProfileListItem extends StatelessWidget {
   final IconData? icon;
@@ -14,43 +15,47 @@ class ProfileListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double spacingUnit = 10.0;
+    final size = MediaQuery.of(context).size; // Obtén el tamaño de la pantalla
+
     const TextStyle titleTextStyle = TextStyle(
       fontSize: 16.0,
       fontWeight: FontWeight.w500,
     );
 
     return Container(
-      height: spacingUnit * 5.5,
+      height: size.height * 0.08,
       margin: EdgeInsets.symmetric(
-        horizontal: spacingUnit * 4,
+        horizontal: size.width * 0.1,
       ).copyWith(
-        bottom: spacingUnit * 2,
+        bottom: size.height * 0.03,
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: spacingUnit * 2,
+        horizontal: size.width * 0.05,
       ),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(spacingUnit * 3),
-          color: Colors.green),
+        borderRadius: BorderRadius.circular(25),
+        color: AppColors.primaryColor,
+      ),
       child: Row(
         children: <Widget>[
-          if (icon != null) // Asegura que icon no sea nulo antes de mostrarlo
+          if (icon != null)
             Icon(
               icon,
-              size: spacingUnit * 2.5,
+              size: size.width * 0.08,
             ),
-          SizedBox(width: spacingUnit * 1.5),
+          SizedBox(width: size.width * 0.07),
           if (text != null)
             Text(
               text!,
-              style: titleTextStyle,
+              style: titleTextStyle.copyWith(
+                fontSize: size.width * 0.045,
+              ),
             ),
           Spacer(),
           if (hasNavigation)
             Icon(
               Icons.arrow_forward_ios,
-              size: spacingUnit * 2.5,
+              size: size.width * 0.08,
             ),
         ],
       ),

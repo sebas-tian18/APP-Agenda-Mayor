@@ -4,6 +4,7 @@ import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/appointment_screen.dart';
 import 'package:mobile/screens/calendar_screen.dart';
 import 'package:mobile/screens/profile_screen.dart';
+import 'package:mobile/colors.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({super.key});
@@ -20,15 +21,15 @@ class NavigationMenu extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.4),
                 spreadRadius: 1,
-                blurRadius: 5,
-                offset: Offset(0, -4),
+                blurRadius: 1,
+                offset: Offset(0, -2),
               ),
             ],
           ),
           child: NavigationBar(
             height: 90,
             elevation: 0,
-            backgroundColor: Colors.grey[300],
+            backgroundColor: Colors.grey.shade300,
             selectedIndex: controller.selectedIndex.value,
             onDestinationSelected: (index) =>
                 controller.selectedIndex.value = index,
@@ -43,7 +44,7 @@ class NavigationMenu extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.add_circle_outlined, size: 65),
-                color: Colors.green,
+                color: AppColors.primaryColor,
                 onPressed: () {},
               ),
               NavigationDestination(

@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:mobile/widgets/tab_item.dart';
 import 'package:mobile/widgets/appointment_item.dart';
 import 'package:mobile/widgets/custom_app_bar.dart';
+import 'package:mobile/colors.dart';
+import 'package:intl/intl.dart'; // Importar intl para obtener el mes actual
 
 class AppointmentScreen extends StatelessWidget {
   const AppointmentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Obtener el nombre del mes actual
+    String currentMonth =
+        DateFormat.MMMM('es_ES').format(DateTime.now()).toUpperCase();
+
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: const CustomAppBar(title: 'Agendado'),
         body: Column(
@@ -22,7 +28,7 @@ class AppointmentScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.green.shade100,
+                  color: AppColors.secondaryColor,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -32,14 +38,13 @@ class AppointmentScreen extends StatelessWidget {
                   indicatorSize: TabBarIndicatorSize.tab,
                   dividerColor: Colors.transparent,
                   indicator: BoxDecoration(
-                    color: Colors.green,
+                    color: AppColors.primaryColor,
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   labelColor: Colors.white,
                   unselectedLabelColor: Colors.black54,
                   tabs: [
                     TabItem(title: 'Expiro'),
-                    TabItem(title: 'Días'),
                     TabItem(title: 'Semanas'),
                     TabItem(title: 'Meses'),
                   ],
@@ -57,23 +62,16 @@ class AppointmentScreen extends StatelessWidget {
                     ],
                   ),
                   AppointmentItem(
-                    title: 'Hoy ',
-                    appointments: [
-                      {'title': 'Psicólogo', 'date': '06/09/2024'},
-                      {'title': 'Kinesiólogo', 'date': '07/09/2024'},
-                    ],
-                  ),
-                  AppointmentItem(
                     title: 'Esta Semana',
                     appointments: [
-                      {'title': 'Consulta Médica', 'date': '08/09/2024'},
+                      {'title': 'peluquero', 'date': '16/10/2024'},
                       // Más citas
                     ],
                   ),
                   AppointmentItem(
-                    title: 'SEPTIEMBRE',
+                    title: currentMonth,
                     appointments: [
-                      {'title': 'Dentista', 'date': '09/09/2024'},
+                      {'title': 'peluquero', 'date': '16/10/2024'},
                       {'title': 'Abogado', 'date': '10/09/2024'},
                     ],
                   ),

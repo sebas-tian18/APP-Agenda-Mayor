@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/colors.dart';
 
 class ServiceButton extends StatelessWidget {
   final IconData icon;
   final String label;
+  final VoidCallback onPressed;
 
-  ServiceButton({required this.icon, required this.label});
+  ServiceButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +29,13 @@ class ServiceButton extends StatelessWidget {
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.primaryColor,
           padding: EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        onPressed: () {},
+        onPressed: onPressed, // Llama al callback cuando se presiona el botón
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

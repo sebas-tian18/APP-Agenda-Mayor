@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/colors.dart';
 
 class AppointmentItem extends StatelessWidget {
   final String title;
@@ -19,7 +20,7 @@ class AppointmentItem extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.green,
+                color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -67,7 +68,7 @@ class AppointmentItem extends StatelessWidget {
             children: [
               Icon(
                 Icons.radio_button_checked,
-                color: Colors.green,
+                color: AppColors.primaryColor,
               ),
               SizedBox(width: 10),
               Text(title, style: TextStyle(fontSize: 16)),

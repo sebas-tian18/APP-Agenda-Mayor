@@ -18,7 +18,7 @@ class TabItem extends StatelessWidget {
             title,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 13,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
