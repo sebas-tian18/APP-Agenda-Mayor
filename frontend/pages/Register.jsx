@@ -10,59 +10,65 @@ const Register = () => {
     apellido_paterno: "",
     apellido_materno: "",
     rut: "",
-    archivo: null,
     email: "",
     contrasena: "",
     Rcontrasena: "",
     telefono: "",
     direccion: "",
+    tipo_domicilio: "casa", // valor predeterminado
     sexo: "M",
     nacionalidad: "CL",
     movilidad: false,
   });
+
+  const [fotoCarnet, setFotoCarnet] = useState(null); // Estado separado para la foto de carnet
+
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === "file") {
-      setFormData({
-        ...formData,
-        [name]: files[0],
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    const { name, value } = e.target; // Only handle text input values
+  
+    setFormData({
+      ...formData,
+      [name]: value, // Update the form data for all input fields
+    });
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validar si las contraseñas coinciden
     if (formData.contrasena !== formData.Rcontrasena) {
       toast.error("Las contraseñas no coinciden");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:3000/usuarios", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      // Crear un objeto FormData para enviar los datos al backend
+      const data = new FormData();
+
+      // Recorrer los datos del formulario y añadirlos a FormData
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
       });
 
-      const data = await response.json();
+      // Hacer la solicitud de registro enviando el FormData
+      const response = await fetch("http://localhost:3000/usuarios", {
+        method: "POST",
+        body: data, // Enviar los datos con FormData
+      });
+
+      const result = await response.json();
 
       if (response.ok) {
         toast.success(
-          `Usuario registrado con éxito con ID: ${data.id_usuario}`
+          `Usuario registrado con éxito con ID: ${result.id_usuario}`
         );
       } else {
-        toast.warning(data.error || "Error al registrar el usuario");
+        toast.warning(result.error || "Error al registrar el usuario");
       }
     } catch (err) {
       toast.error(err.message);
+      console.error(err);
     }
   };
 
@@ -127,6 +133,20 @@ const Register = () => {
                   </div>
                 </div>
 
+                {/* Campo Fecha de Nacimiento */}
+                <div className="mb-4">
+                  <label className="block text-gray-700">
+                    Fecha de Nacimiento:
+                  </label>
+                  <input
+                    type="date"
+                    name="fecha_nacimiento"
+                    className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                    value={formData.fecha_nacimiento}
+                    onChange={handleChange}
+                  />
+                </div>
+
                 {/* Campo RUT y Archivo */}
                 <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -142,7 +162,7 @@ const Register = () => {
                   </div>
                   <div>
                     <label className="block text-gray-700">
-                      Registro Social de Hogares:
+                      Registro Social de Hogares (RSH):
                     </label>
                     <input
                       type="file"
@@ -207,8 +227,8 @@ const Register = () => {
                   </div>
                 </div>
 
-                {/* Dirección y Sexo */}
-                <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Dirección, Nombre del Sector, y Tipo de Domicilio */}
+                <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-gray-700">Dirección:</label>
                     <input
@@ -221,41 +241,63 @@ const Register = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700">Sexo:</label>
-                    <select
-                      name="sexo"
+                    <label className="block text-gray-700">
+                      Nombre del Sector:
+                    </label>
+                    <input
+                      type="text"
+                      name="nombre_sector"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                      value={formData.sexo}
+                      placeholder="Sector"
+                      value={formData.nombre_sector}
                       onChange={handleChange}
-                    >
-                      <option value="M">Masculino</option>
-                      <option value="F">Femenino</option>
-                    </select>
+                    />
                   </div>
+                {/* Tipo de Domicilio */}
+                <div className="mb-4">
+                  <label className="block text-gray-700">Tipo de Domicilio:</label>
+                  <select
+                    name="tipo_domicilio"
+                    className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                    value={formData.tipo_domicilio}
+                    onChange={handleChange}
+                  >
+                    <option value="casa">Casa</option>
+                    <option value="apartamento">Apartamento</option>
+                    <option value="otro">Otro</option>
+                  </select>
+                </div>
                 </div>
 
-                {/* Nacionalidad y Problemas de Movilidad */}
+                {/* Zona Rural y RSH Válido */}
                 <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="mb-4">
+                  <label className="block text-gray-700">Foto de Carnet:</label>
+                  <input
+                    type="file"
+                    name="foto_carnet"
+                    className="block w-full text-sm border-gray-300 cursor-pointer outline-none"
+                    onChange={handleChange}
+                  />
+                </div>
                   <div>
-                    <label className="block text-gray-700">Nacionalidad:</label>
+                    <label className="block text-gray-700">Zona Rural:</label>
                     <select
-                      name="nacionalidad"
+                      name="zona_rural"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                      value={formData.nacionalidad}
+                      value={formData.zona_rural}
                       onChange={handleChange}
                     >
-                      <option value="CL">Chilena</option>
-                      <option value="Ex">Extranjero</option>
+                      <option value="No">No</option>
+                      <option value="Si">Sí</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-gray-700">
-                      Problemas de Movilidad:
-                    </label>
+                    <label className="block text-gray-700">RSH Válido:</label>
                     <select
-                      name="movilidad"
+                      name="rsh_valido"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                      value={formData.movilidad}
+                      value={formData.rsh_valido}
                       onChange={handleChange}
                     >
                       <option value="No">No</option>
@@ -271,24 +313,6 @@ const Register = () => {
                     className="w-full md:w-auto bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-700"
                   >
                     Registrarse
-                  </button>
-                </div>
-
-                {/* Controles para cambiar el tamaño de la fuente */}
-                <div className="flex justify-center space-x-4">
-                  <button
-                    type="button"
-                    onClick={decreaseFontSize}
-                    className="bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400"
-                  >
-                    -
-                  </button>
-                  <button
-                    type="button"
-                    onClick={increaseFontSize}
-                    className="bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400"
-                  >
-                    +
                   </button>
                 </div>
               </form>
