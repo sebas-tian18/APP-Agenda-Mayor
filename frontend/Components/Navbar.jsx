@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Calendar, Clipboard, Settings, LogOut, CalendarCog } from 'lucide-react'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Calendar, Clipboard, Settings, LogOut, CalendarCog, LogIn } from 'lucide-react';
 
 function Navbar() {
   return (
@@ -15,6 +15,9 @@ function Navbar() {
             <NavItem to="/calendario" icon={<Calendar size={20} />} text="Calendario" />
             <NavItem to="/administrar" icon={<CalendarCog size={20} />} text="Administrar" />
             <NavItem to="/ajustes" icon={<Settings size={20} />} text="Ajustes" />
+            {/* Botón de Login */}
+            <NavItem to="/Login" icon={<LogIn size={20} />} text="Login" />
+
             <button
               onClick={() => console.log('Cerrar sesión')}
               className="flex items-center px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition duration-150 ease-in-out"
@@ -26,7 +29,7 @@ function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
 
 function NavItem({ to, icon, text }) {
@@ -38,7 +41,7 @@ function NavItem({ to, icon, text }) {
       {icon}
       <span className="ml-1">{text}</span>
     </Link>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;
