@@ -3,8 +3,7 @@ import { FontSizeContext } from "../Components/FontSizeContext";
 import { toast } from "sonner";
 
 const Register = () => {
-  const { fontSize, increaseFontSize, decreaseFontSize } =
-    useContext(FontSizeContext);
+  const { fontSize } = useContext(FontSizeContext);
   const [formData, setFormData] = useState({
     nombre_usuario: "",
     apellido_paterno: "",
@@ -15,46 +14,66 @@ const Register = () => {
     Rcontrasena: "",
     telefono: "",
     direccion: "",
-    tipo_domicilio: "casa", // valor predeterminado
+    tipo_domicilio: "casa",
     sexo: "M",
     nacionalidad: "CL",
     movilidad: false,
   });
 
-  const [fotoCarnet, setFotoCarnet] = useState(null); // Estado separado para la foto de carnet
+  const [fotoCarnet, setFotoCarnet] = useState(null); // Estado para la foto del carnet
+  const [rshArchivo, setRshArchivo] = useState(null); // Estado para el archivo de RSH
 
   const handleChange = (e) => {
-    const { name, value } = e.target; // Only handle text input values
-  
-    setFormData({
-      ...formData,
-      [name]: value, // Update the form data for all input fields
-    });
+    const { name, value } = e.target;
+
+    if (name === "foto_carnet") {
+      setFotoCarnet(e.target.files[0]);
+    } else if (name === "archivo") {
+      setRshArchivo(e.target.files[0]);
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar si las contraseñas coinciden
     if (formData.contrasena !== formData.Rcontrasena) {
       toast.error("Las contraseñas no coinciden");
       return;
     }
 
+    console.log("Datos del formulario:");
+    console.log("FormData (objeto):", formData);
+    console.log(
+      "Foto de Carnet:",
+      fotoCarnet ? fotoCarnet.name : "No se ha subido ninguna foto"
+    );
+    console.log(
+      "Archivo de RSH:",
+      rshArchivo ? rshArchivo.name : "No se ha subido ningún archivo"
+    );
+
     try {
-      // Crear un objeto FormData para enviar los datos al backend
       const data = new FormData();
 
-      // Recorrer los datos del formulario y añadirlos a FormData
       Object.keys(formData).forEach((key) => {
         data.append(key, formData[key]);
       });
 
-      // Hacer la solicitud de registro enviando el FormData
+      if (fotoCarnet) {
+        data.append("foto_carnet", fotoCarnet);
+      }
+      if (rshArchivo) {
+        data.append("rsh_archivo", rshArchivo);
+      }
+
       const response = await fetch("http://localhost:3000/usuarios", {
         method: "POST",
-        body: data, // Enviar los datos con FormData
+        body: data,
       });
 
       const result = await response.json();
@@ -134,17 +153,32 @@ const Register = () => {
                 </div>
 
                 {/* Campo Fecha de Nacimiento */}
-                <div className="mb-4">
-                  <label className="block text-gray-700">
-                    Fecha de Nacimiento:
-                  </label>
-                  <input
-                    type="date"
-                    name="fecha_nacimiento"
-                    className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                    value={formData.fecha_nacimiento}
-                    onChange={handleChange}
-                  />
+                <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-700">
+                      Fecha de Nacimiento:
+                    </label>
+                    <input
+                      type="date"
+                      name="fecha_nacimiento"
+                      className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                      value={formData.fecha_nacimiento}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">Sexo:</label>
+                    <select
+                      name="sexo"
+                      className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                      value={formData.sexo}
+                      onChange={handleChange}
+                    >
+                      <option value="M">Masculino</option>
+                      <option value="F">Femenino</option>
+                      <option value="O">Otro</option>
+                    </select>
+                  </div>
                 </div>
 
                 {/* Campo RUT y Archivo */}
@@ -227,50 +261,37 @@ const Register = () => {
                   </div>
                 </div>
 
-                {/* Dirección, Nombre del Sector, y Tipo de Domicilio */}
-                <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Dirección y Tipo de Domicilio */}
+                <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-700">Dirección:</label>
                     <input
                       type="text"
                       name="direccion"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                      placeholder="Calle falsa 123"
+                      placeholder="Av. Principal 123"
                       value={formData.direccion}
                       onChange={handleChange}
                     />
                   </div>
                   <div>
                     <label className="block text-gray-700">
-                      Nombre del Sector:
+                      Tipo de Domicilio:
                     </label>
-                    <input
-                      type="text"
-                      name="nombre_sector"
+                    <select
+                      name="tipo_domicilio"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                      placeholder="Sector"
-                      value={formData.nombre_sector}
+                      value={formData.tipo_domicilio}
                       onChange={handleChange}
-                    />
+                    >
+                      <option value="casa">Casa</option>
+                      <option value="departamento">Departamento</option>
+                      <option value="otro">Otro</option>
+                    </select>
                   </div>
-                {/* Tipo de Domicilio */}
-                <div className="mb-4">
-                  <label className="block text-gray-700">Tipo de Domicilio:</label>
-                  <select
-                    name="tipo_domicilio"
-                    className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                    value={formData.tipo_domicilio}
-                    onChange={handleChange}
-                  >
-                    <option value="casa">Casa</option>
-                    <option value="apartamento">Apartamento</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                </div>
                 </div>
 
-                {/* Zona Rural y RSH Válido */}
-                <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Foto de carnet */}
                 <div className="mb-4">
                   <label className="block text-gray-700">Foto de Carnet:</label>
                   <input
@@ -279,31 +300,6 @@ const Register = () => {
                     className="block w-full text-sm border-gray-300 cursor-pointer outline-none"
                     onChange={handleChange}
                   />
-                </div>
-                  <div>
-                    <label className="block text-gray-700">Zona Rural:</label>
-                    <select
-                      name="zona_rural"
-                      className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                      value={formData.zona_rural}
-                      onChange={handleChange}
-                    >
-                      <option value="No">No</option>
-                      <option value="Si">Sí</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-gray-700">RSH Válido:</label>
-                    <select
-                      name="rsh_valido"
-                      className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                      value={formData.rsh_valido}
-                      onChange={handleChange}
-                    >
-                      <option value="No">No</option>
-                      <option value="Si">Sí</option>
-                    </select>
-                  </div>
                 </div>
 
                 {/* Botón Registrarse */}
