@@ -47,21 +47,13 @@ class UsuariosController{
 
             // Si las credenciales son correctas
             if (result.success) {
-                // Configurar las opciones de la cookie
-                res.cookie('token', result.token, {
-                    // La cookie no puede ser accedida mediante JS en el cliente
-                    httpOnly: true,
-                    // En produccion true en desarrollo false. Necesita certificado para HTTPS
-                    secure: process.env.NODE_ENV === 'production',
-                    // En produccion 'strict' en desarrollo 'none'. Protege contra ataques CSRF
-                    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
-                    // Expira en 1 hora
-                    maxAge: 3600000
+                // Enviar el token en la respuesta JSON (Bearer token)
+                return res.status(200).json({ // Mostrar mensaje de exito
+                    message: result.message,
+                    token: result.token // Incluir el token en la respuesta
                 });
-                // Mostrar mensaje de exito
-                res.status(200).json({ message: result.message});
             } else {
-                res.status(401).json({ message: result.message });
+                res.status(401).json({ message: result.message }); // 401: No Autorizado
             }
 
         } catch (error) {

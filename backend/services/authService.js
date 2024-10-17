@@ -24,7 +24,8 @@ const authUsuario = async (correo, contrasena) => {
         // Generar el token JWT con los datos necesarios
         const token = generarToken({ id_usuario, id_rol });
         
-        return { success: true, message: 'Autenticación exitosa', token };
+        // Retornar el token junto a un mensaje de exito
+        return { success: true, message: 'Autenticación exitosa', token: token };
     } catch (error) {
         throw error; // Devuelve el error que manejara el controlador
     }
