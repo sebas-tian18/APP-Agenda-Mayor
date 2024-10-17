@@ -1,31 +1,163 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/widgets/tab_item.dart';
 import 'package:mobile/widgets/appointment_item.dart';
-import 'package:mobile/widgets/custom_app_bar.dart';
 import 'package:mobile/colors.dart';
 import 'package:intl/intl.dart'; // Importar intl para obtener el mes actual
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AppointmentScreen extends StatelessWidget {
-  const AppointmentScreen({super.key});
+class AppointmentScreen extends StatefulWidget {
+  @override
+  AppointmentScreenState createState() => AppointmentScreenState();
+}
+
+class AppointmentScreenState extends State<AppointmentScreen> {
+  List<Map<String, String>> appointments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppointments();
+  }
+
+  // Cargar las citas guardadas en SharedPreferences para el usuario
+  Future<void> _loadAppointments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedAppointments = prefs.getStringList('appointments') ?? [];
+
+    List<Map<String, String>> loadedAppointments =
+        storedAppointments.map((appointment) {
+      List<String> parts = appointment.split(';');
+      if (parts.length == 3) {
+        // Ahora esperamos tres partes: título, fecha y hora
+        return {'title': parts[0], 'date': parts[1], 'time': parts[2]};
+      } else {
+        return {
+          'title': 'Cita inválida',
+          'date': 'Fecha no disponible',
+          'time': 'Hora no disponible'
+        };
+      }
+    }).toList();
+
+    setState(() {
+      appointments = loadedAppointments;
+    });
+  }
+
+  // Función para borrar todas las citas guardadas de un usuario
+  Future<void> _clearAppointments() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('appointments');
+
+    setState(() {
+      appointments = []; // Limpiar la lista en memoria también
+    });
+
+    if (!mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("Citas eliminadas"),
+        content: Text("Todas las citas para este usuario han sido borradas."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Map<String, String>> getExpiredAppointments() {
+    return appointments.where((appointment) {
+      if (appointment['date'] == 'Fecha no disponible') {
+        return false;
+      }
+      DateTime appointmentDate;
+      try {
+        appointmentDate = DateFormat('dd/MM/yyyy').parse(appointment['date']!);
+      } catch (e) {
+        return false;
+      }
+      return appointmentDate.isBefore(DateTime.now());
+    }).toList();
+  }
+
+  List<Map<String, String>> getThisWeekAppointments() {
+    DateTime now = DateTime.now();
+    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+
+    return appointments.where((appointment) {
+      if (appointment['date'] == 'Fecha no disponible') {
+        return false;
+      }
+      DateTime appointmentDate;
+      try {
+        appointmentDate = DateFormat('dd/MM/yyyy').parse(appointment['date']!);
+      } catch (e) {
+        return false;
+      }
+
+      // Excluir citas que ya expiraron
+      if (appointmentDate.isBefore(DateTime.now())) {
+        return false;
+      }
+
+      return appointmentDate.isAfter(startOfWeek) &&
+          appointmentDate.isBefore(endOfWeek);
+    }).toList();
+  }
+
+  List<Map<String, String>> getCurrentMonthAppointments() {
+    DateTime now = DateTime.now();
+    return appointments.where((appointment) {
+      if (appointment['date'] == 'Fecha no disponible') {
+        return false;
+      }
+      DateTime appointmentDate;
+      try {
+        appointmentDate = DateFormat('dd/MM/yyyy').parse(appointment['date']!);
+      } catch (e) {
+        return false;
+      }
+
+      // Excluir citas que ya expiraron
+      if (appointmentDate.isBefore(DateTime.now())) {
+        return false;
+      }
+
+      return appointmentDate.month == now.month &&
+          appointmentDate.year == now.year;
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Obtener el nombre del mes actual
-    String currentMonth =
-        DateFormat.MMMM('es_ES').format(DateTime.now()).toUpperCase();
-
+    final size = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 3,
+      initialIndex: 2,
       child: Scaffold(
-        appBar: const CustomAppBar(title: 'Agendado'),
+        appBar: AppBar(
+          title: Text('Agendado'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: _clearAppointments, // Botón para borrar las citas
+            ),
+          ],
+        ),
         body: Column(
           children: [
-            SizedBox(height: 16),
+            SizedBox(height: size.height * 0.02),
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                height: 60,
-                margin: const EdgeInsets.symmetric(horizontal: 16),
+                height: size.height * 0.08, // Tamaño dinámico
+                margin: EdgeInsets.symmetric(horizontal: size.width * 0.04),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: AppColors.secondaryColor,
@@ -45,8 +177,8 @@ class AppointmentScreen extends StatelessWidget {
                   unselectedLabelColor: Colors.black54,
                   tabs: [
                     TabItem(title: 'Expiro'),
-                    TabItem(title: 'Semanas'),
-                    TabItem(title: 'Meses'),
+                    TabItem(title: 'Semanal'),
+                    TabItem(title: 'Mensual'),
                   ],
                 ),
               ),
@@ -56,24 +188,15 @@ class AppointmentScreen extends StatelessWidget {
                 children: [
                   AppointmentItem(
                     title: 'Expiro',
-                    appointments: [
-                      {'title': 'Cita 1', 'date': '05/09/2024'},
-                      // Agrega más citas si es necesario
-                    ],
+                    appointments: getExpiredAppointments(),
                   ),
                   AppointmentItem(
                     title: 'Esta Semana',
-                    appointments: [
-                      {'title': 'peluquero', 'date': '16/10/2024'},
-                      // Más citas
-                    ],
+                    appointments: getThisWeekAppointments(),
                   ),
                   AppointmentItem(
-                    title: currentMonth,
-                    appointments: [
-                      {'title': 'peluquero', 'date': '16/10/2024'},
-                      {'title': 'Abogado', 'date': '10/09/2024'},
-                    ],
+                    title: "Este mes",
+                    appointments: getCurrentMonthAppointments(),
                   ),
                 ],
               ),

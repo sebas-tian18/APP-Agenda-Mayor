@@ -13,17 +13,16 @@ dependencies:
     sdk: flutter
   syncfusion_flutter_calendar: ^24.1.45
   intl: ^0.18.0
-
+  shared_preferences: ^2.3.2
   english_words: ^4.0.0
   provider: ^6.0.0
-
   dio: ^5.7.0
   get: ^4.6.5
   iconsax: ^0.0.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^4.0.0
 
 flutter:

@@ -10,15 +10,16 @@ class AppointmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: size.height * 0.02),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(size.width * 0.04),
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(10),
@@ -28,21 +29,23 @@ class AppointmentItem extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                        color: Colors.white, fontSize: size.width * 0.05),
                   ),
                   Text(
                     '${appointments.length} Citas',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                        color: Colors.white, fontSize: size.width * 0.05),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 15),
+            SizedBox(height: size.height * 0.02),
             Expanded(
               child: ListView(
                 children: appointments.map((appointment) {
-                  return _appointmentTile(
-                      appointment['title']!, appointment['date']!);
+                  return _appointmentTile(appointment['title']!,
+                      appointment['date']!, appointment['time']!, size);
                 }).toList(),
               ),
             ),
@@ -52,10 +55,11 @@ class AppointmentItem extends StatelessWidget {
     );
   }
 
-  Widget _appointmentTile(String title, String date) {
+  Widget _appointmentTile(String title, String date, String time, Size size) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(12),
+      margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      padding: EdgeInsets.symmetric(
+          vertical: size.height * 0.05, horizontal: size.width * 0.02),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -70,11 +74,20 @@ class AppointmentItem extends StatelessWidget {
                 Icons.radio_button_checked,
                 color: AppColors.primaryColor,
               ),
-              SizedBox(width: 10),
-              Text(title, style: TextStyle(fontSize: 16)),
+              SizedBox(width: size.width * 0.03),
+              Text(title, style: TextStyle(fontSize: size.width * 0.045)),
             ],
           ),
-          Text(date, style: TextStyle(fontSize: 16)),
+          Column(
+            children: [
+              Text("Fecha: $date",
+                  style: TextStyle(
+                      fontSize: size.width * 0.045, color: Colors.black)),
+              Text("Hora: $time",
+                  style: TextStyle(
+                      fontSize: size.width * 0.045, color: Colors.black)),
+            ],
+          ),
         ],
       ),
     );

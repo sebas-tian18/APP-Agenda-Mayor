@@ -3,17 +3,71 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:mobile/widgets/tab_item.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CalendarScreen extends StatelessWidget {
+class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
   @override
+  CalendarScreenState createState() => CalendarScreenState();
+}
+
+class CalendarScreenState extends State<CalendarScreen> {
+  List<Meeting> meetings = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppointments(); // Cargar las citas guardadas al iniciar
+  }
+
+  // Cargar las citas guardadas desde SharedPreferences
+  Future<void> _loadAppointments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedAppointments = prefs.getStringList('appointments') ?? [];
+
+    List<Meeting> loadedMeetings = storedAppointments.map((appointment) {
+      List<String> parts = appointment.split(';');
+      if (parts.length == 3) {
+        DateTime appointmentDate;
+        try {
+          appointmentDate = DateFormat('dd/MM/yyyy').parse(parts[1]);
+        } catch (e) {
+          appointmentDate =
+              DateTime.now(); // Fecha por defecto en caso de error
+        }
+        return Meeting(
+          parts[0], // Título de la cita
+          appointmentDate, // Fecha de inicio
+          appointmentDate.add(const Duration(hours: 1)), // Duración de 1 hora
+          const Color(0xFF0F8644), // Color de fondo
+          false,
+        );
+      } else {
+        return Meeting(
+          'Cita inválida',
+          DateTime.now(),
+          DateTime.now().add(const Duration(hours: 1)),
+          Colors.red,
+          false,
+        );
+      }
+    }).toList();
+
+    setState(() {
+      meetings = loadedMeetings;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     // Establecer la localización en español
     Intl.defaultLocale = 'es_ES';
 
     return DefaultTabController(
       length: 2,
+      initialIndex: 1,
       child: Scaffold(
         body: Column(
           children: [
@@ -21,8 +75,10 @@ class CalendarScreen extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                height: 60,
-                margin: const EdgeInsets.symmetric(horizontal: 16),
+                height: size.height *
+                    0.08, // Altura dinámica para el contenedor de Tabs
+                margin: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.04), // Margen dinámico
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: AppColors.secondaryColor,
@@ -54,7 +110,8 @@ class CalendarScreen extends StatelessWidget {
                   SfCalendar(
                     view: CalendarView.week,
                     firstDayOfWeek: 1, // Lunes como primer día
-                    dataSource: MeetingDataSource(_getDataSource()),
+                    dataSource: MeetingDataSource(meetings),
+                    timeZone: 'America/Santiago',
                     timeSlotViewSettings: TimeSlotViewSettings(
                       dayFormat: 'EEE', // Mostrar días completos en español
                     ),
@@ -63,7 +120,7 @@ class CalendarScreen extends StatelessWidget {
                   SfCalendar(
                     view: CalendarView.month,
                     firstDayOfWeek: 1, // Lunes como primer día
-                    dataSource: MeetingDataSource(_getDataSource()),
+                    dataSource: MeetingDataSource(meetings),
                     monthViewSettings: MonthViewSettings(
                       appointmentDisplayMode:
                           MonthAppointmentDisplayMode.appointment,
@@ -80,20 +137,9 @@ class CalendarScreen extends StatelessWidget {
       ),
     );
   }
-
-  // Generar datos para el calendario
-  List<Meeting> _getDataSource() {
-    final List<Meeting> meetings = <Meeting>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime =
-        DateTime(today.year, today.month, today.day, 9, 0, 0);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    meetings.add(Meeting(
-        'peluquero', startTime, endTime, const Color(0xFF0F8644), false));
-    return meetings;
-  }
 }
 
+// Modelo de citas (Meetings)
 class MeetingDataSource extends CalendarDataSource {
   MeetingDataSource(List<Meeting> source) {
     appointments = source;
@@ -125,6 +171,7 @@ class MeetingDataSource extends CalendarDataSource {
   }
 }
 
+// Clase para representar una cita (Meeting)
 class Meeting {
   Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
 
