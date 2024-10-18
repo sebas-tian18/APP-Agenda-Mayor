@@ -31,19 +31,27 @@ const Login = () => {
         }),
       });
 
-      const data = await response.json();
+      console.log("A");
 
-      if (response.ok) {
+      const data = await response.json(); // Convertir respuesta a JSON
+
+      console.log("Datos recibidos del backend:", data);
+
+      if (response.ok && data.token) {
+        const token = data.token; // Token que viene en la respuesta
+        sessionStorage.setItem("token", token); // Guardar el token en sessionStorage
         toast.success("Autenticacion exitosa!");
-        // TODO: redirigir usuario y almacenar token JWT
+        // TODO: redirigir usuario (Manejar Rutas Protegidas react-router)
+
       } else {
-        setError(data.message); // error si credenciales son incorrectas
+        setError(data.message); // Manejar error si credenciales son incorrectas
         toast.warning(data.message || "Error al autenticar usuario");
       }
     } catch (err) {
       toast.error(err.message || "Error al Autenticar.");
-    }
+    } finally {
       setLoading(false); // Termina carga
+    }
   };
 
   return (

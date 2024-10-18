@@ -4,18 +4,20 @@ const { verificarToken } = require('../services/jwtService');
 // Verifica si el toquen es recibido y es valido
 
 function verifyToken(req, res, next) {
-    const token = req.cookies.token; // Obtener el token desde la cookie
+    const authHeader = req.headers.authorization; // Obtener el token del header ('Bearer <token>')
   
-    if (!token) {
-      return res.status(401).json({ message: "Token no recibido" });
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: "Token no recibido o formato inválido" });
     }
+    
+    const token = authHeader.split(' ')[1]; // Extraer el token despues de 'Bearer '
   
     try {
-      const payload = verificarToken(token); // Verificar el token
-      req.username = payload.username; // Guardar payload en req
-      next();
+        const payload = verificarToken(token); // Verificar el token
+        req.username = payload.username; // Guardar payload en req
+        next();
     } catch (error) {
-      return res.status(403).json({ message: "Token no válido" });
+        return res.status(403).json({ message: "Token no válido" });
     }
   }
 
