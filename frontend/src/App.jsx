@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Servicios from "../pages/Servicios";
 import EditarPerfil from "../pages/EditarPerfil";
 import Ajustes from "../pages/Ajustes";
+import Administrador from "../pages/Administrador";
 import "./App.css";
 import { FontSizeProvider } from "../Components/FontSizeContext";
 import { Toaster } from "sonner";
@@ -21,6 +22,7 @@ function App() {
         <Router>
         <Navbar />
           <Routes>
+            <Route path="/administrador" element={<Administrador />} />
             <Route path="/register" element={<Register />} />
             <Route path="/servicios" element={<Servicios />} />
             <Route path="/editar-perfil" element={<EditarPerfil />} />
