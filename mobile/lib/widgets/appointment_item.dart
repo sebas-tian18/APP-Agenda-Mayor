@@ -11,6 +11,8 @@ class AppointmentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -23,19 +25,37 @@ class AppointmentItem extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: Offset(1, 1),
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                        color: Colors.white, fontSize: size.width * 0.05),
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: size.width * 0.06),
+                      overflow: TextOverflow.ellipsis, // Agregado
+                    ),
                   ),
-                  Text(
-                    '${appointments.length} Citas',
-                    style: TextStyle(
-                        color: Colors.white, fontSize: size.width * 0.05),
+                  Flexible(
+                    child: Text(
+                      '${appointments.length} Citas',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: size.width * 0.06),
+                      overflow: TextOverflow.ellipsis, // Agregado
+                    ),
                   ),
                 ],
               ),
@@ -44,8 +64,14 @@ class AppointmentItem extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: appointments.map((appointment) {
-                  return _appointmentTile(appointment['title']!,
-                      appointment['date']!, appointment['time']!, size);
+                  return _appointmentTile(
+                      appointment['title']!,
+                      appointment['date']!,
+                      appointment['time']!,
+                      appointment['name']!,
+                      appointment['location']!,
+                      size,
+                      theme);
                 }).toList(),
               ),
             ),
@@ -55,40 +81,128 @@ class AppointmentItem extends StatelessWidget {
     );
   }
 
-  Widget _appointmentTile(String title, String date, String time, Size size) {
+  Widget _appointmentTile(String title, String date, String time, String name,
+      String location, Size size, ThemeData theme) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
-      padding: EdgeInsets.symmetric(
-          vertical: size.height * 0.05, horizontal: size.width * 0.02),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(
+            color: theme.dividerColor,
+            width: 1,
+          ),
+        ),
+        elevation: 6,
+        color: theme.cardColor,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.radio_button_checked,
-                color: AppColors.primaryColor,
+              ListTile(
+                title: Text(
+                  title,
+                  style: TextStyle(
+                      fontSize: size.width * 0.070,
+                      fontWeight: FontWeight.bold,
+                      color: theme.textTheme.bodyLarge!.color),
+                ),
               ),
-              SizedBox(width: size.width * 0.03),
-              Text(title, style: TextStyle(fontSize: size.width * 0.045)),
+              Divider(thickness: 4, color: theme.dividerColor),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    // Agregado
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Icon(Icons.calendar_today, color: Colors.green),
+                            SizedBox(width: 10),
+                            Flexible(
+                              // Agregado
+                              child: Text(
+                                "Fecha: $date",
+                                style: TextStyle(
+                                  fontSize: size.width * 0.055,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.textTheme.bodyLarge!.color,
+                                ),
+                                overflow: TextOverflow.ellipsis, // Agregado
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Icon(Icons.access_time, color: Colors.green),
+                            SizedBox(width: 10),
+                            Flexible(
+                              // Agregado
+                              child: Text(
+                                "Hora: $time",
+                                style: TextStyle(
+                                  fontSize: size.width * 0.055,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.textTheme.bodyLarge!.color,
+                                ),
+                                overflow: TextOverflow.ellipsis, // Agregado
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Icon(Icons.person, color: Colors.green),
+                            SizedBox(width: 10),
+                            Flexible(
+                              // Agregado
+                              child: Text(
+                                "Profesional: $name",
+                                style: TextStyle(
+                                  fontSize: size.width * 0.055,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.textTheme.bodyLarge!.color,
+                                ),
+                                overflow: TextOverflow.ellipsis, // Agregado
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Icon(Icons.location_on, color: Colors.green),
+                            SizedBox(width: 10),
+                            Flexible(
+                              // Agregado
+                              child: Text(
+                                "Ubicación: $location",
+                                style: TextStyle(
+                                  fontSize: size.width * 0.055,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.textTheme.bodyLarge!.color,
+                                ),
+                                overflow: TextOverflow.ellipsis, // Agregado
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
             ],
           ),
-          Column(
-            children: [
-              Text("Fecha: $date",
-                  style: TextStyle(
-                      fontSize: size.width * 0.045, color: Colors.black)),
-              Text("Hora: $time",
-                  style: TextStyle(
-                      fontSize: size.width * 0.045, color: Colors.black)),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

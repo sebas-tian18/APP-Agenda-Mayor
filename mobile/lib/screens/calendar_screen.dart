@@ -22,22 +22,26 @@ class CalendarScreenState extends State<CalendarScreen> {
   }
 
   // Cargar las citas guardadas desde SharedPreferences
+// Cargar las citas guardadas desde SharedPreferences
   Future<void> _loadAppointments() async {
     final prefs = await SharedPreferences.getInstance();
     final storedAppointments = prefs.getStringList('appointments') ?? [];
 
     List<Meeting> loadedMeetings = storedAppointments.map((appointment) {
       List<String> parts = appointment.split(';');
-      if (parts.length == 3) {
+
+      if (parts.length == 5) {
         DateTime appointmentDate;
         try {
           appointmentDate = DateFormat('dd/MM/yyyy').parse(parts[1]);
+          // Ajustar la hora (por ejemplo, si estás guardando la hora en UTC)
+          // appointmentDate = appointmentDate.toUtc().add(Duration(hours: 3)); // Ajustar según sea necesario
         } catch (e) {
           appointmentDate =
               DateTime.now(); // Fecha por defecto en caso de error
         }
         return Meeting(
-          parts[0], // Título de la cita
+          parts[0], // Título de la cita (label)
           appointmentDate, // Fecha de inicio
           appointmentDate.add(const Duration(hours: 1)), // Duración de 1 hora
           const Color(0xFF0F8644), // Color de fondo
@@ -114,6 +118,7 @@ class CalendarScreenState extends State<CalendarScreen> {
                     timeZone: 'America/Santiago',
                     timeSlotViewSettings: TimeSlotViewSettings(
                       dayFormat: 'EEE', // Mostrar días completos en español
+                      startHour: 0,
                     ),
                   ),
                   // Vista de mes

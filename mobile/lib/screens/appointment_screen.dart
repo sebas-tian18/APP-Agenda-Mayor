@@ -27,14 +27,22 @@ class AppointmentScreenState extends State<AppointmentScreen> {
     List<Map<String, String>> loadedAppointments =
         storedAppointments.map((appointment) {
       List<String> parts = appointment.split(';');
-      if (parts.length == 3) {
-        // Ahora esperamos tres partes: título, fecha y hora
-        return {'title': parts[0], 'date': parts[1], 'time': parts[2]};
+      if (parts.length == 5) {
+        // Ahora esperamos cinco partes
+        return {
+          'title': parts[0],
+          'date': parts[1],
+          'time': parts[2],
+          'name': parts[3],
+          'location': parts[4],
+        };
       } else {
         return {
           'title': 'Cita inválida',
           'date': 'Fecha no disponible',
-          'time': 'Hora no disponible'
+          'time': 'Hora no disponible',
+          'name': 'Profesional no disponible',
+          'location': 'Ubicación no disponible',
         };
       }
     }).toList();

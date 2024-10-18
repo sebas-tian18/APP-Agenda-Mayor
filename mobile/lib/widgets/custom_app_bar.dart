@@ -1,27 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/screens/login_screen.dart';
+import 'package:provider/provider.dart'; // Importar Provider
+import 'package:mobile/widgets/theme_notifier.dart'; // Importar el ThemeNotifier
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final bool showBackButton; // Controla si se muestra la campana o la flecha
 
-  const CustomAppBar({super.key, required this.title});
+  const CustomAppBar(
+      {super.key, required this.title, this.showBackButton = false});
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier =
+        Provider.of<ThemeNotifier>(context); // Obtener el estado del tema
     return AppBar(
       title: Text(title),
-      backgroundColor: Colors.white,
-      automaticallyImplyLeading: false,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
-          );
-        },
-        color: Colors.black,
-      ),
+      backgroundColor: themeNotifier.isDarkMode // Cambiar color dinámicamente
+          ? Colors.grey.shade900
+          : Colors.grey.shade300,
+      automaticallyImplyLeading:
+          showBackButton, // Muestra el botón de retroceso si está habilitado
+      leading: showBackButton
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context); // Navegar hacia atrás
+              },
+              color: Colors.black,
+            )
+          : IconButton(
+              icon: const Icon(Icons
+                  .notifications), // Muestra la campana si no hay botón de retroceso
+              onPressed: () {
+                // Acciones para la campana
+              },
+              color: Colors.black,
+            ),
       actions: [
         IconButton(
           icon: const Icon(Icons.account_circle),

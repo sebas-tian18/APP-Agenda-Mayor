@@ -1,24 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Importar Provider
+import 'package:mobile/widgets/theme_notifier.dart'; // Importar el ThemeNotifier
 import 'package:mobile/widgets/profile_list_item.dart';
 
-class ProfileScreen extends StatefulWidget {
-  @override
-  ProfileScreenState createState() => ProfileScreenState();
-}
-
-class ProfileScreenState extends State<ProfileScreen> {
-  bool isDarkMode = false; // Controla el estado del tema.
-
-  void _toggleTheme() {
-    setState(() {
-      isDarkMode = !isDarkMode;
-    });
-  }
-
+class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final size =
-        MediaQuery.of(context).size; // Obtiene el tamaño de la pantalla
+    final size = MediaQuery.of(context).size;
 
     var profileInfo = Column(
       children: <Widget>[
@@ -79,50 +67,52 @@ class ProfileScreenState extends State<ProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           profileInfo,
-          IconButton(
-            icon: Icon(
-              isDarkMode ? Icons.wb_sunny : Icons.nights_stay,
-            ),
-            onPressed: _toggleTheme,
-            iconSize: size.width * 0.12,
+          Consumer<ThemeNotifier>(
+            builder: (context, themeNotifier, child) {
+              return IconButton(
+                icon: Icon(
+                  themeNotifier.isDarkMode ? Icons.wb_sunny : Icons.nights_stay,
+                ),
+                onPressed: () {
+                  themeNotifier.toggleTheme();
+                },
+                iconSize: size.width * 0.12,
+              );
+            },
           ),
         ],
       ),
     );
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              header,
-              ListView(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(), // Evita scroll interno
-                children: <Widget>[
-                  ProfileListItem(
-                    icon: Icons.history,
-                    text: 'Historial de Citas',
-                  ),
-                  ProfileListItem(
-                    icon: Icons.help_outline,
-                    text: 'Ayuda y Soporte',
-                  ),
-                  ProfileListItem(
-                    icon: Icons.settings,
-                    text: 'Configuración',
-                  ),
-                  ProfileListItem(
-                    icon: Icons.logout,
-                    text: 'Cerrar Sesión',
-                    hasNavigation: false,
-                  ),
-                ],
-              ),
-            ],
-          ),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            header,
+            ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                ProfileListItem(
+                  icon: Icons.history,
+                  text: 'Historial de Citas',
+                ),
+                ProfileListItem(
+                  icon: Icons.help_outline,
+                  text: 'Ayuda y Soporte',
+                ),
+                ProfileListItem(
+                  icon: Icons.settings,
+                  text: 'Configuración',
+                ),
+                ProfileListItem(
+                  icon: Icons.logout,
+                  text: 'Cerrar Sesión',
+                  hasNavigation: false,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

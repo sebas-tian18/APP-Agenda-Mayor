@@ -18,9 +18,7 @@ class ProfileListItem extends StatelessWidget {
     final size = MediaQuery.of(context).size; // Obtén el tamaño de la pantalla
 
     const TextStyle titleTextStyle = TextStyle(
-      fontSize: 16.0,
-      fontWeight: FontWeight.w500,
-    );
+        fontSize: 16.0, fontWeight: FontWeight.w500, color: Colors.white);
 
     return Container(
       height: size.height * 0.08,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart'; // Importar Provider
+import 'package:mobile/widgets/theme_notifier.dart'; // Importar el ThemeNotifier
 import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/appointment_screen.dart';
 import 'package:mobile/screens/calendar_screen.dart';
@@ -12,6 +14,8 @@ class NavigationMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(NavigationController());
+    final themeNotifier =
+        Provider.of<ThemeNotifier>(context); // Obtener el estado del tema
 
     return Scaffold(
       bottomNavigationBar: Obx(
@@ -29,7 +33,10 @@ class NavigationMenu extends StatelessWidget {
           child: NavigationBar(
             height: 90,
             elevation: 0,
-            backgroundColor: Colors.grey.shade300,
+            backgroundColor:
+                themeNotifier.isDarkMode // Cambiar color dinámicamente
+                    ? Colors.grey.shade900
+                    : Colors.grey.shade300,
             selectedIndex: controller.selectedIndex.value,
             onDestinationSelected: (index) =>
                 controller.selectedIndex.value = index,
@@ -45,7 +52,16 @@ class NavigationMenu extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.add_circle_outlined, size: 65),
                 color: AppColors.primaryColor,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(
+                          fromNavigationMenu:
+                              true), // Pasa true para mostrar la flecha
+                    ),
+                  );
+                },
               ),
               NavigationDestination(
                 icon: Icon(Icons.book, size: 40),
