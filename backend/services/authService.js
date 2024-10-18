@@ -5,7 +5,7 @@ const { generarToken } = require('./jwtService'); // Importar la funcion para ge
 const authUsuario = async (correo, contrasena) => {
     try {
         // Consultar si el usuario existe en la base de datos
-        const [rows] = await db.promise().query(`SELECT id_usuario, password_hash, id_rol FROM usuario WHERE email = ?`, [correo]);
+        const [rows] = await db.promise().query(`SELECT id_usuario, password_hash, id_rol, nombre_usuario FROM usuario WHERE email = ?`, [correo]);
 
         // Si no ecuentra el correo
         if (rows.length === 0) {
@@ -13,7 +13,7 @@ const authUsuario = async (correo, contrasena) => {
         }
 
         // Obtener los valores de las columnas necesarias
-        const { id_usuario, password_hash, id_rol } = rows[0];
+        const { id_usuario, password_hash, id_rol, nombre_usuario } = rows[0];
 
         // Verificar la contrasena con el hash almacenado
         const isPasswordValid = await argon2.verify(password_hash, contrasena);
@@ -22,7 +22,7 @@ const authUsuario = async (correo, contrasena) => {
         }
 
         // Generar el token JWT con los datos necesarios
-        const token = generarToken({ id_usuario, id_rol });
+        const token = generarToken({ id_usuario, id_rol, nombre_usuario });
         
         // Retornar el token junto a un mensaje de exito
         return { success: true, message: 'Autenticación exitosa', token: token };
