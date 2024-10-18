@@ -1,8 +1,10 @@
 import { useContext, useState } from "react";
 import { FontSizeContext } from "../Components/FontSizeContext";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const { fontSize } = useContext(FontSizeContext);
   const [formData, setFormData] = useState({
     nombre_usuario: "",
@@ -94,6 +96,7 @@ const Register = () => {
         toast.success(
           `Usuario registrado con éxito con ID: ${result.id_usuario}`
         );
+        navigate("/Login");
       } else {
         toast.warning(result.error || "Error al registrar el usuario");
       }

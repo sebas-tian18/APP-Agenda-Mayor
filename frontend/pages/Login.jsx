@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { FontSizeContext } from "../Components/FontSizeContext.jsx";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";  // Importa useNavigate
+import { Link, useNavigate } from "react-router-dom";  // Importa useNavigate
 
 const Login = () => {
   const { fontSize, increaseFontSize, decreaseFontSize } =
@@ -108,12 +108,12 @@ const Login = () => {
 
               {/* Enlaces */}
               <div className="flex justify-between items-center mb-10">
-                <a href="#" className="text-blue-500 hover:underline">
+                <Link to="/register" className="text-blue-500 hover:underline">
                   No tengo una cuenta
-                </a>
-                <a href="#" className="text-blue-500 hover:underline">
+                </Link>
+                <Link to="#" className="text-blue-500 hover:underline">
                   Recuperar contraseña
-                </a>
+                </Link>
               </div>
 
               {/* Botón de Iniciar sesión */}
