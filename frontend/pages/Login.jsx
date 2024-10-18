@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { FontSizeContext } from "../Components/FontSizeContext.jsx";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";  // Importa useNavigate
 
 const Login = () => {
   const { fontSize, increaseFontSize, decreaseFontSize } =
@@ -11,6 +12,8 @@ const Login = () => {
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate(); // Hook de navegación
 
   // manejar envio de formulario
   const handleSubmit = async (e) => {
@@ -43,15 +46,20 @@ const Login = () => {
         toast.success("Autenticacion exitosa!");
         // TODO: redirigir usuario (Manejar Rutas Protegidas react-router)
 
+        // Redirige a la página de Home
+        navigate("/Home");
+
       } else {
         setError(data.message); // Manejar error si credenciales son incorrectas
         toast.warning(data.message || "Error al autenticar usuario");
       }
     } catch (err) {
       toast.error(err.message || "Error al Autenticar.");
+
     } finally {
       setLoading(false); // Termina carga
     }
+
   };
 
   return (

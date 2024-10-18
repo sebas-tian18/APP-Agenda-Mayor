@@ -15,8 +15,7 @@ function Navbar() {
             <NavItem to="/calendario" icon={<Calendar size={20} />} text="Calendario" />
             <NavItem to="/administrar" icon={<CalendarCog size={20} />} text="Administrar" />
             <NavItem to="/ajustes" icon={<Settings size={20} />} text="Ajustes" />
-            {/* Botón de Login */}
-            <NavItem to="/Login" icon={<LogIn size={20} />} text="Login" />
+            
 
             <button
               onClick={() => console.log('Cerrar sesión')}
