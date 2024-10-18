@@ -10,32 +10,26 @@ const Register = () => {
     apellido_materno: "",
     rut: "",
     email: "",
-    contrasena: "",
-    Rcontrasena: "",
+    contrasena: "",  // Cambiado de contrasena a password_hash
+    Rcontrasena: "", // Para confirmar la contraseña, aunque no se envía
     telefono: "",
     direccion: "",
     tipo_domicilio: "casa",
     sexo: "M",
     nacionalidad: "CL",
-    movilidad: false,
+    problemas_movilidad: false,  // Cambiado de movilidad a problemas_movilidad
+    nombre_sector: "",
+    zona_rural: false,
+    fecha_nacimiento: "",
+    rsh_valido: false,  // Nuevo campo para rsh_valido si es necesario en el frontend
   });
 
-  const [fotoCarnet, setFotoCarnet] = useState(null); // Estado para la foto del carnet
-  const [rshArchivo, setRshArchivo] = useState(null); // Estado para el archivo de RSH
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "foto_carnet") {
-      setFotoCarnet(e.target.files[0]);
-    } else if (name === "archivo") {
-      setRshArchivo(e.target.files[0]);
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -48,14 +42,6 @@ const Register = () => {
 
     console.log("Datos del formulario:");
     console.log("FormData (objeto):", formData);
-    console.log(
-      "Foto de Carnet:",
-      fotoCarnet ? fotoCarnet.name : "No se ha subido ninguna foto"
-    );
-    console.log(
-      "Archivo de RSH:",
-      rshArchivo ? rshArchivo.name : "No se ha subido ningún archivo"
-    );
 
     try {
       const data = new FormData();
@@ -63,13 +49,6 @@ const Register = () => {
       Object.keys(formData).forEach((key) => {
         data.append(key, formData[key]);
       });
-
-      if (fotoCarnet) {
-        data.append("foto_carnet", fotoCarnet);
-      }
-      if (rshArchivo) {
-        data.append("rsh_archivo", rshArchivo);
-      }
 
       const response = await fetch("http://localhost:3000/usuarios", {
         method: "POST",
@@ -181,30 +160,17 @@ const Register = () => {
                   </div>
                 </div>
 
-                {/* Campo RUT y Archivo */}
-                <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gray-700">RUT:</label>
-                    <input
-                      type="text"
-                      name="rut"
-                      className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
-                      placeholder="123456789-0"
-                      value={formData.rut}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700">
-                      Registro Social de Hogares (RSH):
-                    </label>
-                    <input
-                      type="file"
-                      name="archivo"
-                      className="block w-full text-sm border-gray-300 cursor-pointer outline-none"
-                      onChange={handleChange}
-                    />
-                  </div>
+                {/* Campo RUT */}
+                <div className="mb-4">
+                  <label className="block text-gray-700">RUT:</label>
+                  <input
+                    type="text"
+                    name="rut"
+                    className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                    placeholder="123456789-0"
+                    value={formData.rut}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 {/* Campo Correo y Contraseña */}
@@ -291,22 +257,50 @@ const Register = () => {
                   </div>
                 </div>
 
-                {/* Foto de carnet */}
+                {/* Nombre Sector y Zona Rural */}
+                <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-700">
+                      Nombre del Sector:
+                    </label>
+                    <input
+                      type="text"
+                      name="nombre_sector"
+                      className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                      placeholder="Sector"
+                      value={formData.nombre_sector}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700">Zona Rural:</label>
+                    <input
+                      type="checkbox"
+                      name="zona_rural"
+                      className="my-1"
+                      checked={formData.zona_rural}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700">Foto de Carnet:</label>
+                  <label className="block text-gray-700">
+                    Problemas de Movilidad:
+                  </label>
                   <input
-                    type="file"
-                    name="foto_carnet"
-                    className="block w-full text-sm border-gray-300 cursor-pointer outline-none"
+                    type="checkbox"
+                    name="problemas_movilidad"
+                    className="my-1"
+                    checked={formData.problemas_movilidad}
                     onChange={handleChange}
                   />
                 </div>
 
-                {/* Botón Registrarse */}
-                <div className="flex justify-center mb-4">
+                {/* Botón de Envío */}
+                <div className="mb-4">
                   <button
                     type="submit"
-                    className="w-full md:w-auto bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-700"
+                    className="w-full bg-[#FF5100] hover:bg-[#FF4200] text-white font-bold py-2 px-4 rounded"
                   >
                     Registrarse
                   </button>

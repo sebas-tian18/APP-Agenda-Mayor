@@ -8,7 +8,7 @@ const crearUsuarioBD = async (userData) => {
   const connection = db.promise();
     
   try {
-
+      rsh_valido = false;
       // Comprobar si el correo esta registrado
       const [existeUsuario] = await connection.query(
         `SELECT * FROM usuario WHERE email = ? OR rut = ?`, 
