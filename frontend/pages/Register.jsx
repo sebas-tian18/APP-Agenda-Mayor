@@ -10,8 +10,9 @@ const Register = () => {
     apellido_materno: "",
     rut: "",
     email: "",
-    contrasena: "",  // Cambiado de contrasena a password_hash
-    Rcontrasena: "", // Para confirmar la contraseña, aunque no se envía
+    fecha_nacimiento: "",
+    contrasena: "",
+    Rcontrasena: "",
     telefono: "",
     direccion: "",
     tipo_domicilio: "casa",
@@ -20,16 +21,26 @@ const Register = () => {
     problemas_movilidad: false,  // Cambiado de movilidad a problemas_movilidad
     nombre_sector: "",
     zona_rural: false,
-    fecha_nacimiento: "",
     rsh_valido: false,  // Nuevo campo para rsh_valido si es necesario en el frontend
   });
 
+  //const [fotoCarnet, setFotoCarnet] = useState(""); // Estado para la foto del carnet
+  //const [rshArchivo, setRshArchivo] = useState(""); // Estado para el archivo de RSH
+
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    const { name, type, value, checked } = e.target;
+
+    /*
+    if (name === "foto_carnet") {
+      setFotoCarnet(e.target.files[0]);
+    } else if (name === "archivo") {
+      setRshArchivo(e.target.files[0]);
+    } else {
+    */  
+    setFormData((prevData) => ({ // Actualizar el estado dependiendo del tipo de input
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value, // Checked para checkbox value para otros inputs
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -43,16 +54,38 @@ const Register = () => {
     console.log("Datos del formulario:");
     console.log("FormData (objeto):", formData);
 
+    /*
+    console.log(
+      "Foto de Carnet:",
+      fotoCarnet ? fotoCarnet.name : "No se ha subido ninguna foto"
+    );
+    console.log(
+      "Archivo de RSH:",
+      rshArchivo ? rshArchivo.name : "No se ha subido ningún archivo"
+    );
+    */
     try {
-      const data = new FormData();
+    /*  const data = new FormData();
 
       Object.keys(formData).forEach((key) => {
         data.append(key, formData[key]);
       });
 
+
+      if (fotoCarnet) {
+        data.append("foto_carnet", fotoCarnet);
+      }
+      if (rshArchivo) {
+        data.append("rsh_archivo", rshArchivo);
+      }
+    */
       const response = await fetch("http://localhost:3000/usuarios", {
         method: "POST",
-        body: data,
+        //body: data, // Estaba usando multipart/form-data en lugar de application/json
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData), // Enviar los datos como JSON
       });
 
       const result = await response.json();
