@@ -5,29 +5,84 @@ import Servicios from "../pages/Servicios";
 import EditarPerfil from "../pages/EditarPerfil";
 import Ajustes from "../pages/Ajustes";
 import Administrador from "../pages/Administrador";
-import Home from "../pages/Home"; // Asegúrate de que esta importación sea correcta
+import Home from "../pages/Home";
 import "./App.css";
 import { FontSizeProvider } from "../Components/FontSizeContext";
 import { Toaster } from "sonner";
-import Navbar from "../Components/Navbar"; // Importa el Navbar
-import Footer from "../Components/Footer";  // Importa el Footer
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
+import PrivateRoute from "../Components/PrivateRoute"; // Importa la ruta privada
 
 function App() {
   return (
     <FontSizeProvider>
       <div className="App">
-        <Toaster richColors duration={3000} /> {/* Duración del toaster */}
+        <Toaster richColors duration={3000} />
         <Router>
           <Navbar />
           <Routes>
-            <Route path="/administrador" element={<Administrador />} />
-            <Route path="/" element={<Login />} />  {/* Esta será la vista predeterminada */}
-            <Route path="/register" element={<Register />} />
-            <Route path="/servicios" element={<Servicios />} />
-            <Route path="/editar-perfil" element={<EditarPerfil />} />
+            {/* Rutas públicas */}
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/ajustes" element={<Ajustes />} />
-            <Route path="/home" element={<Home />} />  {/* Ruta para Home */}
+            <Route path="/register" element={<Register />} />
+
+            {/* Rutas privadas */}
+            <Route
+              path="/administrador"
+              element={
+                <PrivateRoute>
+                  <Administrador />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/servicios"
+              element={
+                <PrivateRoute>
+                  <Servicios />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/editar-perfil"
+              element={
+                <PrivateRoute>
+                  <EditarPerfil />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/ajustes"
+              element={
+                <PrivateRoute>
+                  <Ajustes />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/calendario"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/administrar"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
           </Routes>
           <Footer />
         </Router>
@@ -36,4 +91,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
