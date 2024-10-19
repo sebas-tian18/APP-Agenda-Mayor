@@ -16,6 +16,7 @@ const services = [
         name: "Dr. Pedro Silva",
         date: "2024-10-21",
         location: "Temuco, Chile",
+        time: "10:00",
       },
     ],
   },
@@ -173,10 +174,6 @@ function ServiceDrawer({ service, onClose }) {
       </button>
       <h2 className="text-2xl font-bold mb-4">{service.title}</h2>
       <p><strong>Descripción:</strong> {service.description}</p>
-      <p><strong>Horario:</strong> {service.time}</p>
-      <p><strong>Quién lo ofrece:</strong> {service.provider}</p>
-      <p><strong>Ubicación:</strong> {service.location}</p>
-
       {/* Lista de proveedores */}
       <h3 className="mt-4 text-lg font-semibold">Proveedores disponibles:</h3>
       <ul className="mt-2 space-y-4">
@@ -189,6 +186,8 @@ function ServiceDrawer({ service, onClose }) {
               <p className="font-semibold">Nombre: {provider.name}</p>
               <p>Fecha: {provider.date}</p>
               <p>Ubicación: {provider.location}</p>
+              <p>Hora: {provider.time}</p>
+
             </div>
             <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
               Agendar

@@ -5,6 +5,7 @@ import Servicios from "../pages/Servicios";
 import EditarPerfil from "../pages/EditarPerfil";
 import Ajustes from "../pages/Ajustes";
 import Administrador from "../pages/Administrador";
+import ViewCitas from "../pages/ViewCitas";
 import Home from "../pages/Home";
 import "./App.css";
 import { FontSizeProvider } from "../Components/FontSizeContext";
@@ -25,6 +26,8 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/citas" element={<ViewCitas />} />
+
 
             {/* Rutas privadas */}
             <Route

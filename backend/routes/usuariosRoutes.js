@@ -9,9 +9,12 @@ router.post('/', usuariosController.crearUsuario);
 router.post('/login', usuariosController.authUsuario);
 router.get('/adultoMayor', verifyToken, usuariosController.probarLogin); // Usar middleware
 
+
+
 router.route("/:id")
     .get(usuariosController.consultarUsuario)
     .put(usuariosController.actualizarUsuario)
-    .delete(usuariosController.eliminarUsuario);
+    .delete(usuariosController.eliminarUsuario)
+    .get(usuariosController.consultarDetallesUsuario);
 
 module.exports = router;

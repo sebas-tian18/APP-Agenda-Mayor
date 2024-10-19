@@ -100,5 +100,42 @@ class UsuariosController{
     probarLogin(req, res){
         res.status(200).json({ message: 'Bienvenido, Adulto Mayor' })
     }
+
+    consultarDetallesUsuario(req, res) {
+        const { id } = req.params;
+        try {
+            const query = `
+                SELECT 
+                    u.id_usuario, u.rut, u.nombre_usuario, u.apellido_paterno, u.apellido_materno,
+                    u.fecha_nacimiento, u.telefono, u.email, u.sexo, u.nacionalidad,
+                    d.direccion, d.nombre_sector, d.tipo_domicilio, d.zona_rural,
+                    am.edad, am.rsh_valido, am.problemas_movilidad
+                FROM 
+                    usuario u
+                LEFT JOIN 
+                    adulto_mayor am ON u.id_usuario = am.id_usuario
+                LEFT JOIN 
+                    direccion d ON am.id_direccion = d.id_direccion
+                WHERE 
+                    u.id_usuario = ?
+            `;
+            
+            db.query(query, [id], (err, rows) => {
+                if (err) {
+                    return res.status(400).send(err);
+                }
+    
+                if (rows.length === 0) {
+                    return res.status(404).json({ message: 'Usuario no encontrado' });
+                }
+    
+                res.status(200).json(rows[0]); // Devolver los detalles del usuario encontrado
+            });
+    
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
+    }
+    
 }
   module.exports = new UsuariosController();
