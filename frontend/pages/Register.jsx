@@ -110,14 +110,14 @@ const Register = () => {
     <div
       className="min-h-screen w-full bg-cover bg-center text-wrap"
       style={{
-        backgroundImage: "url('https://picsum.photos/seed/picsum/200/300')",
+        backgroundImage: "url('https://picsum.photos/seed/picsum/1920/1080')",
         fontSize: `${fontSize}px`,
       }}
     >
-      <div className="min-h-screen bg-black bg-opacity-50 flex items-center">
+      <div className="min-h-screen bg-black bg-opacity-50 flex items-center py-20">
         <div className="w-full max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row bg-white shadow-lg min-h-[600px]">
-            <div className="bg-gradient-to-b from-emerald-500 to-indigo-500 basis-full md:basis-1/3"></div>
+          <div className="flex flex-col md:flex-row bg-white shadow-lg min-h-[600px] rounded-lg">
+            <div className="bg-gradient-to-b from-emerald-500 to-indigo-500 basis-full md:basis-1/3 rounded-l-lg"></div>
 
             <div className="basis-full md:basis-2/3 p-6">
               <h2 className="text-2xl font-bold mb-6 text-center md:text-left">
