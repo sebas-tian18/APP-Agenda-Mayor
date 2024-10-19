@@ -1,11 +1,7 @@
 import { useContext, useState } from "react";
 import { FontSizeContext } from "../Components/FontSizeContext.jsx";
 import { toast } from "sonner";
-<<<<<<< Updated upstream
 import { Link, useNavigate } from "react-router-dom";  // Importa useNavigate
-=======
-import { useNavigate } from "react-router-dom";  // Se usa para la redirección desde el Login al Home
->>>>>>> Stashed changes
 
 const Login = () => {
   const { fontSize, increaseFontSize, decreaseFontSize } =
