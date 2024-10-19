@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Clipboard, Settings, LogOut, CalendarCog, LogIn } from 'lucide-react';
 
@@ -13,7 +12,7 @@ function Navbar() {
           <div className="flex">
             <NavItem to="/servicios" icon={<Clipboard size={20} />} text="Citas" />
             <NavItem to="/calendario" icon={<Calendar size={20} />} text="Calendario" />
-            <NavItem to="/administrar" icon={<CalendarCog size={20} />} text="Administrar" />
+            <NavItem to="/citas" icon={<CalendarCog size={20} />} text="Administrar" />
             <NavItem to="/ajustes" icon={<Settings size={20} />} text="Ajustes" />
             
 

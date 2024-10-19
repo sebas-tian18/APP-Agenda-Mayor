@@ -3,7 +3,6 @@ import { Calendar, Clock, X } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 
 function ViewCitas() {
-
   const token = sessionStorage.getItem("token");
   const user = jwtDecode(token);
   const userid = user.id_usuario;
@@ -25,6 +24,7 @@ function ViewCitas() {
         setAppointments(data);
       } catch (err) {
         setError(err.message);
+        console.log(error)
       } finally {
         setLoading(false);
       }

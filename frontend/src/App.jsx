@@ -27,8 +27,6 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/citas" element={<ViewCitas />} />
-
-
             {/* Rutas privadas */}
             <Route
               path="/administrador"
