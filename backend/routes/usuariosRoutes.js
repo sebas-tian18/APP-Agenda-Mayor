@@ -10,11 +10,11 @@ router.post('/login', usuariosController.authUsuario);
 router.get('/adultoMayor', verifyToken, usuariosController.probarLogin); // Usar middleware
 
 
+router.get("/:id/detalles", usuariosController.consultarDetallesUsuario); // Detalles de usuario
 
 router.route("/:id")
     .get(usuariosController.consultarUsuario)
     .put(usuariosController.actualizarUsuario)
     .delete(usuariosController.eliminarUsuario)
-    .get(usuariosController.consultarDetallesUsuario);
 
 module.exports = router;

@@ -102,20 +102,33 @@ class UsuariosController{
     }
 
     consultarDetallesUsuario(req, res) {
-        const { id } = req.params;
+        const { id } = req.params; // 'id' es el id_usuario
         try {
             const query = `
                 SELECT 
-                    u.id_usuario, u.rut, u.nombre_usuario, u.apellido_paterno, u.apellido_materno,
-                    u.fecha_nacimiento, u.telefono, u.email, u.sexo, u.nacionalidad,
-                    d.direccion, d.nombre_sector, d.tipo_domicilio, d.zona_rural,
-                    am.edad, am.rsh_valido, am.problemas_movilidad
+                    c.id_cita,
+                    c.fecha,
+                    c.hora_inicio,
+                    c.hora_termino,
+                    c.asistencia,
+                    c.atencion_a_domicilio,
+                    p.nombre_usuario AS nombre_profesional,
+                    e.nombre_estado,
+                    r.nombre_resolucion
                 FROM 
-                    usuario u
-                LEFT JOIN 
-                    adulto_mayor am ON u.id_usuario = am.id_usuario
-                LEFT JOIN 
-                    direccion d ON am.id_direccion = d.id_direccion
+                    cita c
+                JOIN 
+                    adulto_mayor am ON c.id_adulto_mayor = am.id_adulto_mayor
+                JOIN 
+                    usuario u ON am.id_usuario = u.id_usuario
+                JOIN 
+                    profesional pr ON c.id_profesional = pr.id_profesional
+                JOIN 
+                    usuario p ON pr.id_usuario = p.id_usuario
+                JOIN 
+                    estado e ON c.id_estado = e.id_estado
+                JOIN 
+                    resolucion r ON c.id_resolucion = r.id_resolucion
                 WHERE 
                     u.id_usuario = ?
             `;
@@ -129,13 +142,14 @@ class UsuariosController{
                     return res.status(404).json({ message: 'Usuario no encontrado' });
                 }
     
-                res.status(200).json(rows[0]); // Devolver los detalles del usuario encontrado
+                res.status(200).json(rows); // Devolver los detalles del usuario y sus citas
             });
-    
-        } catch (err) {
-            res.status(500).send(err.message);
+        } catch (error) {
+            res.status(500).json({ message: 'Error del servidor', error });
         }
     }
+    
+
     
 }
   module.exports = new UsuariosController();
