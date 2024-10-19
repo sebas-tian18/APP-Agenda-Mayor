@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 const Home = () => {
   const token = sessionStorage.getItem('token');
   const user = jwtDecode(token);
   const username = user.nombre_usuario;
-  console.log(user)
   
 
   return (
