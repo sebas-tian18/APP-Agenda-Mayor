@@ -6,7 +6,13 @@ export default {
     './components/**/*.{html,js,jsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'primary': '#4CAF50',
+        'secondary': '#45a049',
+        'background': '#e8f5e9',
+      }
+    },
   },
   plugins: [],
 }
