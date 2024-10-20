@@ -42,7 +42,7 @@ function ViewCitas() {
   };
 
   // Retorna un cargando si esta cargando
-  if (loading) return <div>Cargando...</div>;
+  if (loading) return <div className="min-h-screen bg-green-50">Cargando...</div>;
   // Div principal que muestra las citas que tengo agendadas
   return (
     <div className="min-h-screen bg-green-50 from-green-100 to-blue-100 flex flex-col items-center justify-center p-4 sm:p-6">
