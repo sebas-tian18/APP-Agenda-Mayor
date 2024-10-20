@@ -215,8 +215,8 @@ function Servicios() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="text-center p-8 bg-white shadow">
+    <div className="min-h-screen bg-green-50">
+      <div className="text-center p-8">
         <h1 className="text-3xl font-bold">Servicios a Domicilio</h1>
       </div>
       <main className="p-8">

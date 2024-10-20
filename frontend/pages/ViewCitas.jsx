@@ -45,7 +45,7 @@ function ViewCitas() {
   if (loading) return <div>Cargando...</div>;
   // Div principal que muestra las citas que tengo agendadas
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 flex flex-col items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-green-50 from-green-100 to-blue-100 flex flex-col items-center justify-center p-4 sm:p-6">
       <h1 className="text-3xl sm:text-4xl font-bold text-green-800 mb-6 sm:mb-8 text-center">
         Mis Citas Agendadas
       </h1>
