@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Calendar, Clipboard, Settings, LogOut, CalendarCog, LogIn } from 'lucide-react';
+import CerrarSesion from './Logout';
 
 function Navbar() {
   return (
@@ -15,14 +16,8 @@ function Navbar() {
             <NavItem to="/citas" icon={<CalendarCog size={20} />} text="Administrar" />
             <NavItem to="/ajustes" icon={<Settings size={20} />} text="Ajustes" />
             
-
-            <button
-              onClick={() => console.log('Cerrar sesión')}
-              className="flex items-center px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition duration-150 ease-in-out"
-            >
-              <LogOut size={20} className="mr-1" />
-              Cerrar sesión
-            </button>
+            <CerrarSesion />
+            
           </div>
         </div>
       </div>
