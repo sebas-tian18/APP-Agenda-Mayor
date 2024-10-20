@@ -21,9 +21,35 @@ class CitasController {
 
 
     consultarCitasnotomadas(req, res) {
+        const {id} = req.params;
         try {
-            db.query('SELECT * FROM cita WHERE id_adulto_mayor IS NULL',
-            (err, rows) => {
+            const query = `
+                        SELECT 
+                            c.id_cita, 
+                            c.fecha,
+                            c.hora_inicio,
+                            c.hora_termino,
+                            u.nombre_usuario AS nombre_profesional,
+                            u.apellido_paterno AS apellido_profesional,
+                            u.apellido_materno AS apellido_materno_profesional,
+                            e.id_especialidad,
+                            e.especialidad
+                        FROM 
+                            cita c
+                        JOIN 
+                            profesional p ON c.id_profesional = p.id_profesional
+                        JOIN 
+                            usuario u ON p.id_usuario = u.id_usuario
+                        JOIN 
+                            especialidad e ON p.id_especialidad = e.id_especialidad
+                        WHERE 
+                            c.id_adulto_mayor IS NULL
+                        AND
+                            e.id_especialidad = ?
+                    `;
+
+
+            db.query(query,[id],(err, rows) => {
                 if(err){
                     res.status(400).send(err);
                 }
