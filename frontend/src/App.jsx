@@ -8,11 +8,11 @@ import Administrador from "../pages/Administrador";
 import ViewCitas from "../pages/ViewCitas";
 import Home from "../pages/Home";
 import "./App.css";
-import { FontSizeProvider } from "../Components/FontSizeContext";
+import { FontSizeProvider } from "../components/FontSizeContext";
 import { Toaster } from "sonner";
-import Navbar from "../Components/Navbar";
-import Footer from "../Components/Footer";
-import PrivateRoute from "../Components/PrivateRoute"; // Importa la ruta privada
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import PrivateRoute from "../components/PrivateRoute"; // Importa la ruta privada
 
 function App() {
   return (

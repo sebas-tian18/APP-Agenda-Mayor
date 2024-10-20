@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { FontSizeContext } from "../Components/FontSizeContext.jsx";
+import { FontSizeContext } from "../components/FontSizeContext.jsx";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";  // Importa useNavigate
 
@@ -34,11 +34,7 @@ const Login = () => {
         }),
       });
 
-      console.log("A");
-
       const data = await response.json(); // Convertir respuesta a JSON
-
-      console.log("Datos recibidos del backend:", data);
 
       if (response.ok && data.token) {
         const token = data.token; // Token que viene en la respuesta
@@ -64,13 +60,13 @@ const Login = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-cover bg-center"
+      className="min-h-screen flex flex-col bg-cover bg-center"
       style={{
-        backgroundImage: "url('https://picsum.photos/seed/picsum/200/300')",
+        backgroundImage: "url('https://picsum.photos/seed/picsum/1920/1080')",
         fontSize: `${fontSize}px`,
       }}
     >
-      <div className="min-h-screen bg-black bg-opacity-50 flex items-center justify-center">
+      <div className="flex-grow bg-black bg-opacity-50 flex items-center justify-center">
         <div className="bg-white shadow-2xl w-full max-w-4xl rounded-lg flex">
           <div className="hidden md:block bg-gradient-to-b from-emerald-500 to-blue-500 w-1/3 rounded-l-lg"></div>
 

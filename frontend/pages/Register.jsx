@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { FontSizeContext } from "../Components/FontSizeContext";
+import { FontSizeContext } from "../components/FontSizeContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
