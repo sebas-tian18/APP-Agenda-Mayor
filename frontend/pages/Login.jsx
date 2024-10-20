@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { FontSizeContext } from "../components/FontSizeContext.jsx";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";  // Importa useNavigate
+import Spinner from "../components/Spinner.jsx"; // Spinner de carga :)
 
 const Login = () => {
   const { fontSize, increaseFontSize, decreaseFontSize } =
@@ -116,10 +117,19 @@ const Login = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-full md:w-auto bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-700"
-                  disabled={loading} // Desactiva el botón si está cargando
+                  className={`w-full md:w-auto bg-blue-500 text-white inline-flex items-center 
+                    rounded-lg p-4 focus:ring-4 hover:bg-blue-700`}
+                  disabled={loading}
                 >
-                  {loading ? "Cargando..." : "Ingresar"}
+                  {/* Logica del Spinner y Carga*/}
+                  {loading ? (
+                    <>
+                      <Spinner />
+                      Cargando...
+                    </>
+                  ) : (
+                    "Ingresar"
+                  )}
                 </button>
               </div>
             </form>
