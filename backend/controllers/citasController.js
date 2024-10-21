@@ -1,8 +1,48 @@
 const db = require('../config/database');
 
+// Controlador que maneja las operaciones relacionadas a citas
 class CitasController {
     constructor() {
     }
+
+    async crearCita(req, res){
+
+        const connection = db.promise(); // Usar promesas para las querys a la BD
+        
+        try{
+            // Necesita id_profesional, id de adulto mayor es null
+            const { id_profesional, hora_inicio, hora_termino, fecha, atencion_a_domicilio } = req.body;
+
+            // Iniciar transaccion
+            await connection.beginTransaction();
+    
+            const id_estado = 1 ; // "Pendiente" por defecto
+            const id_resolucion = 1; // "No realizado" por defecto
+            const asistencia = 0; // No asiste por defecto
+
+            // Insertar en la tabla `cita`
+            const [result] = await connection.query(`
+                INSERT INTO cita 
+                  (id_cita, id_profesional, id_estado, id_resolucion, fecha, hora_inicio, hora_termino, 
+                  asistencia, atencion_a_domicilio)
+                VALUES 
+                  (NULL, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                [ id_profesional, id_estado, id_resolucion, fecha, hora_inicio, hora_termino, 
+                  asistencia, atencion_a_domicilio ]);
+
+            // Confirmar la transaccion
+            await connection.commit();
+
+            // Retornar 200: Operacion Exitosa
+            res.status(200).json({ message: 'Cita creada exitosamente', id_cita: result.insertId });
+        } catch (err) {
+            // Si ocurre error revertir transaccion
+            await connection.rollback();
+            // Mejorar errores
+            res.status(500).send(err.message);
+        }
+    } 
+
 
     consultarCitas(req, res){
         try{

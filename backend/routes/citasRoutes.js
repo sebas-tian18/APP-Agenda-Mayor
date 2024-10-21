@@ -4,6 +4,7 @@ const citasController = require('../controllers/citasController');
 
 
 router.get('/', citasController.consultarCitas);
+router.post('/', citasController.crearCita);
 router.get('/:id/noagendadas', citasController.consultarCitasnotomadas);
 
 module.exports = router;
