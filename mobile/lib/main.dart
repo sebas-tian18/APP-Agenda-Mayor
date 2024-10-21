@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/widgets/theme_notifier.dart'; // Asegúrate de que esta ruta sea correcta
-import 'package:mobile/widgets/navigation_bar.dart';
+import 'package:mobile/screens/login_screen.dart'; // Importar screen de inicio
 
 void main() {
   Intl.defaultLocale = 'es_ES'; // Configura el idioma a español
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
                 ? Colors.black87
                 : Colors.grey.shade200,
           ),
-          home: NavigationMenu(),
+          home: LoginScreen(), // Al entrar se muestra el login
         );
       },
     );

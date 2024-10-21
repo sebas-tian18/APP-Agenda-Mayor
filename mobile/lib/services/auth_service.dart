@@ -5,68 +5,68 @@ final dio = Dio();
 class AuthResponse {
   final bool isAuthenticated;
   final String message;
+  final String? token; // Almacenar el token
 
-  AuthResponse({required this.isAuthenticated, required this.message});
+  AuthResponse(
+      {required this.isAuthenticated, required this.message, this.token});
 }
 
-Future<AuthResponse> userLogin(String correo, String contrasena) async {
-  try {
-    // crear Map para enviar los datos
-    var data = {
-      "correo": correo,
-      "contrasena": contrasena,
-    };
+class AuthService {
+  // Endpoint del login en el backend
+  final String _baseUrl = 'http://10.0.2.2:3000/api/login';
 
-    final response = await dio.post(
-      'http://10.0.2.2:3000/usuarios/login',
-      data: data, // Map
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      ),
-    );
+  Future<AuthResponse> userLogin(String correo, String contrasena) async {
+    try {
+      var data = {
+        "correo": correo,
+        "contrasena": contrasena,
+      };
 
-    if (response.statusCode == 200) {
-      return AuthResponse(
-          isAuthenticated: true, message: 'Autenticación exitosa');
-    } else {
-      return AuthResponse(isAuthenticated: false, message: 'Error desconocido');
-    }
-  } catch (e) {
-    // Si el error es por parte de Dio
-    if (e is DioException) {
-      if (e.response != null) {
-        // Se manejan errores basados en el codigo de estado enviado por la API
-        if (e.response?.statusCode == 400) {
-          return AuthResponse(
-              isAuthenticated: false, message: 'Solicitud incorrecta');
-        } else if (e.response?.statusCode == 404) {
-          return AuthResponse(
-              isAuthenticated: false, message: 'Correo no registrado');
-        } else if (e.response?.statusCode == 401) {
-          return AuthResponse(
-              isAuthenticated: false,
-              message: 'Contraseña incorrecta, intente nuevamente');
-        } else if (e.response?.statusCode == 500) {
-          return AuthResponse(
-              isAuthenticated: false,
-              message: 'Error en el servidor, intente de nuevo mas tarde');
-        }
+      // Post al endpoint con los datos correo y contrasena, header json
+      final response = await dio.post(
+        _baseUrl,
+        data: data,
+        options: Options(headers: {'Content-Type': 'application/json'}),
+      );
+
+      // Si no hay errores
+      if (response.statusCode == 200) {
+        final token = response.data['token']; // Se obtiene el token
+        return AuthResponse(
+          isAuthenticated: true,
+          message: 'Autenticación exitosa',
+          token: token, // Devolver el token
+        );
+      } else {
+        return _handleHttpError(response.statusCode);
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        return _handleHttpError(e.response?.statusCode);
       }
       return AuthResponse(
           isAuthenticated: false, message: 'Error en la red o conexión');
     }
-    // Mostrar la excepcion inesperada
-    throw Exception('Error inesperado: $e');
+  }
+
+  AuthResponse _handleHttpError(int? statusCode) {
+    switch (statusCode) {
+      case 400:
+        return AuthResponse(
+            isAuthenticated: false, message: 'Solicitud incorrecta');
+      case 404:
+        return AuthResponse(
+            isAuthenticated: false, message: 'Correo no registrado');
+      case 401:
+        return AuthResponse(
+            isAuthenticated: false, message: 'Contraseña incorrecta');
+      case 500:
+        return AuthResponse(
+            isAuthenticated: false,
+            message: 'Error en el servidor, intente de nuevo más tarde');
+      default:
+        return AuthResponse(
+            isAuthenticated: false, message: 'Error desconocido');
+    }
   }
 }
-
-// Template para requests:
-//Future<void> http() async {
-//  try {
-//    //aqui anadir la logica de envio o recibo
-//  } catch (e) {
-//    print('Error: $e');
-//  }
-//}

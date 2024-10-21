@@ -11,6 +11,9 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
+
+  final AuthService _authService = AuthService(); // Instancia de AuthService
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -28,7 +31,7 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      AuthResponse authResponse = await userLogin(
+      AuthResponse authResponse = await _authService.userLogin(
           _emailController.text, _passwordController.text); // llamar a la API
 
       if (!mounted) return; // Verificar si el widget sigue montado
