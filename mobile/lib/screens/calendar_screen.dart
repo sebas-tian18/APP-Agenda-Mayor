@@ -25,6 +25,13 @@ class CalendarScreenState extends State<CalendarScreen> {
 // Cargar las citas guardadas desde SharedPreferences
   Future<void> _loadAppointments() async {
     final prefs = await SharedPreferences.getInstance();
+
+    // Obtener el id del usuario logueado, puedes cambiarlo según cómo almacenes el ID
+    // final String userId = 'userID'; // Reemplaza esto con la obtención dinámica del ID
+
+    // Cargar citas específicas para este usuario
+    // final storedAppointments = prefs.getStringList('appointments_$userId') ?? [];
+
     final storedAppointments = prefs.getStringList('appointments') ?? [];
 
     List<Meeting> loadedMeetings = storedAppointments.map((appointment) {
@@ -79,10 +86,8 @@ class CalendarScreenState extends State<CalendarScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                height: size.height *
-                    0.08, // Altura dinámica para el contenedor de Tabs
-                margin: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.04), // Margen dinámico
+                height: size.height * 0.08,
+                margin: EdgeInsets.symmetric(horizontal: size.width * 0.04),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: AppColors.secondaryColor,

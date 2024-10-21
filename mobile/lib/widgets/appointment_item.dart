@@ -4,9 +4,14 @@ import 'package:mobile/colors.dart';
 class AppointmentItem extends StatelessWidget {
   final String title;
   final List<Map<String, String>> appointments;
+  final String emptyMessage;
 
-  const AppointmentItem(
-      {super.key, required this.title, required this.appointments});
+  const AppointmentItem({
+    super.key,
+    required this.title,
+    required this.appointments,
+    this.emptyMessage = 'No hay citas disponibles',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +49,7 @@ class AppointmentItem extends StatelessWidget {
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: size.width * 0.06),
-                      overflow: TextOverflow.ellipsis, // Agregado
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Flexible(
@@ -54,7 +59,7 @@ class AppointmentItem extends StatelessWidget {
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: size.width * 0.06),
-                      overflow: TextOverflow.ellipsis, // Agregado
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -62,18 +67,30 @@ class AppointmentItem extends StatelessWidget {
             ),
             SizedBox(height: size.height * 0.02),
             Expanded(
-              child: ListView(
-                children: appointments.map((appointment) {
-                  return _appointmentTile(
-                      appointment['title']!,
-                      appointment['date']!,
-                      appointment['time']!,
-                      appointment['name']!,
-                      appointment['location']!,
-                      size,
-                      theme);
-                }).toList(),
-              ),
+              child: appointments.isEmpty
+                  ? Center(
+                      child: Text(
+                        emptyMessage,
+                        style: TextStyle(
+                          fontSize: size.width * 0.05,
+                          fontWeight: FontWeight.bold,
+                          color: theme.textTheme.bodyLarge!.color,
+                        ),
+                      ),
+                    )
+                  : ListView(
+                      children: appointments.map((appointment) {
+                        return _appointmentTile(
+                          appointment['title']!,
+                          appointment['date']!,
+                          appointment['time']!,
+                          appointment['name']!,
+                          appointment['location']!,
+                          size,
+                          theme,
+                        );
+                      }).toList(),
+                    ),
             ),
           ],
         ),
@@ -114,7 +131,6 @@ class AppointmentItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    // Agregado
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -124,7 +140,6 @@ class AppointmentItem extends StatelessWidget {
                             Icon(Icons.calendar_today, color: Colors.green),
                             SizedBox(width: 10),
                             Flexible(
-                              // Agregado
                               child: Text(
                                 "Fecha: $date",
                                 style: TextStyle(
@@ -132,7 +147,7 @@ class AppointmentItem extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: theme.textTheme.bodyLarge!.color,
                                 ),
-                                overflow: TextOverflow.ellipsis, // Agregado
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -143,7 +158,6 @@ class AppointmentItem extends StatelessWidget {
                             Icon(Icons.access_time, color: Colors.green),
                             SizedBox(width: 10),
                             Flexible(
-                              // Agregado
                               child: Text(
                                 "Hora: $time",
                                 style: TextStyle(
@@ -151,7 +165,7 @@ class AppointmentItem extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: theme.textTheme.bodyLarge!.color,
                                 ),
-                                overflow: TextOverflow.ellipsis, // Agregado
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -162,7 +176,6 @@ class AppointmentItem extends StatelessWidget {
                             Icon(Icons.person, color: Colors.green),
                             SizedBox(width: 10),
                             Flexible(
-                              // Agregado
                               child: Text(
                                 "Profesional: $name",
                                 style: TextStyle(
@@ -170,7 +183,7 @@ class AppointmentItem extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: theme.textTheme.bodyLarge!.color,
                                 ),
-                                overflow: TextOverflow.ellipsis, // Agregado
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -181,7 +194,6 @@ class AppointmentItem extends StatelessWidget {
                             Icon(Icons.location_on, color: Colors.green),
                             SizedBox(width: 10),
                             Flexible(
-                              // Agregado
                               child: Text(
                                 "Ubicación: $location",
                                 style: TextStyle(
@@ -189,7 +201,7 @@ class AppointmentItem extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: theme.textTheme.bodyLarge!.color,
                                 ),
-                                overflow: TextOverflow.ellipsis, // Agregado
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],

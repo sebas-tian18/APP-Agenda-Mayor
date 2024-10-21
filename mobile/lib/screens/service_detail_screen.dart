@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/colors.dart';
+import 'appointment_screen.dart'; // Asegúrate de importar AppointmentScreen
 
 class ServiceDetailScreen extends StatefulWidget {
   final String label;
@@ -19,6 +20,10 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
   Future<void> _saveAppointment() async {
     if (selectedPredefinedTimeSlot != null) {
       final prefs = await SharedPreferences.getInstance();
+
+      // Obtener el id del usuario logueado, puedes cambiarlo según cómo almacenes el ID
+      // final String userId = 'userID'; // Reemplaza esto con la obtención dinámica del ID
+
       final selectedAppointment = widget.predefinedAppointments.firstWhere(
           (appointment) =>
               '${appointment['date']};${appointment['time']}' ==
@@ -27,8 +32,11 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
       final appointmentString =
           '${widget.label};${selectedAppointment['date']};${selectedAppointment['time']};${selectedAppointment['name']};${selectedAppointment['location']}';
 
+      // Cargar las citas específicas para este usuario
+      // List<String>? appointments = prefs.getStringList('appointments_$userId') ?? [];
       List<String>? appointments = prefs.getStringList('appointments') ?? [];
       appointments.add(appointmentString);
+      // await prefs.setStringList('appointments_$userId', appointments);
       await prefs.setStringList('appointments', appointments);
 
       if (!mounted) return;
@@ -41,7 +49,16 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
               "Has realizado una cita para el $selectedPredefinedTimeSlot"),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(context); // Cierra el diálogo
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AppointmentScreen(), // Redirige a AppointmentScreen
+                  ),
+                );
+              },
               child: const Text("OK"),
             ),
           ],
@@ -54,6 +71,7 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.label)),
       body: Container(
@@ -65,6 +83,9 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
                 itemCount: widget.predefinedAppointments.length,
                 itemBuilder: (context, index) {
                   final appointment = widget.predefinedAppointments[index];
+                  final isSelected = selectedPredefinedTimeSlot ==
+                      '${appointment['date']};${appointment['time']}';
+
                   return Column(
                     children: [
                       InkWell(
@@ -83,7 +104,10 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             ),
                           ),
                           elevation: 6,
-                          color: theme.cardColor,
+                          color: isSelected
+                              ? Colors.green[100]
+                              : theme
+                                  .cardColor, // Cambiar color si está seleccionado
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: Column(
@@ -95,7 +119,9 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                     style: TextStyle(
                                       fontSize: size.width * 0.070,
                                       fontWeight: FontWeight.bold,
-                                      color: theme.textTheme.bodyLarge!.color,
+                                      color: isSelected
+                                          ? Colors.green
+                                          : theme.textTheme.bodyLarge!.color,
                                     ),
                                   ),
                                 ),

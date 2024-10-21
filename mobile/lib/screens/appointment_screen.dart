@@ -22,6 +22,13 @@ class AppointmentScreenState extends State<AppointmentScreen> {
   // Cargar las citas guardadas en SharedPreferences para el usuario
   Future<void> _loadAppointments() async {
     final prefs = await SharedPreferences.getInstance();
+
+    // Obtener el id del usuario logueado, puedes cambiarlo según cómo almacenes el ID
+    // final String userId = 'userID'; // Reemplaza esto con la obtención dinámica del ID
+
+    // Cargar citas específicas para este usuario
+    // final storedAppointments = prefs.getStringList('appointments_$userId') ?? [];
+
     final storedAppointments = prefs.getStringList('appointments') ?? [];
 
     List<Map<String, String>> loadedAppointments =

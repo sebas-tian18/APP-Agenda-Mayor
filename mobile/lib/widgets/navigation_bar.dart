@@ -65,7 +65,7 @@ class NavigationMenu extends StatelessWidget {
               ),
               NavigationDestination(
                 icon: Icon(Icons.book, size: 40),
-                label: 'Administrar',
+                label: 'Agendado',
               ),
               NavigationDestination(
                 icon: Icon(Icons.person_outline, size: 40),
