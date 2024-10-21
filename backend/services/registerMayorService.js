@@ -45,7 +45,7 @@ const registrarAdultoMayor = async (userData) => {
 
       // Insertar en la tabla `direcciones`
       const [resultDireccion] = await connection.query(`
-        INSERT INTO direccion 
+        INSERT INTO direcciones
           (id_direccion, direccion, nombre_sector, tipo_domicilio, zona_rural) 
         VALUES (NULL, ?, ?, ?, ?)`, 
           [userData.direccion, userData.nombre_sector, userData.tipo_domicilio, userData.zona_rural]);
