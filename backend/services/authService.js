@@ -31,7 +31,7 @@ const authUsuario = async (correo, contrasena) => {
         const token = generarToken({ id_usuario, nombre_usuario, nombre_rol });
         
         // Retornar el token junto a un mensaje de exito
-        return { success: true, message: 'Autenticación exitosa', token: token };
+        return { success: true, message: 'Autenticación exitosa', token };
     } catch (error) {
         throw error; // Devuelve el error que manejara el controlador
     }

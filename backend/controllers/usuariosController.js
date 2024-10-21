@@ -1,6 +1,4 @@
 const db = require('../config/database');
-const { crearUsuarioBD } = require('../services/usuariosService');
-const { authUsuario } = require('../services/authService');
 
 class UsuariosController{
     constructor(){
@@ -19,45 +17,6 @@ class UsuariosController{
 
         } catch (err) {
             res.status(500).send(err.message);
-        }
-    }
-
-    async crearUsuario(req, res){
-      //TODO: Mejorar codigos http
-      try {
-          const result = await crearUsuarioBD(req.body);
-          res.status(201).json(result);
-      } catch (error) {
-          console.error('Error al crear usuario:', error.message); // Mostrar el error en consola
-          res.status(500).json({ error: error.message }); // Mostrar el mensaje del error en la respuesta
-      }
-    }
-
-    async authUsuario(req,res){
-        const {correo,contrasena} = req.body;
-
-        // Verificar que el correo y contrasena son validos
-        if (!correo || !contrasena) {
-          return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
-        }
-
-        try {
-            // Ejecuta la autenticacion asincrona
-            const result = await authUsuario(correo, contrasena);
-
-            // Si las credenciales son correctas
-            if (result.success) {
-                // Enviar el token en la respuesta JSON (Bearer token)
-                return res.status(200).json({ // Mostrar mensaje de exito
-                    message: result.message,
-                    token: result.token // Incluir el token en la respuesta
-                });
-            } else {
-                res.status(401).json({ message: result.message }); // 401: No Autorizado
-            }
-
-        } catch (error) {
-            res.status(500).json({ error: 'Error en la autenticación' });
         }
     }
 
@@ -84,7 +43,10 @@ class UsuariosController{
     eliminarUsuario(req, res){
         const {id} = req.params;
         try{
-            db.query('DELETE FROM usuario WHERE id_usuario = ?', [id],
+            db.query(`
+                DELETE 
+                FROM usuario 
+                WHERE id_usuario = ?`, [id],
                 (err, rows) => {
                     if(err){
                         res.status(400).send(err);

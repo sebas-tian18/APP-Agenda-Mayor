@@ -1,17 +1,19 @@
 const db = require('../config/database');
 const { hashPassword } = require('../utils/passwordUtils');
 
-// Contiene la logica para manejar los datos de usuarios
+// Contiene logica para registrar los datos de los adultos mayores
 
-const crearUsuarioBD = async (userData) => {
+const registrarAdultoMayor = async (userData) => {
 
   const connection = db.promise();
     
   try {
       rsh_valido = false;
       // Comprobar si el correo esta registrado
-      const [existeUsuario] = await connection.query(
-        `SELECT * FROM usuario WHERE email = ? OR rut = ?`, 
+      const [existeUsuario] = await connection.query(`
+        SELECT * 
+        FROM usuario 
+        WHERE email = ? OR rut = ?`, 
         [userData.email, userData.rut]
       );
 
@@ -27,24 +29,25 @@ const crearUsuarioBD = async (userData) => {
 
       // Insertar en la tabla `usuario`
 
-      const ID_ROL_ADULTO_MAYOR = 3;
+      const ID_ROL_ADULTO_MAYOR = 3; // 1 = admin, 2 = profesional, 3 = adulto_mayor
 
-      const [resultUsuario] = await connection.query(`INSERT INTO usuario
-          (id_usuario, rut, nombre_usuario, apellido_paterno, apellido_materno, fecha_nacimiento,
-          telefono, email, password_hash, sexo, nacionalidad, id_rol)
-          VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-          [
-              userData.rut, userData.nombre_usuario, userData.apellido_paterno, 
-              userData.apellido_materno, userData.fecha_nacimiento, userData.telefono, 
-              userData.email, hashedPassword, userData.sexo, userData.nacionalidad, ID_ROL_ADULTO_MAYOR
-          ]);
-      
+      const [resultUsuario] = await connection.query(`
+        INSERT INTO usuario 
+          (id_usuario, rut, nombre_usuario, apellido_paterno, apellido_materno, 
+          fecha_nacimiento, telefono, email, password_hash, sexo, nacionalidad, id_rol)
+        VALUES 
+          (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        [ userData.rut, userData.nombre_usuario, userData.apellido_paterno, 
+          userData.apellido_materno, userData.fecha_nacimiento, userData.telefono, 
+          userData.email, hashedPassword, userData.sexo, userData.nacionalidad, ID_ROL_ADULTO_MAYOR ]);
+
       const id_usuario = resultUsuario.insertId; // Obtener id del nuevo usuario
 
       // Insertar en la tabla `direcciones`
-      const [resultDireccion] = await connection.query(`INSERT INTO direccion 
+      const [resultDireccion] = await connection.query(`
+        INSERT INTO direccion 
           (id_direccion, direccion, nombre_sector, tipo_domicilio, zona_rural) 
-          VALUES (NULL, ?, ?, ?, ?)`, 
+        VALUES (NULL, ?, ?, ?, ?)`, 
           [userData.direccion, userData.nombre_sector, userData.tipo_domicilio, userData.zona_rural]);
 
       const id_direccion = resultDireccion.insertId; // Obtener id de la nueva direccion
@@ -61,16 +64,19 @@ const crearUsuarioBD = async (userData) => {
       console.log(edadCalculada);
 
       // Insertar en la tabla `adulto_mayor`
-      await connection.query(`INSERT INTO adulto_mayor 
+      await connection.query(`
+        INSERT INTO adulto_mayor 
           (id_adulto_mayor, id_usuario, id_direccion, edad, rsh_valido, problemas_movilidad)
-          VALUES (NULL, ?, ?, ?, ?, ?)`, 
-          [id_usuario, id_direccion, edadCalculada, userData.rsh_valido, userData.problemas_movilidad]);
+        VALUES 
+          (NULL, ?, ?, ?, ?, ?)`,
+        [id_usuario, id_direccion, edadCalculada, userData.rsh_valido, userData.problemas_movilidad]);
 
       // Confirmar transaccion
       await connection.commit();
       
       // Retornar el id del usuario creado
       return { id_usuario }; 
+      
   } catch (error) {
       // Si ocurre error hacer rollback
       console.log(error);
@@ -79,4 +85,4 @@ const crearUsuarioBD = async (userData) => {
   }
 };
 
-module.exports = { crearUsuarioBD };
+module.exports = { registrarAdultoMayor };
