@@ -1,19 +1,20 @@
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart'; // Importar dio para manejo HTTP
+import 'package:mobile/services/jwt_service.dart'; // Importar JwtService
 
 final dio = Dio();
 
 class AuthResponse {
   final bool isAuthenticated;
   final String message;
-  final String? token; // Almacenar el token
+  final String? token;
 
   AuthResponse(
       {required this.isAuthenticated, required this.message, this.token});
 }
 
 class AuthService {
-  // Endpoint del login en el backend
-  final String _baseUrl = 'http://10.0.2.2:3000/api/login';
+  final String _baseUrl = 'http://10.0.2.2:3000/api/login'; // Endpoint login
+  final JwtService _jwtService = JwtService(); // Instancia de JwtService
 
   Future<AuthResponse> userLogin(String correo, String contrasena) async {
     try {
@@ -31,11 +32,12 @@ class AuthService {
 
       // Si no hay errores
       if (response.statusCode == 200) {
-        final token = response.data['token']; // Se obtiene el token
+        final token = response.data['token']; // Obtener token
+        await _jwtService.saveToken(token); // Guardar el token
         return AuthResponse(
           isAuthenticated: true,
           message: 'Autenticación exitosa',
-          token: token, // Devolver el token
+          token: token,
         );
       } else {
         return _handleHttpError(response.statusCode);
