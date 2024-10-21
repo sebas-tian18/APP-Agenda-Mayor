@@ -2,6 +2,8 @@ const db = require('../config/database');
 const argon2 = require('argon2');
 const { generarToken } = require('./jwtService'); // Importar la funcion para generar jwt
 
+// Este servicio autentica al usuario en el login
+
 const authUsuario = async (correo, contrasena) => {
     try {
         // Obtener los datos que se enviaran en el payload del JWT 

@@ -1,5 +1,7 @@
 const db = require('../config/database');
 const { registrarAdultoMayor  } = require('../services/registerMayorService');
+const { registrarAdmin } = require('../services/registerAdminService');
+const { registrarProfesional } = require('../services/registerProfesService');
 const { authUsuario } = require('../services/authService');
 
 class AuthController {
@@ -16,7 +18,27 @@ class AuthController {
             res.status(500).json({ error: error.message }); // Mostrar el mensaje del error en la respuesta
         }
     }
-  
+
+    async crearAdmin(req, res){
+        try {
+            const result = await registrarAdmin(req.body); // Servicio registerAdmin
+            res.status(201).json(result);
+        } catch (error) {
+            console.error('Error al crear usuario:', error.message);
+            res.status(500).json({ error: error.message }); 
+        }
+    }
+
+    async crearProfesional(req, res){
+        try {
+            const result = await registrarProfesional(req.body); // Servicio registerProfesional
+            res.status(201).json(result);
+        } catch (error) {
+            console.error('Error al crear usuario:', error.message);
+            res.status(500).json({ error: error.message });
+        }
+    }
+
     async authUsuario(req,res){
         const {correo,contrasena} = req.body;
   
