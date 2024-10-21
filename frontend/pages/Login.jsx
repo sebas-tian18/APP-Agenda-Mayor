@@ -24,7 +24,7 @@ const Login = () => {
   
     try {
       // realiza POST al backend
-      const response = await fetch("http://localhost:3000/usuarios/login", {
+      const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

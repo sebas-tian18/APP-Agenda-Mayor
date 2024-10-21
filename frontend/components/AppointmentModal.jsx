@@ -10,7 +10,7 @@ function AppointmentModal({ service, onClose }) {
       try {
         setLoading(true)
         // Asumimos que el id_especialidad corresponde al id del servicio
-        const response = await fetch(`http://localhost:3000/citas/${service.id}/noagendadas`)
+        const response = await fetch(`http://localhost:3000/api/citas/${service.id}/noagendadas`)
         if (!response.ok) {
           throw new Error('No se pudieron obtener las citas disponibles')
         }

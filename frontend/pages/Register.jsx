@@ -81,7 +81,7 @@ const Register = () => {
         data.append("rsh_archivo", rshArchivo);
       }
     */
-      const response = await fetch("http://localhost:3000/usuarios", {
+      const response = await fetch("http://localhost:3000/register", {
         method: "POST",
         //body: data, // Estaba usando multipart/form-data en lugar de application/json
         headers: {
