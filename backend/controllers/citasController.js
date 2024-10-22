@@ -11,7 +11,8 @@ class CitasController {
         
         try{
             // Necesita id_profesional, id de adulto mayor es null
-            const { id_profesional, hora_inicio, hora_termino, fecha, atencion_a_domicilio } = req.body;
+            const { id_profesional, fecha, hora_inicio, hora_termino, atencion_a_domicilio, 
+                id_adulto_mayor, id_tipo_servicio } = req.body;
 
             // Iniciar transaccion
             await connection.beginTransaction();
@@ -24,11 +25,11 @@ class CitasController {
             const [result] = await connection.query(`
                 INSERT INTO cita 
                   (id_cita, id_profesional, id_estado, id_resolucion, fecha, hora_inicio, hora_termino, 
-                  asistencia, atencion_a_domicilio)
+                  asistencia, atencion_a_domicilio, id_adulto_mayor, id_tipo_servicio)
                 VALUES 
-                  (NULL, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                  (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                 [ id_profesional, id_estado, id_resolucion, fecha, hora_inicio, hora_termino, 
-                  asistencia, atencion_a_domicilio ]);
+                  asistencia, atencion_a_domicilio, id_adulto_mayor, id_tipo_servicio ]);
 
             // Confirmar la transaccion
             await connection.commit();
@@ -43,10 +44,34 @@ class CitasController {
         }
     } 
 
-
-    consultarCitas(req, res){
+    // Se muestran las citas junto a los datos de profesional, centro, direccion, tipo de servicio
+    async consultarCitas(req, res){
         try{
-            db.query('SELECT * FROM cita', 
+            db.query(`
+                SELECT 
+                    c.id_cita,
+                    c.fecha,
+                    c.hora_inicio,
+                    c.hora_termino,
+                    c.asistencia,
+                    c.atencion_a_domicilio,
+                    CONCAT(u.nombre_usuario, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_profesional,
+                    CONCAT(a.nombre_usuario, ' ', a.apellido_paterno, ' ', a.apellido_materno) AS nombre_asistente,
+                    ts.nombre_tipo_servicio,
+                    e.nombre_estado,
+                    r.nombre_resolucion,
+                    cat.nonbre_categoria AS nombre_categoria,
+                    esp.nombre_especialidad AS nombre_especialidad
+                FROM cita c
+                LEFT JOIN profesional p ON c.id_profesional = p.id_profesional
+                LEFT JOIN usuario u ON p.id_usuario = u.id_usuario
+                LEFT JOIN adulto_mayor am ON c.id_adulto_mayor = am.id_adulto_mayor
+                LEFT JOIN usuario a ON am.id_usuario = a.id_usuario
+                LEFT JOIN tipos_servicio ts ON c.id_tipo_servicio = ts.id_tipo_servicio
+                LEFT JOIN estado e ON c.id_estado = e.id_estado
+                LEFT JOIN resolucion r ON c.id_resolucion = r.id_resolucion
+                LEFT JOIN categoria cat ON ts.id_categoria = cat.id_categoria
+                LEFT JOIN especialidad esp ON ts.id_especialidad = esp.id_especialidad;`,
                 (err, rows) => {
                     if(err){
                         res.status(400).send(err);
