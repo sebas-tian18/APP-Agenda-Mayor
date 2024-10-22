@@ -17,6 +17,7 @@ const Register = () => {
     Rcontrasena: "",
     telefono: "",
     direccion: "",
+    direccion_numero: "",
     tipo_domicilio: "casa",
     sexo: "M",
     nacionalidad: "CL",
@@ -276,7 +277,21 @@ const Register = () => {
                       onChange={handleChange}
                     />
                   </div>
+        
+                  <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
+                    <label className="block text-gray-700">Dirección Numero:</label>
+                    <input
+                      type="text"
+                      name="direccion_numero"
+                      className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
+                      placeholder="123"
+                      value={formData.direccion_numero}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  </div>
+                <div>
                     <label className="block text-gray-700">
                       Tipo de Domicilio:
                     </label>
