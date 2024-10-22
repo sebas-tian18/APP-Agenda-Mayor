@@ -133,31 +133,33 @@ class CitasController {
 
 
     async agendarCita(req, res) {
-        const { id_cita } = req.params; // ID de la cita que se va a agendar
-        const { id_adulto_mayor } = req.body; // ID del adulto mayor que agenda la cita
-
+        const { id_cita, id_adulto_mayor } = req.body; // ID de la cita que se va a agendar
+        const connection = db.promise(); // Usar promesas para las querys a la BD
         // Verificar que los parámetros están presentes
         if (!id_adulto_mayor || !id_cita) {
             return res.status(400).json({ message: 'Faltan datos requeridos para agendar la cita' });
         }
-
+        
         try {
+            await connection.beginTransaction();
             // Verificar si la cita ya ha sido tomada
-            const citaExistente = await db.query('SELECT * FROM cita WHERE id_cita = ? AND id_adulto_mayor IS NULL', [id_cita]);
+            const citaExistente = await connection.query('SELECT * FROM cita WHERE id_cita = ? AND id_adulto_mayor IS NULL', [id_cita]);
             
             if (citaExistente.length === 0) {
                 return res.status(404).json({ message: 'La cita ya ha sido tomada o no existe' });
             }
-
             // Actualizar la cita asignándole el id_adulto_mayor
-            const result = await db.query('UPDATE cita SET id_adulto_mayor = ? WHERE id_cita = ?', [id_adulto_mayor, id_cita]);
+            const result = await connection.query('UPDATE cita SET id_adulto_mayor = ? WHERE id_cita = ?', [id_adulto_mayor, id_cita]);
 
             if (result.affectedRows > 0) {
                 res.status(200).json({ message: 'Cita agendada con éxito' });
             } else {
                 res.status(500).json({ message: 'No se pudo agendar la cita' });
             }
+
+            await connection.commit();
         } catch (error) {
+            await connection.rollback();
             console.error('Error al agendar cita:', error.message);
             res.status(500).json({ message: 'Error del servidor', error });
         }

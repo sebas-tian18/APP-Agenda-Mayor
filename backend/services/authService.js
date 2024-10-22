@@ -9,9 +9,10 @@ const authUsuario = async (correo, contrasena) => {
         // Obtener los datos que se enviaran en el payload del JWT 
         // (usando aliases (u y r) para legibilidad)
         const [rows] = await db.promise().query(`
-            SELECT u.id_usuario, u.password_hash, u.nombre_usuario, r.nombre_rol 
+            SELECT u.id_usuario, u.password_hash, u.nombre_usuario, r.nombre_rol, am.id_adulto_mayor
             FROM usuario u
             JOIN rol r ON u.id_rol = r.id_rol 
+            JOIN adulto_mayor am ON u.id_usuario = am.id_usuario
             WHERE u.email = ?`,
             [correo]);
 
@@ -21,7 +22,7 @@ const authUsuario = async (correo, contrasena) => {
         }
 
         // Obtener los valores de las columnas necesarias
-        const { id_usuario, nombre_usuario, nombre_rol, password_hash } = rows[0];
+        const { id_usuario, nombre_usuario, nombre_rol, password_hash, id_adulto_mayor } = rows[0];
 
         // Verificar la contrasena con el hash almacenado
         const isPasswordValid = await argon2.verify(password_hash, contrasena);
@@ -30,7 +31,7 @@ const authUsuario = async (correo, contrasena) => {
         }
 
         // Generar el token JWT con los datos necesarios
-        const token = generarToken({ id_usuario, nombre_usuario, nombre_rol });
+        const token = generarToken({ id_usuario, nombre_usuario, nombre_rol, id_adulto_mayor });
         
         // Retornar el token junto a un mensaje de exito
         return { success: true, message: 'Autenticación exitosa', token };
