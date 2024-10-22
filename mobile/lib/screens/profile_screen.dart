@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Importar Provider
 import 'package:mobile/widgets/theme_notifier.dart'; // Importar el ThemeNotifier
 import 'package:mobile/widgets/profile_list_item.dart';
+import 'package:mobile/services/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
+  final AuthService _authService = AuthService(); // Instancia de AuthService
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -18,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: size.width * 0.2,
-                // backgroundImage: AssetImage('assets/images/profile.jpg'), // Imagen de perfil
+                // backgroundImage: AssetImage('assets/images/profile.jpg'),
               ),
               Align(
                 alignment: Alignment.bottomRight,
@@ -109,6 +112,16 @@ class ProfileScreen extends StatelessWidget {
                   icon: Icons.logout,
                   text: 'Cerrar Sesión',
                   hasNavigation: false,
+                  onTap: () async {
+                    await _authService
+                        .userLogout(); // Llamar a la función de cierre de sesión
+
+                    // Verificar si el contexto sigue montado
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(context,
+                          '/login'); // Redirigir a la pantalla de login
+                    }
+                  },
                 ),
               ],
             ),

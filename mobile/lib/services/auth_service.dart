@@ -14,6 +14,8 @@ class AuthResponse {
 
 class AuthService {
   final String _baseUrl = 'http://10.0.2.2:3000/api/login'; // Endpoint login
+  final String _logoutUrl =
+      'http://10.0.2.2:3000/api/logout'; // Endpoint logout
   final JwtService _jwtService = JwtService(); // Instancia de JwtService
 
   Future<AuthResponse> userLogin(String correo, String contrasena) async {
@@ -23,14 +25,14 @@ class AuthService {
         "contrasena": contrasena,
       };
 
-      // Post al endpoint con los datos correo y contrasena, header json
+// Post al endpoint con los datos correo y contrasena, header json
       final response = await dio.post(
         _baseUrl,
         data: data,
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
-      // Si no hay errores
+// Si no hay errores
       if (response.statusCode == 200) {
         final token = response.data['token']; // Obtener token
         await _jwtService.saveToken(token); // Guardar el token
@@ -48,6 +50,22 @@ class AuthService {
       }
       return AuthResponse(
           isAuthenticated: false, message: 'Error en la red o conexión');
+    }
+  }
+
+  Future<void> userLogout() async {
+    try {
+      // Opcional: Hacer una llamada al servidor para cerrar sesión
+      await dio.post(
+        _logoutUrl,
+        options: Options(headers: {'Content-Type': 'application/json'}),
+      );
+    } catch (e) {
+      // Manejar el error si la llamada falla
+      print('Error cerrando sesión: ${e.toString()}');
+    } finally {
+      // Borrar el token local
+      await _jwtService.deleteToken(); // Implementa este método en JwtService
     }
   }
 

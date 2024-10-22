@@ -38,8 +38,7 @@ class LoginScreenState extends State<LoginScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(authResponse.message) //Mostrar el mensaje de error
-            ),
+            content: Text(authResponse.message)), //Mostrar el mensaje de error
       );
 
       if (authResponse.isAuthenticated) {
@@ -203,19 +202,16 @@ class LoginScreenState extends State<LoginScreen> {
       ),
       child: _isLoading
           ? const SizedBox(
-              width: 20,
               height: 20,
+              width: 20,
               child: CircularProgressIndicator(
-                strokeWidth: 4,
                 color: Colors.white,
+                strokeWidth: 2,
               ),
             )
           : const Text(
-              'Ingresar',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              ),
+              'Iniciar Sesión',
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
     );
   }
