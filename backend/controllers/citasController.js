@@ -133,33 +133,45 @@ class CitasController {
 
 
     async agendarCita(req, res) {
-        const { id_cita, id_adulto_mayor } = req.body; // ID de la cita que se va a agendar
+
         const connection = db.promise(); // Usar promesas para las querys a la BD
-        // Verificar que los parámetros están presentes
-        if (!id_adulto_mayor || !id_cita) {
+        const { id } = req.params; // Obtener el id_cita desde los parámetros de la URL
+        const { id_adulto_mayor } = req.body; // Obtener el id_adulto_mayor desde el cuerpo de la solicitud
+
+        // Verificar que los parametros están presentes
+        if (!id_adulto_mayor || !id) {
             return res.status(400).json({ message: 'Faltan datos requeridos para agendar la cita' });
         }
-        
+
         try {
             await connection.beginTransaction();
-            // Verificar si la cita ya ha sido tomada
-            const citaExistente = await connection.query('SELECT * FROM cita WHERE id_cita = ? AND id_adulto_mayor IS NULL', [id_cita]);
-            
+
+            // Verificar si la cita ya ha sido tomada o si existe
+            const [citaExistente] = await connection.query(
+                'SELECT * FROM cita WHERE id_cita = ? AND id_adulto_mayor IS NULL', 
+                [id]
+            );
+
             if (citaExistente.length === 0) {
+                await connection.rollback();  // Realizar el rollback
                 return res.status(404).json({ message: 'La cita ya ha sido tomada o no existe' });
             }
-            // Actualizar la cita asignándole el id_adulto_mayor
-            const result = await connection.query('UPDATE cita SET id_adulto_mayor = ? WHERE id_cita = ?', [id_adulto_mayor, id_cita]);
+
+            // Actualizar la cita asignandole el id_adulto_mayor
+            const [result] = await connection.query(
+                'UPDATE cita SET id_adulto_mayor = ? WHERE id_cita = ?', 
+                [id_adulto_mayor, id]
+            );
 
             if (result.affectedRows > 0) {
+                await connection.commit();  // Realizar el commit si todo va bien
                 res.status(200).json({ message: 'Cita agendada con éxito' });
             } else {
+                await connection.rollback();
                 res.status(500).json({ message: 'No se pudo agendar la cita' });
             }
-
-            await connection.commit();
         } catch (error) {
-            await connection.rollback();
+            await connection.rollback();  // Si hay un error, asegúrate de hacer rollback
             console.error('Error al agendar cita:', error.message);
             res.status(500).json({ message: 'Error del servidor', error });
         }

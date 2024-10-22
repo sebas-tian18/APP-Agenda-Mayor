@@ -5,10 +5,10 @@ function AppointmentModal({ service, onClose }) {
   const [availableAppointments, setAvailableAppointments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null) // Para mostrar un mensaje de éxito
+  const [successMessage, setSuccessMessage] = useState(null) // Para mostrar un mensaje de exito
   const token = sessionStorage.getItem("token");
   const user = jwtDecode(token);
-  const userid = user.id_adulto_mayor; // Obtener ID desde sessionStorage (o donde lo tengas guardado)
+  const userid = user.id_adulto_mayor; // Obtener ID desde sessionStorage
 
   useEffect(() => {
     const fetchAvailableAppointments = async () => {
@@ -32,14 +32,14 @@ function AppointmentModal({ service, onClose }) {
 
   const handleAppointmentSelect = async (appointmentId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/citas/agendar`, {
+      const response = await fetch(`http://localhost:3000/api/citas/agendar/${appointmentId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-           id_adulto_mayor: userid,
-           id_cita: appointmentId})
+           id_adulto_mayor: userid
+        })
       })
 
       if (!response.ok) {
@@ -49,7 +49,7 @@ function AppointmentModal({ service, onClose }) {
       const data = await response.json()
       setSuccessMessage('Cita agendada con éxito')
 
-      // Aquí puedes manejar la actualización de la lista de citas o redirigir al usuario
+      // Aqui se maneja la actualizacion de la lista de citas
       setAvailableAppointments(prev => prev.filter(appointment => appointment.id_cita !== appointmentId)) // Remover la cita agendada de la lista
     } catch (err) {
       setError(err.message)
