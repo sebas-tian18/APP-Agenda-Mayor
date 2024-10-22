@@ -16,7 +16,8 @@ const Register = () => {
     contrasena: "",
     Rcontrasena: "",
     telefono: "",
-    direccion: "",
+    calle: "",
+    numero: "",
     direccion_numero: "",
     tipo_domicilio: "casa",
     sexo: "M",
@@ -270,10 +271,10 @@ const Register = () => {
                     <label className="block text-gray-700">Dirección:</label>
                     <input
                       type="text"
-                      name="direccion"
+                      name="calle"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="Av. Principal 123"
-                      value={formData.direccion}
+                      value={formData.calle}
                       onChange={handleChange}
                     />
                   </div>
@@ -283,10 +284,10 @@ const Register = () => {
                     <label className="block text-gray-700">Dirección Numero:</label>
                     <input
                       type="text"
-                      name="direccion_numero"
+                      name="numero"
                       className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                       placeholder="123"
-                      value={formData.direccion_numero}
+                      value={formData.numero}
                       onChange={handleChange}
                     />
                   </div>

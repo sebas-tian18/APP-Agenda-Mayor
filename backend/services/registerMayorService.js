@@ -43,12 +43,12 @@ const registrarAdultoMayor = async (userData) => {
 
       const id_usuario = resultUsuario.insertId; // Obtener id del nuevo usuario
 
-      // Insertar en la tabla `direcciones`
+      // Insertar en la tabla `direccion`
       const [resultDireccion] = await connection.query(`
-        INSERT INTO direcciones
-          (id_direccion, direccion, nombre_sector, tipo_domicilio, zona_rural) 
-        VALUES (NULL, ?, ?, ?, ?)`, 
-          [userData.direccion, userData.nombre_sector, userData.tipo_domicilio, userData.zona_rural]);
+        INSERT INTO direccion
+          (id_direccion, calle, numero, nombre_sector, tipo_domicilio, zona_rural) 
+        VALUES (NULL, ?, ?, ?, ?, ?)`, 
+          [ userData.calle, userData.numero ,userData.nombre_sector, userData.tipo_domicilio, userData.zona_rural]);
 
       const id_direccion = resultDireccion.insertId; // Obtener id de la nueva direccion
 
