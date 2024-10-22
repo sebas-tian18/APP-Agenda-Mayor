@@ -89,30 +89,31 @@ class CitasController {
         const {id} = req.params;
         try {
             const query = `
-                        SELECT 
-                            c.id_cita, 
-                            c.fecha,
-                            c.hora_inicio,
-                            c.hora_termino,
-                            u.nombre_usuario AS nombre_profesional,
-                            u.apellido_paterno AS apellido_profesional,
-                            u.apellido_materno AS apellido_materno_profesional,
-                            e.id_especialidad,
-                            e.especialidad
-                        FROM 
-                            cita c
-                        JOIN 
-                            profesional p ON c.id_profesional = p.id_profesional
-                        JOIN 
-                            usuario u ON p.id_usuario = u.id_usuario
-                        JOIN 
-                            especialidad e ON p.id_especialidad = e.id_especialidad
-                        WHERE 
-                            c.id_adulto_mayor IS NULL
-                        AND
-                            e.id_especialidad = ?
-                    `;
-
+                    SELECT 
+                        c.id_cita,
+                        c.fecha,
+                        c.hora_inicio,
+                        c.hora_termino,
+                        c.asistencia,
+                        c.atencion_a_domicilio,
+                        CONCAT(u.nombre_usuario, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_profesional,
+                        ts.nombre_tipo_servicio,
+                        e.nombre_estado,
+                        r.nombre_resolucion,
+                        cat.nonbre_categoria AS nombre_categoria,
+                        esp.nombre_especialidad AS nombre_especialidad
+                    FROM cita c
+                    LEFT JOIN profesional p ON c.id_profesional = p.id_profesional
+                    LEFT JOIN usuario u ON p.id_usuario = u.id_usuario
+                    LEFT JOIN adulto_mayor am ON c.id_adulto_mayor = am.id_adulto_mayor
+                    LEFT JOIN usuario a ON am.id_usuario = a.id_usuario
+                    LEFT JOIN tipos_servicio ts ON c.id_tipo_servicio = ts.id_tipo_servicio
+                    LEFT JOIN estado e ON c.id_estado = e.id_estado
+                    LEFT JOIN resolucion r ON c.id_resolucion = r.id_resolucion
+                    LEFT JOIN categoria cat ON ts.id_categoria = cat.id_categoria
+                    LEFT JOIN especialidad esp ON ts.id_especialidad = esp.id_especialidad
+                    WHERE c.id_adulto_mayor IS NULL
+                    AND esp.id_especialidad = ?;`;
 
             db.query(query,[id],(err, rows) => {
                 if(err){

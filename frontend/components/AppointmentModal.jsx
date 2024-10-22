@@ -42,7 +42,8 @@ function AppointmentModal({ service, onClose }) {
             <div key={appointment.id_cita} className="border p-4 rounded-lg hover:bg-gray-50">
               <p className="font-semibold">{new Date(appointment.fecha).toLocaleDateString()}</p>
               <p>Hora: {appointment.hora_inicio} - {appointment.hora_termino}</p>
-              <p>Profesional: {appointment.nombre_profesional} {appointment.apellido_profesional}</p>
+              <p>Profesional: {appointment.nombre_profesional}</p>
+              <p>Servicio: {appointment.nombre_tipo_servicio}</p>
               <button
                 onClick={() => handleAppointmentSelect(appointment.id_cita)}
                 className="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-secondary transition-colors"
