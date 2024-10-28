@@ -25,11 +25,11 @@ class CitasController {
             const [result] = await connection.query(`
                 INSERT INTO cita 
                   (id_cita, id_profesional, id_estado, id_resolucion, fecha, hora_inicio, hora_termino, 
-                  asistencia, atencion_a_domicilio, id_adulto_mayor, id_tipo_servicio)
+                  asistencia, atencion_a_domicilio, id_adulto_mayor, id_servicio)
                 VALUES 
                   (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                 [ id_profesional, id_estado, id_resolucion, fecha, hora_inicio, hora_termino, 
-                  asistencia, atencion_a_domicilio, id_adulto_mayor, id_tipo_servicio ]);
+                  asistencia, atencion_a_domicilio, id_adulto_mayor, id_servicio ]);
 
             // Confirmar la transaccion
             await connection.commit();
@@ -57,10 +57,10 @@ class CitasController {
                 c.atencion_a_domicilio,
                 CONCAT(u.nombre_usuario, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_profesional,
                 CONCAT(a.nombre_usuario, ' ', a.apellido_paterno, ' ', a.apellido_materno) AS nombre_asistente,
-                ts.nombre_tipo_servicio,
+                ts.nombre_servicio,
                 e.nombre_estado,
                 r.nombre_resolucion,
-                cat.nonbre_categoria AS nombre_categoria,
+                cat.nombre_categoria AS nombre_categoria,
                 esp.nombre_especialidad AS nombre_especialidad,
                 cs.nombre_centro AS nombre_centro,
                 CONCAT(d.calle, ' ', d.numero, ', ', d.nombre_sector) AS direccion_centro
@@ -69,7 +69,7 @@ class CitasController {
             LEFT JOIN usuario u ON p.id_usuario = u.id_usuario
             LEFT JOIN adulto_mayor am ON c.id_adulto_mayor = am.id_adulto_mayor
             LEFT JOIN usuario a ON am.id_usuario = a.id_usuario
-            LEFT JOIN tipos_servicio ts ON c.id_tipo_servicio = ts.id_tipo_servicio
+            LEFT JOIN servicio ts ON c.id_servicio = ts.id_servicio
             LEFT JOIN estado e ON c.id_estado = e.id_estado
             LEFT JOIN resolucion r ON c.id_resolucion = r.id_resolucion
             LEFT JOIN categoria cat ON ts.id_categoria = cat.id_categoria
@@ -101,17 +101,17 @@ class CitasController {
                         c.asistencia,
                         c.atencion_a_domicilio,
                         CONCAT(u.nombre_usuario, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_profesional,
-                        ts.nombre_tipo_servicio,
+                        ts.nombre_servicio,
                         e.nombre_estado,
                         r.nombre_resolucion,
-                        cat.nonbre_categoria AS nombre_categoria,
+                        cat.nombre_categoria AS nombre_categoria,
                         esp.nombre_especialidad AS nombre_especialidad
                     FROM cita c
                     LEFT JOIN profesional p ON c.id_profesional = p.id_profesional
                     LEFT JOIN usuario u ON p.id_usuario = u.id_usuario
                     LEFT JOIN adulto_mayor am ON c.id_adulto_mayor = am.id_adulto_mayor
                     LEFT JOIN usuario a ON am.id_usuario = a.id_usuario
-                    LEFT JOIN tipos_servicio ts ON c.id_tipo_servicio = ts.id_tipo_servicio
+                    LEFT JOIN servicio ts ON c.id_servicio = ts.id_servicio
                     LEFT JOIN estado e ON c.id_estado = e.id_estado
                     LEFT JOIN resolucion r ON c.id_resolucion = r.id_resolucion
                     LEFT JOIN categoria cat ON ts.id_categoria = cat.id_categoria
@@ -157,21 +157,21 @@ class CitasController {
                 return res.status(404).json({ message: 'La cita ya ha sido tomada o no existe' });
             }
 
-            // Actualizar la cita asignandole el id_adulto_mayor
+            // Actualizar la cita asignando el id_adulto_mayor
             const [result] = await connection.query(
                 'UPDATE cita SET id_adulto_mayor = ? WHERE id_cita = ?', 
                 [id_adulto_mayor, id]
             );
 
             if (result.affectedRows > 0) {
-                await connection.commit();  // Realizar el commit si todo va bien
+                await connection.commit();  // Realizar el commit
                 res.status(200).json({ message: 'Cita agendada con éxito' });
             } else {
                 await connection.rollback();
                 res.status(500).json({ message: 'No se pudo agendar la cita' });
             }
         } catch (error) {
-            await connection.rollback();  // Si hay un error, asegúrate de hacer rollback
+            await connection.rollback();  // Si hay error hacer rollback
             console.error('Error al agendar cita:', error.message);
             res.status(500).json({ message: 'Error del servidor', error });
         }
