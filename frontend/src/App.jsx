@@ -16,25 +16,27 @@ import EditarPerfil from "../pages/EditarPerfil";
 import Ajustes from "../pages/Ajustes";
 import Administrador from "../pages/Administrador";
 import ViewCitas from "../pages/ViewCitas";
-// Rutas privadas
-import PrivateRoute from "../components/PrivateRoute";
+// Rutas
+import PrivateRoute from "../routes/PrivateRoute";
+import RedirectRoute from '../routes/RedirectRoute';
 import { AuthProvider } from "../context/AuthContext";
 
 function App() {
   return (
     <AuthProvider>
-        <FontSizeProvider>
-          <div className="App">
-            <Toaster richColors duration={3000} />
-            <Router>
-              <Navbar />
+      <FontSizeProvider>
+        <div className="App min-h-screen flex flex-col" > 
+          <Toaster richColors duration={3000} />
+          <Router>
+            <Navbar />
+            <main className="flex-grow"> 
               <Routes>
-                {/* Rutas públicas */}
-                <Route path="/" element={<Login />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                {/* Rutas públicas (redirecciona si esta autenticado)*/}
+                <Route path="/" element={<RedirectRoute><Login /></RedirectRoute>} />
+                <Route path="/login" element={<RedirectRoute><Login /></RedirectRoute>} /> 
+                <Route path="/register" element={<RedirectRoute><Register /></RedirectRoute>} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
-                {/* Rutas privadas usuario*/}
+                {/* Rutas privadas usuario adulto mayor*/}
                 <Route path="/citas" 
                 element={
                   <PrivateRoute>
@@ -101,10 +103,11 @@ function App() {
                 {/* Rutas privadas admin*/}
                 {/* Rutas privadas profesional*/}
               </Routes>
-              <Footer />
-            </Router>
-          </div>
-        </FontSizeProvider>
+            </main>
+            <Footer />
+          </Router>
+        </div>
+      </FontSizeProvider>
     </AuthProvider>
   );
 }
