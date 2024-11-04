@@ -1,12 +1,13 @@
 import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { FontSizeContext } from "../components/FontSizeContext.jsx";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";  // Importa useNavigate
 import Spinner from "../components/Spinner.jsx"; // Spinner de carga :)
 
 const Login = () => {
-  const { fontSize, increaseFontSize, decreaseFontSize } =
-    useContext(FontSizeContext);
+  const { fontSize, increaseFontSize, decreaseFontSize } = useContext(FontSizeContext);
+  const { login } = useContext(AuthContext); // Acceder a funcion login desde AuthContext
 
   // manejar estado de correo y la contraseña
   const [correo, setCorreo] = useState("");
@@ -39,13 +40,9 @@ const Login = () => {
 
       if (response.ok && data.token) {
         const token = data.token; // Token que viene en la respuesta
-        sessionStorage.setItem("token", token); // Guardar el token en sessionStorage
-        toast.success("Autenticacion exitosa!");
-        // TODO: redirigir usuario (Manejar Rutas Protegidas react-router)
-
-        // Redirige a la página de Home
-        navigate("/Home");
-
+        login(token); // Llama a la funcion login del contexto con el token
+        navigate("/home"); // Redirige al usuario a Home
+        toast.success("¡Autenticación exitosa!");
       } else {
         setError(data.message); // Manejar error si credenciales son incorrectas
         toast.warning(data.message || "Error al autenticar usuario");
