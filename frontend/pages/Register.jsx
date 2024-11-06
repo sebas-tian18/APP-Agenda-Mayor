@@ -18,14 +18,12 @@ const Register = () => {
     telefono: "",
     calle: "",
     numero: "",
-    direccion_numero: "",
     tipo_domicilio: "casa",
     sexo: "M",
     nacionalidad: "CL",
     problemas_movilidad: false,  // Cambiado de movilidad a problemas_movilidad
     nombre_sector: "",
     zona_rural: false,
-    rsh_valido: false,  // Nuevo campo para rsh_valido si es necesario en el frontend
   });
 
   //const [fotoCarnet, setFotoCarnet] = useState(""); // Estado para la foto del carnet
