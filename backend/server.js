@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser'); 
+require('express-async-errors'); // Permite no usar try-catch para errores en funciones asincronas
+
 const app = express();
 const usuariosRoutes = require('./routes/usuariosRoutes.js');
 const citasRoutes = require('./routes/citasRoutes.js');
