@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser'); 
+const errorHandler = require('./middlewares/errorHandler');
 require('express-async-errors'); // Permite no usar try-catch para errores en funciones asincronas
 
 const app = express();
@@ -20,6 +21,9 @@ app.use("/api", publicRoutes); // login y register estan aqui
 app.use("/api/usuarios", usuariosRoutes); // Conjunto de endpoints para CRUD de usuarios
 app.use("/api/citas", citasRoutes);       // Conjunto de endpoints para CRUD de citas
 app.use("/api", registerRoutes);          // Registro para admin y profesional
+
+// Middleware de manejo de errores
+app.use(errorHandler);
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
