@@ -10,33 +10,19 @@ class AuthController {
 
     async crearUsuario(req, res){
         //TODO: Mejorar codigos http
-        try {
-            const result = await registrarAdultoMayor(req.body); // Llamar servicio de registerAdultoMayor
-            res.status(201).json(result);
-        } catch (error) {
-            console.error('Error al crear usuario:', error.message); // Mostrar el error en consola
-            res.status(500).json({ error: error.message }); // Mostrar el mensaje del error en la respuesta
-        }
+        const result = await registrarAdultoMayor(req.body); // Llamar servicio de registerAdultoMayor
+        res.status(201).json(result);
     }
 
     async crearAdmin(req, res){
-        try {
-            const result = await registrarAdmin(req.body); // Servicio registerAdmin
-            res.status(201).json(result);
-        } catch (error) {
-            console.error('Error al crear usuario:', error.message);
-            res.status(500).json({ error: error.message }); 
-        }
+        const result = await registrarAdmin(req.body); // Servicio registerAdmin
+        res.status(201).json(result);
+        
     }
 
     async crearProfesional(req, res){
-        try {
-            const result = await registrarProfesional(req.body); // Servicio registerProfesional
-            res.status(201).json(result);
-        } catch (error) {
-            console.error('Error al crear usuario:', error.message);
-            res.status(500).json({ error: error.message });
-        }
+        const result = await registrarProfesional(req.body); // Servicio registerProfesional
+        res.status(201).json(result);
     }
 
     async authUsuario(req,res){
