@@ -1,5 +1,5 @@
 const db = require('../config/database');
-
+const errors = require('../utils/errors');
 class UsuariosController{
     constructor(){
 
@@ -15,7 +15,7 @@ class UsuariosController{
         const [rows] = await db.promise().query('SELECT * FROM usuario WHERE id_usuario = ?', [id]);
 
         if (rows.length === 0) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+            throw errors.NotFoundError('Usuario no encontrado');
         }
 
         res.status(200).json(rows[0]);
@@ -30,7 +30,7 @@ class UsuariosController{
         const [result] = await db.promise().query('DELETE FROM usuario WHERE id_usuario = ?', [id]);
 
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+            throw errors.NotFoundError('Usuario no encontrado');
         }
 
         res.status(200).json({ message: 'Usuario eliminado' });
@@ -73,7 +73,7 @@ class UsuariosController{
         const [rows] = await db.promise().query(query, [id]);
 
         if (rows.length === 0) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+            throw errors.NotFoundError('Usuario no encontrado');
         }
 
         res.status(200).json(rows);

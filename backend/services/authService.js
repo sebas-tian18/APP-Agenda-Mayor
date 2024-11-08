@@ -1,6 +1,7 @@
 const db = require('../config/database');
 const argon2 = require('argon2');
 const { generarToken } = require('./jwtService'); // Importar la funcion para generar jwt
+const errors = require('../utils/errors');
 
 // Este servicio autentica al usuario en el login
 
@@ -16,7 +17,7 @@ const authUsuario = async (correo, contrasena) => {
 
     // Si no ecuentra el correo
     if (rows.length === 0) {
-        return { success: false, message: 'Correo no registrado', status: 404 };
+        throw errors.NotFoundError('Correo no registrado');
     }
 
     // Obtener los valores de las columnas necesarias
@@ -25,14 +26,17 @@ const authUsuario = async (correo, contrasena) => {
     // Verificar la contrasena con el hash almacenado
     const isPasswordValid = await argon2.verify(password_hash, contrasena);
     if (!isPasswordValid) {
-        return { success: false, message: 'Contraseña incorrecta' };
+        throw errors.UnauthorizedError('Contraseña incorrecta');
     }
 
     // Generar el token JWT con los datos necesarios
     const token = generarToken({ id_usuario, nombre_usuario, nombre_rol, id_adulto_mayor });
 
     // Retornar el token junto a un mensaje de exito
-    return { success: true, message: 'Autenticación exitosa', token };
+    return {
+        message: 'Autenticación exitosa', 
+        token 
+    };
 };
 
 module.exports = { authUsuario };

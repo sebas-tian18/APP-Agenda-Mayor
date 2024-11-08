@@ -1,5 +1,6 @@
 const db = require('../config/database');
 const { hashPassword } = require('../utils/passwordUtils');
+const errors = require('../utils/errors');
 
 // Contiene logica para registrar los datos de los profesionales
 
@@ -17,7 +18,7 @@ const registrarProfesional = async (userData) => {
       );
 
       if (existeUsuario.length > 0 ) {
-        throw new Error('El correo o rut ya está registrado.'); 
+        throw errors.ConflictError('El correo o rut ya está registrado.'); 
       }
 
       // Hashear la contrasena (llamar)
@@ -39,6 +40,11 @@ const registrarProfesional = async (userData) => {
         [ userData.rut, userData.nombre_usuario, userData.apellido_paterno, 
           userData.apellido_materno, userData.fecha_nacimiento, userData.telefono, 
           userData.email, hashedPassword, userData.sexo, userData.nacionalidad, ID_ROL_PROFESIONAL ]);
+
+      // Verificar la insercion en `usuario`
+      if (resultUsuario.affectedRows === 0) {
+          throw errors.InternalServerError('Error al crear el usuario.');
+      }        
     
       // Obtener id del usuario creado
       const id_usuario = resultUsuario.insertId; 
@@ -60,9 +66,14 @@ const registrarProfesional = async (userData) => {
       
   } catch (error) {
       // Si ocurre error hacer rollback
-      console.log(error);
       await connection.rollback();
-      throw error; // Lanzar el error para que el controlador lo maneje
+      
+      // Lanzar un error personalizado si el error no tiene statusCode
+      if (!error.statusCode) {
+        throw errors.InternalServerError('Fallo en la transacción. No se pudo completar el registro del profesional.');
+      }
+
+      throw error;
   }
 };
 

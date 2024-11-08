@@ -17,7 +17,7 @@ const registrarAdmin = async (userData) => {
       );
 
       if (existeUsuario.length > 0 ) {
-        throw new Error('El correo o rut ya está registrado.'); 
+        throw errors.ConflictError('El correo o rut ya está registrado.'); 
       }
 
       // Hashear la contrasena (llamar)
@@ -39,6 +39,11 @@ const registrarAdmin = async (userData) => {
           userData.apellido_materno, userData.fecha_nacimiento, userData.telefono, 
           userData.email, hashedPassword, userData.sexo, userData.nacionalidad, ID_ROL_ADMIN ]);
 
+      // Verificar la insercion en `usuario`
+      if (resultUsuario.affectedRows === 0) {
+          throw errors.InternalServerError('Error al crear el usuario.');
+      }
+
       const id_usuario = resultUsuario.insertId; // Obtener id del usuario creado
 
       // Insertar en la tabla `administrador`
@@ -57,9 +62,14 @@ const registrarAdmin = async (userData) => {
       
   } catch (error) {
       // Si ocurre error hacer rollback
-      console.log(error);
       await connection.rollback();
-      throw error; // Lanzar el error para que el controlador lo maneje
+
+      // Lanzar un error personalizado si el error no tiene statusCode
+      if (!error.statusCode) {
+        throw errors.InternalServerError('Fallo en la transacción. No se pudo completar el registro del usuario.');
+      }
+
+      throw error;
   }
 };
 
