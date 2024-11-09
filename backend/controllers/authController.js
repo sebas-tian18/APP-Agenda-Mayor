@@ -11,17 +11,26 @@ class AuthController {
 
     async crearUsuario(req, res){
         const result = await registrarAdultoMayor(req.body);
-        res.status(201).json(result);
+        res.status(201).json({
+            success: true,
+            ...result
+        });
     }
 
     async crearAdmin(req, res){
         const result = await registrarAdmin(req.body);
-        res.status(201).json(result);
+        res.status(201).json({
+            success: true,
+            ...result
+        });
     }
 
     async crearProfesional(req, res){
         const result = await registrarProfesional(req.body);
-        res.status(201).json(result);
+        res.status(201).json({
+            success: true,
+            ...result
+        });
     }
 
     async authUsuario(req,res){

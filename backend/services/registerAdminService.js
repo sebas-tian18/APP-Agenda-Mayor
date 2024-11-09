@@ -1,5 +1,6 @@
 const db = require('../config/database');
 const { hashPassword } = require('../utils/passwordUtils');
+const errors = require('../utils/errors');
 
 // Contiene logica para registrar los datos de los admins
 
