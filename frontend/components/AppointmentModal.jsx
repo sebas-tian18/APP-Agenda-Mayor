@@ -19,7 +19,7 @@ function AppointmentModal({ service, onClose }) {
           throw new Error('No se pudieron obtener las citas disponibles')
         }
         const data = await response.json()
-        setAvailableAppointments(data)
+        setAvailableAppointments(data.data)
       } catch (err) {
         setError(err.message)
       } finally {

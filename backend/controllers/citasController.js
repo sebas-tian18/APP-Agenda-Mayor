@@ -34,7 +34,7 @@ class CitasController {
 
             // Confirmar la transaccion
             await connection.commit();
-            res.status(200).json({ 
+            res.status(201).json({ 
                 message: 'Cita creada exitosamente', 
                 id_cita: result.insertId 
             });
@@ -57,7 +57,7 @@ class CitasController {
                 c.atencion_a_domicilio,
                 CONCAT(u.nombre_usuario, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_profesional,
                 CONCAT(a.nombre_usuario, ' ', a.apellido_paterno, ' ', a.apellido_materno) AS nombre_asistente,
-                ts.nombre_servicio,
+                s.nombre_servicio,
                 e.nombre_estado,
                 r.nombre_resolucion,
                 cat.nombre_categoria AS nombre_categoria,
@@ -69,15 +69,19 @@ class CitasController {
             LEFT JOIN usuario u ON p.id_usuario = u.id_usuario
             LEFT JOIN adulto_mayor am ON c.id_adulto_mayor = am.id_adulto_mayor
             LEFT JOIN usuario a ON am.id_usuario = a.id_usuario
-            LEFT JOIN servicio ts ON c.id_servicio = ts.id_servicio
+            LEFT JOIN servicio s ON c.id_servicio = s.id_servicio
             LEFT JOIN estado e ON c.id_estado = e.id_estado
             LEFT JOIN resolucion r ON c.id_resolucion = r.id_resolucion
-            LEFT JOIN categoria cat ON ts.id_categoria = cat.id_categoria
-            LEFT JOIN especialidad esp ON ts.id_especialidad = esp.id_especialidad
-            LEFT JOIN centro_servicio cs ON ts.id_centro = cs.id_centro
+            LEFT JOIN categoria cat ON s.id_categoria = cat.id_categoria
+            LEFT JOIN especialidad esp ON s.id_especialidad = esp.id_especialidad
+            LEFT JOIN centro_servicio cs ON s.id_centro = cs.id_centro
             LEFT JOIN direccion d ON cs.id_direccion = d.id_direccion;`
         );
-        res.status(200).json(rows);
+        res.status(200).json({
+            success: true,
+            message: 'Lista de citas obtenida exitosamente',
+            data: rows
+        });
     } 
 
     async consultarCitasnotomadas(req, res) {
@@ -91,7 +95,7 @@ class CitasController {
                 c.asistencia,
                 c.atencion_a_domicilio,
                 CONCAT(u.nombre_usuario, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_profesional,
-                ts.nombre_servicio,
+                s.nombre_servicio,
                 e.nombre_estado,
                 r.nombre_resolucion,
                 cat.nombre_categoria AS nombre_categoria,
@@ -101,11 +105,11 @@ class CitasController {
             LEFT JOIN usuario u ON p.id_usuario = u.id_usuario
             LEFT JOIN adulto_mayor am ON c.id_adulto_mayor = am.id_adulto_mayor
             LEFT JOIN usuario a ON am.id_usuario = a.id_usuario
-            LEFT JOIN servicio ts ON c.id_servicio = ts.id_servicio
+            LEFT JOIN servicio s ON c.id_servicio = s.id_servicio
             LEFT JOIN estado e ON c.id_estado = e.id_estado
             LEFT JOIN resolucion r ON c.id_resolucion = r.id_resolucion
-            LEFT JOIN categoria cat ON ts.id_categoria = cat.id_categoria
-            LEFT JOIN especialidad esp ON ts.id_especialidad = esp.id_especialidad
+            LEFT JOIN categoria cat ON s.id_categoria = cat.id_categoria
+            LEFT JOIN especialidad esp ON s.id_especialidad = esp.id_especialidad
             WHERE c.id_adulto_mayor IS NULL
             AND esp.id_especialidad = ?;`,
             [id]
@@ -114,10 +118,27 @@ class CitasController {
         if (rows.length === 0) {
             throw errors.NotFoundError(`No se encontraron citas no tomadas para la especialidad`);
         }
-    
-        res.status(200).json(rows);
+        res.status(200).json({
+            success: true,
+            message: 'Lista de citas disponibles obtenida exitosamente',
+            data: rows
+        });
     }
 
+    async consultarEspecialidadesDisponibles(req, res){
+        const [rows] = await db.promise().query(`
+            SELECT DISTINCT e.id_especialidad, e.nombre_especialidad
+            FROM cita c
+            LEFT JOIN servicio s ON c.id_servicio = s.id_servicio
+            LEFT JOIN especialidad e ON s.id_especialidad = e.id_especialidad
+            WHERE c.id_adulto_mayor IS NULL;`
+        );
+        res.status(200).json({
+            success: true,
+            message: 'Lista de especialidades disponibles obtenida exitosamente',
+            data: rows
+        });
+    } 
 
     async agendarCita(req, res) {
         const connection = db.promise(); // Usar promesas para las querys a la BD
@@ -139,7 +160,6 @@ class CitasController {
             );
 
             if (citaExistente.length === 0) {
-                await connection.rollback();  // Realizar el rollback
                 throw errors.NotFoundError('La cita ya ha sido tomada o no existe'); // 404
             }
 
@@ -151,10 +171,12 @@ class CitasController {
 
             if (result.affectedRows > 0) {
                 // Realizar el commit
-                await connection.commit();  
-                res.status(200).json({ message: 'Cita agendada con éxito' });
+                await connection.commit();
+                res.status(200).json({
+                    success: true,
+                    message: 'Cita agendada con éxito'
+                });
             } else {
-                await connection.rollback();
                 throw errors.InternalServerError('No se pudo agendar la cita'); // 500
             }
         } catch (error) {
