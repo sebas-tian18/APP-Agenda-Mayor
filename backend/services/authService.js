@@ -8,10 +8,9 @@ const errors = require('../utils/errors');
 const authUsuario = async (correo, contrasena) => {
     // Obtener los datos que se enviaran en el payload del JWT 
     const [rows] = await db.promise().query(`
-        SELECT u.id_usuario, u.password_hash, u.nombre_usuario, r.nombre_rol, am.id_adulto_mayor
+        SELECT u.id_usuario, u.password_hash, u.nombre_usuario, r.nombre_rol
         FROM usuario u
         JOIN rol r ON u.id_rol = r.id_rol 
-        JOIN adulto_mayor am ON u.id_usuario = am.id_usuario
         WHERE u.email = ?`,
         [correo]);
 
