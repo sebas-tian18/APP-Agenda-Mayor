@@ -1,25 +1,25 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { FontSizeProvider } from "../components/FontSizeContext";
+import { FontSizeProvider } from "./components/FontSizeContext";
 import { Toaster } from "sonner";
 import "./App.css";
 // Componentes 
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 // Paginas Publicas
-import Register from "../pages/Register";
-import Login from "../pages/Login";
-import Unauthorized from "../pages/Unauthorized";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Unauthorized from "./pages/Unauthorized";
 // Paginas Privadas
-import Home from "../pages/Home";
-import Servicios from "../pages/Servicios";
-import EditarPerfil from "../pages/EditarPerfil";
-import Ajustes from "../pages/Ajustes";
-import Administrador from "../pages/Administrador";
-import ViewCitas from "../pages/ViewCitas";
+import Home from "./pages/Home";
+import Servicios from "./pages/Servicios";
+import EditarPerfil from "./pages/EditarPerfil";
+import Ajustes from "./pages/Ajustes";
+import Administrador from "./pages/Administrador";
+import ViewCitas from "./pages/ViewCitas";
 // Rutas
-import PrivateRoute from "../routes/PrivateRoute";
-import RedirectRoute from '../routes/RedirectRoute';
-import { AuthProvider } from "../context/AuthContext";
+import PrivateRoute from "./routes/PrivateRoute";
+import RedirectRoute from './routes/RedirectRoute';
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (

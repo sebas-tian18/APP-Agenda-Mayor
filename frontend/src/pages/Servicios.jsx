@@ -1,25 +1,29 @@
 import { useState } from 'react'
 import ServiceList from '../components/ServiceList'
 import AppointmentModal from '../components/AppointmentModal'
+import fonoaudiologia from '../images/fonoaudiologia.webp';
+import peluqueria from '../images/peluqueria.webp';
+import kinesiologia from '../images/kinesiologia.webp';
+
 
 const services = [
   {
     id: 1,
     name: 'Fonoaudiología',
     description: 'Evaluación y tratamiento de trastornos de la comunicación y deglución.',
-    image: '../Images/fonoaudiologia.webp'
+    image: fonoaudiologia
   },
   {
     id: 2,
     name: 'Peluquería',
     description: 'Servicios de corte, peinado y coloración de cabello.',
-    image: '../Images/peluqueria.webp'
+    image: peluqueria
   },
   {
     id: 3,
     name: 'Kinesiología',
     description: 'Terapia física para recuperación y prevención de lesiones.',
-    image: '../Images/kinesiologia.webp'
+    image: kinesiologia
   }
 ]
 
