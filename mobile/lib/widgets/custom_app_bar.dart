@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Importar Provider
-import 'package:mobile/widgets/theme_notifier.dart'; // Importar el ThemeNotifier
+import 'package:mobile/providers/theme_notifier.dart'; // Importar el ThemeNotifier
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

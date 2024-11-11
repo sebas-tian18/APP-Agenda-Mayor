@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Importar Provider
-import 'package:mobile/widgets/theme_notifier.dart'; // Importar el ThemeNotifier
+import 'package:mobile/providers/theme_notifier.dart'; // Importar el ThemeNotifier
 import 'package:mobile/widgets/profile_list_item.dart';
 import 'package:mobile/services/auth_service.dart';
 

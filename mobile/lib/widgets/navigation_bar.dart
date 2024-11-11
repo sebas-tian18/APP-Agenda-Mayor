@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart'; // Importar Provider
-import 'package:mobile/widgets/theme_notifier.dart'; // Importar el ThemeNotifier
+import 'package:mobile/providers/theme_notifier.dart'; // Importar el ThemeNotifier
 import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/appointment_screen.dart';
 import 'package:mobile/screens/calendar_screen.dart';

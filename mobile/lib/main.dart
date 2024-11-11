@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:mobile/widgets/theme_notifier.dart'; // Asegúrate de que esta ruta sea correcta
+import 'package:mobile/providers/theme_notifier.dart'; // Estado global de tema
 import 'package:mobile/screens/login_screen.dart'; // Importar screen de inicio
 
 void main() {
   Intl.defaultLocale = 'es_ES'; // Configura el idioma a español
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+      ],
       child: MyApp(),
     ),
   );
