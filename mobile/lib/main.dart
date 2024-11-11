@@ -41,6 +41,9 @@ class MyApp extends StatelessWidget {
                 : Colors.grey.shade200,
           ),
           home: LoginScreen(), // Al entrar se muestra el login
+          routes: {
+            '/login': (context) => LoginScreen(), // Registrar la ruta /login
+          },
         );
       },
     );

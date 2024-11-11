@@ -14,8 +14,6 @@ class AuthResponse {
 
 class AuthService {
   final String _baseUrl = 'http://10.0.2.2:3000/api/login'; // Endpoint login
-  final String _logoutUrl =
-      'http://10.0.2.2:3000/api/logout'; // Endpoint logout
   final JwtService _jwtService = JwtService(); // Instancia de JwtService
 
   Future<AuthResponse> userLogin(String correo, String contrasena) async {
@@ -54,19 +52,8 @@ class AuthService {
   }
 
   Future<void> userLogout() async {
-    try {
-      // Opcional: Hacer una llamada al servidor para cerrar sesión
-      await dio.post(
-        _logoutUrl,
-        options: Options(headers: {'Content-Type': 'application/json'}),
-      );
-    } catch (e) {
-      // Manejar el error si la llamada falla
-      print('Error cerrando sesión: ${e.toString()}');
-    } finally {
-      // Borrar el token local
-      await _jwtService.deleteToken(); // Implementa este método en JwtService
-    }
+    await _jwtService.deleteToken(); // Simplemente elimina el token local
+    print("Usuario desconectado y token eliminado");
   }
 
   AuthResponse _handleHttpError(int? statusCode) {
