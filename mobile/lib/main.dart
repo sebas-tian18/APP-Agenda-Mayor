@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/providers/theme_notifier.dart'; // Estado global de tema
+import 'package:mobile/providers/auth_provider.dart'; // Estado global de autenticacion
 import 'package:mobile/screens/login_screen.dart'; // Importar screen de inicio
 
 void main() {
@@ -9,6 +10,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()..cargarDatos()),
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
       ],
       child: MyApp(),

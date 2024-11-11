@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Importar Provider
 import 'package:mobile/providers/theme_notifier.dart'; // Importar el ThemeNotifier
 import 'package:mobile/widgets/profile_list_item.dart';
-import 'package:mobile/services/auth_service.dart';
+import 'package:mobile/providers/auth_provider.dart'; // Importar para logout
 
 class ProfileScreen extends StatelessWidget {
-  final AuthService _authService = AuthService(); // Instancia de AuthService
+  final AuthProvider _authProvider = AuthProvider(); // Instanciar AuthProvider
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +113,8 @@ class ProfileScreen extends StatelessWidget {
                   text: 'Cerrar Sesión',
                   hasNavigation: false,
                   onTap: () async {
-                    await _authService
-                        .userLogout(); // Llamar a la función de cierre de sesión
+                    await _authProvider
+                        .logout(); // Llamar a la funcion de cierre de sesion
 
                     // Verificar si el contexto sigue montado
                     if (context.mounted) {

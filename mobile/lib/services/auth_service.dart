@@ -23,14 +23,14 @@ class AuthService {
         "contrasena": contrasena,
       };
 
-// Post al endpoint con los datos correo y contrasena, header json
+      // Post al endpoint con los datos correo y contrasena, header json
       final response = await dio.post(
         _baseUrl,
         data: data,
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
-// Si no hay errores
+      // Si no hay errores
       if (response.statusCode == 200) {
         final token = response.data['token']; // Obtener token
         await _jwtService.saveToken(token); // Guardar el token
@@ -40,40 +40,23 @@ class AuthService {
           token: token,
         );
       } else {
-        return _handleHttpError(response.statusCode);
+        // Extraer y mostrar el mensaje de error enviado por el backend
+        final message = response.data['message'] ?? 'Error desconocido';
+        return AuthResponse(
+          isAuthenticated: false,
+          message: message,
+        );
       }
     } catch (e) {
       if (e is DioException && e.response != null) {
-        return _handleHttpError(e.response?.statusCode);
+        final message = e.response?.data['message'] ?? 'Error desconocido';
+        return AuthResponse(
+          isAuthenticated: false,
+          message: message,
+        );
       }
       return AuthResponse(
           isAuthenticated: false, message: 'Error en la red o conexión');
-    }
-  }
-
-  Future<void> userLogout() async {
-    await _jwtService.deleteToken(); // Simplemente elimina el token local
-    print("Usuario desconectado y token eliminado");
-  }
-
-  AuthResponse _handleHttpError(int? statusCode) {
-    switch (statusCode) {
-      case 400:
-        return AuthResponse(
-            isAuthenticated: false, message: 'Solicitud incorrecta');
-      case 404:
-        return AuthResponse(
-            isAuthenticated: false, message: 'Correo no registrado');
-      case 401:
-        return AuthResponse(
-            isAuthenticated: false, message: 'Contraseña incorrecta');
-      case 500:
-        return AuthResponse(
-            isAuthenticated: false,
-            message: 'Error en el servidor, intente de nuevo más tarde');
-      default:
-        return AuthResponse(
-            isAuthenticated: false, message: 'Error desconocido');
     }
   }
 }
