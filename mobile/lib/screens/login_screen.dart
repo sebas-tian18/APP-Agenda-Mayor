@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/widgets/navigation_bar.dart';
 import 'package:mobile/services/auth_service.dart';
+import 'package:provider/provider.dart'; // Para acceder a AuthProvider
+import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/widgets/login_design.dart';
 import 'package:mobile/colors.dart';
 
@@ -42,6 +44,12 @@ class LoginScreenState extends State<LoginScreen> {
       );
 
       if (authResponse.isAuthenticated) {
+        // Llamar a cargarDatos en AuthProvider para actualizar el estado global
+        await Provider.of<AuthProvider>(context, listen: false).cargarDatos();
+
+        // Verificar si el widget sigue montado antes de usar context
+        if (!mounted) return;
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavigationMenu()),

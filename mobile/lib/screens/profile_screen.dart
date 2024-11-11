@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Importar Provider
 import 'package:mobile/providers/theme_notifier.dart'; // Importar el ThemeNotifier
 import 'package:mobile/widgets/profile_list_item.dart';
-import 'package:mobile/providers/auth_provider.dart'; // Importar para logout
+import 'package:mobile/providers/auth_provider.dart'; // Importar para los datos y logout
 
 class ProfileScreen extends StatelessWidget {
   final AuthProvider _authProvider = AuthProvider(); // Instanciar AuthProvider
