@@ -144,14 +144,29 @@ class CitasController {
         const connection = db.promise(); // Usar promesas para las querys a la BD
 
         const { id } = req.params; // Obtener el id_cita desde los parametros de la URL
-        const { id_adulto_mayor } = req.body; // Obtener el id_adulto_mayor desde el cuerpo de la solicitud
+        const { id_usuario } = req.body; // Obtener el id_adulto_mayor desde el cuerpo de la solicitud
 
-        if (!id_adulto_mayor || !id) {
-            throw errors.BadRequestError('Faltan datos requeridos para agendar la cita');
+        if (!id_usuario || !id) {
+            throw errors.BadRequestError('Faltan datos requeridos para agendar cita');
         }
 
         try {
             await connection.beginTransaction();
+
+            // Obtener id_adulto_mayor
+            const [rows] = await connection.query(`
+                SELECT am.id_adulto_mayor 
+                FROM usuario u
+                JOIN adulto_mayor am ON u.id_usuario = am.id_usuario 
+                WHERE u.id_usuario = ?;`, 
+                [id_usuario]
+            );
+
+            const id_adulto_mayor = rows[0].id_adulto_mayor;
+
+            if (!id_adulto_mayor) {
+                throw errors.ForbiddenError('El usuario no posee los permisos para agendar citas.');
+            }
 
             // Verificar si la cita ya ha sido tomada o si existe
             const [citaExistente] = await connection.query(

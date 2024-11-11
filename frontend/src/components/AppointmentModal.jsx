@@ -8,7 +8,7 @@ function AppointmentModal({ service, onClose }) {
   const [successMessage, setSuccessMessage] = useState(null) // Para mostrar un mensaje de exito
   const token = sessionStorage.getItem("token");
   const user = jwtDecode(token);
-  const userid = user.id_adulto_mayor; // Obtener ID desde sessionStorage
+  const userid = user.id_usuario; // Obtener ID desde sessionStorage
 
   useEffect(() => {
     const fetchAvailableAppointments = async () => {
@@ -38,7 +38,7 @@ function AppointmentModal({ service, onClose }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-           id_adulto_mayor: userid
+           id_usuario: userid
         })
       })
 
