@@ -3,9 +3,46 @@ import 'package:provider/provider.dart'; // Importar Provider
 import 'package:mobile/providers/theme_notifier.dart'; // Importar el ThemeNotifier
 import 'package:mobile/widgets/profile_list_item.dart';
 import 'package:mobile/providers/auth_provider.dart'; // Importar para los datos y logout
+import 'package:dio/dio.dart';
 
-class ProfileScreen extends StatelessWidget {
-  final AuthProvider _authProvider = AuthProvider(); // Instanciar AuthProvider
+class ProfileScreen extends StatefulWidget {
+  @override
+  ProfileScreenState createState() => ProfileScreenState();
+}
+
+class ProfileScreenState extends State<ProfileScreen> {
+  String nombreCompleto = '';
+  String email = '';
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (authProvider.idUsuario != null) {
+      fetchUserData(authProvider.idUsuario!);
+    }
+  }
+
+  Future<void> fetchUserData(int id) async {
+    try {
+      final dio = Dio();
+      final response = await dio.get('http://10.0.2.2:3000/api/usuarios/$id');
+
+      final data = response.data;
+      setState(() {
+        nombreCompleto =
+            "${data['nombre_usuario']} ${data['apellido_paterno']} ${data['apellido_materno']}";
+        email = data['email'];
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error al cargar los datos del usuario: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         SizedBox(height: size.height * 0.02),
         Text(
-          'Nombre Usuario',
+          nombreCompleto.isNotEmpty ? nombreCompleto : 'Nombre Usuario',
           style: TextStyle(
             fontSize: size.width * 0.05,
             fontWeight: FontWeight.bold,
@@ -54,7 +91,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         SizedBox(height: size.height * 0.015),
         Text(
-          'hola@gmail.com',
+          email.isNotEmpty ? email : 'Correo no disponible',
           style: TextStyle(
             fontSize: size.width * 0.04,
             color: Colors.grey,
@@ -113,7 +150,7 @@ class ProfileScreen extends StatelessWidget {
                   text: 'Cerrar Sesión',
                   hasNavigation: false,
                   onTap: () async {
-                    await _authProvider
+                    await Provider.of<AuthProvider>(context, listen: false)
                         .logout(); // Llamar a la funcion de cierre de sesion
 
                     // Verificar si el contexto sigue montado

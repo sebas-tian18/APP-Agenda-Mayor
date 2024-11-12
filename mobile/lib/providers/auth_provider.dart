@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
-  String? idUsuario;
+  int? idUsuario;
   String? nombre;
   String? rol;
 
