@@ -88,7 +88,7 @@ class UsuariosController{
         res.status(200).json({ message: 'Bienvenido, Adulto Mayor' })
     }
 
-    async consultarDetallesUsuario(req, res) {
+    async consultarCitasPorUsuario(req, res) {
         const { id } = req.params; // 'id' es el id_usuario
         const query = `
             SELECT 

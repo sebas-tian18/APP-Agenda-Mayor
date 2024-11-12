@@ -5,12 +5,9 @@ const usuariosController = require('../controllers/usuariosController');
 
 router.get('/', usuariosController.consultarUsuarios);
 
-//router.post('/register', usuariosController.crearUsuario);
-//router.post('/login', usuariosController.authUsuario);
 router.get('/adultoMayor', verifyToken, usuariosController.probarLogin); // Usar middleware
 
-
-router.get("/:id/detalles", usuariosController.consultarDetallesUsuario); // Detalles de usuario
+router.get("/:id/citas", usuariosController.consultarCitasPorUsuario); // Citas de usuario
 
 router.route("/:id")
     .get(usuariosController.consultarUsuario)
