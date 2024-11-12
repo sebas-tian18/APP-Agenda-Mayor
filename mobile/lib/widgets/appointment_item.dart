@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/colors.dart';
+import 'package:mobile/models/cita.dart';
+import 'package:intl/intl.dart'; // Para manejar tiempo
 
 class AppointmentItem extends StatelessWidget {
   final String title;
-  final List<Map<String, String>> appointments;
+  final List<Cita> appointments;
   final String emptyMessage;
 
   const AppointmentItem({
@@ -79,13 +81,9 @@ class AppointmentItem extends StatelessWidget {
                       ),
                     )
                   : ListView(
-                      children: appointments.map((appointment) {
+                      children: appointments.map((cita) {
                         return _appointmentTile(
-                          appointment['title']!,
-                          appointment['date']!,
-                          appointment['time']!,
-                          appointment['name']!,
-                          appointment['location']!,
+                          cita,
                           size,
                           theme,
                         );
@@ -98,8 +96,7 @@ class AppointmentItem extends StatelessWidget {
     );
   }
 
-  Widget _appointmentTile(String title, String date, String time, String name,
-      String location, Size size, ThemeData theme) {
+  Widget _appointmentTile(Cita cita, Size size, ThemeData theme) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
       child: Card(
@@ -119,7 +116,7 @@ class AppointmentItem extends StatelessWidget {
             children: [
               ListTile(
                 title: Text(
-                  title,
+                  "Cita ${cita.idCita}", // Cambiar a nombre servicio
                   style: TextStyle(
                       fontSize: size.width * 0.070,
                       fontWeight: FontWeight.bold,
@@ -127,87 +124,79 @@ class AppointmentItem extends StatelessWidget {
                 ),
               ),
               Divider(thickness: 4, color: theme.dividerColor),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(Icons.calendar_today, color: Colors.green),
-                            SizedBox(width: 10),
-                            Flexible(
-                              child: Text(
-                                "Fecha: $date",
-                                style: TextStyle(
-                                  fontSize: size.width * 0.055,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.textTheme.bodyLarge!.color,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today, color: Colors.green),
+                      SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          "Fecha: ${DateFormat('dd/MM/yyyy').format(cita.fecha)}",
+                          style: TextStyle(
+                            fontSize: size.width * 0.055,
+                            fontWeight: FontWeight.bold,
+                            color: theme.textTheme.bodyLarge!.color,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(Icons.access_time, color: Colors.green),
-                            SizedBox(width: 10),
-                            Flexible(
-                              child: Text(
-                                "Hora: $time",
-                                style: TextStyle(
-                                  fontSize: size.width * 0.055,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.textTheme.bodyLarge!.color,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Icon(Icons.access_time, color: Colors.green),
+                      SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          "Hora: ${cita.horaInicio} - ${cita.horaTermino}",
+                          style: TextStyle(
+                            fontSize: size.width * 0.055,
+                            fontWeight: FontWeight.bold,
+                            color: theme.textTheme.bodyLarge!.color,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(Icons.person, color: Colors.green),
-                            SizedBox(width: 10),
-                            Flexible(
-                              child: Text(
-                                "Profesional: $name",
-                                style: TextStyle(
-                                  fontSize: size.width * 0.055,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.textTheme.bodyLarge!.color,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Icon(Icons.person, color: Colors.green),
+                      SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          "Profesional: ${cita.nombreProfesional}",
+                          style: TextStyle(
+                            fontSize: size.width * 0.055,
+                            fontWeight: FontWeight.bold,
+                            color: theme.textTheme.bodyLarge!.color,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(Icons.location_on, color: Colors.green),
-                            SizedBox(width: 10),
-                            Flexible(
-                              child: Text(
-                                "Ubicación: $location",
-                                style: TextStyle(
-                                  fontSize: size.width * 0.055,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.textTheme.bodyLarge!.color,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.green),
+                      SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          "Estado: ${cita.nombreEstado}",
+                          style: TextStyle(
+                            fontSize: size.width * 0.055,
+                            fontWeight: FontWeight.bold,
+                            color: theme.textTheme.bodyLarge!.color,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),

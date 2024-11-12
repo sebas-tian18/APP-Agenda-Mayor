@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mobile/widgets/tab_item.dart';
 import 'package:mobile/widgets/appointment_item.dart';
 import 'package:mobile/colors.dart';
-import 'package:intl/intl.dart'; // Importar intl para obtener el mes actual
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:mobile/providers/citas_provider.dart';
+import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/models/cita.dart';
 
 class AppointmentScreen extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class AppointmentScreenState extends State<AppointmentScreen> {
-  List<Map<String, String>> appointments = [];
+  List<Cita> appointments = [];
 
   @override
   void initState() {
@@ -19,134 +21,50 @@ class AppointmentScreenState extends State<AppointmentScreen> {
     _loadAppointments();
   }
 
-  // Cargar las citas guardadas en SharedPreferences para el usuario
+  // Cargar las citas del usuario
   Future<void> _loadAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
+    final citasProvider = Provider.of<CitasProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    // Obtener el id del usuario logueado, puedes cambiarlo según cómo almacenes el ID
-    // final String userId = 'userID'; // Reemplaza esto con la obtención dinámica del ID
-
-    // Cargar citas específicas para este usuario
-    // final storedAppointments = prefs.getStringList('appointments_$userId') ?? [];
-
-    final storedAppointments = prefs.getStringList('appointments') ?? [];
-
-    List<Map<String, String>> loadedAppointments =
-        storedAppointments.map((appointment) {
-      List<String> parts = appointment.split(';');
-      if (parts.length == 5) {
-        // Ahora esperamos cinco partes
-        return {
-          'title': parts[0],
-          'date': parts[1],
-          'time': parts[2],
-          'name': parts[3],
-          'location': parts[4],
-        };
-      } else {
-        return {
-          'title': 'Cita inválida',
-          'date': 'Fecha no disponible',
-          'time': 'Hora no disponible',
-          'name': 'Profesional no disponible',
-          'location': 'Ubicación no disponible',
-        };
-      }
-    }).toList();
-
-    setState(() {
-      appointments = loadedAppointments;
-    });
+    if (authProvider.idUsuario != null) {
+      // Obtener citas a traves del provider
+      await citasProvider.cargarCitasPorUsuario(authProvider.idUsuario!);
+      setState(() {
+        appointments = citasProvider.citas;
+      });
+    } else {
+      // Manejo de error si el ID del usuario no está disponible
+      print('Error: ID de usuario no disponible');
+    }
   }
 
-  // Función para borrar todas las citas guardadas de un usuario
-  Future<void> _clearAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('appointments');
-
-    setState(() {
-      appointments = []; // Limpiar la lista en memoria también
-    });
-
-    if (!mounted) return;
-
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text("Citas eliminadas"),
-        content: Text("Todas las citas para este usuario han sido borradas."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("OK"),
-          ),
-        ],
-      ),
-    );
+  List<Cita> getExpiredAppointments() {
+    return appointments
+        .where((cita) => cita.fecha.isBefore(DateTime.now()))
+        .toList();
   }
 
-  List<Map<String, String>> getExpiredAppointments() {
-    return appointments.where((appointment) {
-      if (appointment['date'] == 'Fecha no disponible') {
-        return false;
-      }
-      DateTime appointmentDate;
-      try {
-        appointmentDate = DateFormat('dd/MM/yyyy').parse(appointment['date']!);
-      } catch (e) {
-        return false;
-      }
-      return appointmentDate.isBefore(DateTime.now());
-    }).toList();
-  }
-
-  List<Map<String, String>> getThisWeekAppointments() {
+  List<Cita> getThisWeekAppointments() {
     DateTime now = DateTime.now();
     DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
 
-    return appointments.where((appointment) {
-      if (appointment['date'] == 'Fecha no disponible') {
-        return false;
-      }
-      DateTime appointmentDate;
-      try {
-        appointmentDate = DateFormat('dd/MM/yyyy').parse(appointment['date']!);
-      } catch (e) {
-        return false;
-      }
-
-      // Excluir citas que ya expiraron
-      if (appointmentDate.isBefore(DateTime.now())) {
-        return false;
-      }
-
-      return appointmentDate.isAfter(startOfWeek) &&
-          appointmentDate.isBefore(endOfWeek);
-    }).toList();
+    return appointments
+        .where((cita) =>
+            cita.fecha.isAfter(startOfWeek) &&
+            cita.fecha.isBefore(endOfWeek) &&
+            cita.fecha.isAfter(DateTime.now()))
+        .toList();
   }
 
-  List<Map<String, String>> getCurrentMonthAppointments() {
+  List<Cita> getCurrentMonthAppointments() {
     DateTime now = DateTime.now();
-    return appointments.where((appointment) {
-      if (appointment['date'] == 'Fecha no disponible') {
-        return false;
-      }
-      DateTime appointmentDate;
-      try {
-        appointmentDate = DateFormat('dd/MM/yyyy').parse(appointment['date']!);
-      } catch (e) {
-        return false;
-      }
-
-      // Excluir citas que ya expiraron
-      if (appointmentDate.isBefore(DateTime.now())) {
-        return false;
-      }
-
-      return appointmentDate.month == now.month &&
-          appointmentDate.year == now.year;
-    }).toList();
+    return appointments
+        .where((cita) =>
+            cita.fecha.month == now.month &&
+            cita.fecha.year == now.year &&
+            cita.fecha.isAfter(DateTime.now()))
+        .toList();
   }
 
   @override
@@ -160,8 +78,9 @@ class AppointmentScreenState extends State<AppointmentScreen> {
           title: Text('Agendado'),
           actions: [
             IconButton(
+              // Boton para borrar cita, falta crear el endpoint
               icon: Icon(Icons.delete),
-              onPressed: _clearAppointments, // Botón para borrar las citas
+              onPressed: () => setState(() => appointments = []),
             ),
           ],
         ),

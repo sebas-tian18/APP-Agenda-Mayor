@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
-import 'package:mobile/providers/theme_notifier.dart'; // Estado global de tema
-import 'package:mobile/providers/auth_provider.dart'; // Estado global de autenticacion
-import 'package:mobile/screens/login_screen.dart'; // Importar screen de inicio
+import 'package:mobile/providers/theme_notifier.dart';
+import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/providers/citas_provider.dart';
+import 'package:mobile/screens/login_screen.dart';
 
-void main() {
-  Intl.defaultLocale = 'es_ES'; // Configura el idioma a español
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Inicializacion del framework
+  Intl.defaultLocale = 'es_ES'; // Idioma
+  await initializeDateFormatting('es_CL', null); // Configuracion regional
+
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => CitasProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()..cargarDatos()),
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
       ],
