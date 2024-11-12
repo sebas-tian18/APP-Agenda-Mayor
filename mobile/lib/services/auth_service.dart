@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart'; // Importar dio para manejo HTTP
 import 'package:mobile/services/jwt_service.dart'; // Importar JwtService
+import 'package:mobile/services/api_client.dart'; // Importar ApiClient
 
 final dio = Dio();
 
@@ -13,7 +14,8 @@ class AuthResponse {
 }
 
 class AuthService {
-  final String _baseUrl = 'http://10.0.2.2:3000/api/login'; // Endpoint login
+  final ApiClient _apiClient =
+      ApiClient(); // Reutiliza la instancia de ApiClient
   final JwtService _jwtService = JwtService(); // Instancia de JwtService
 
   Future<AuthResponse> userLogin(String correo, String contrasena) async {
@@ -23,14 +25,13 @@ class AuthService {
         "contrasena": contrasena,
       };
 
-      // Post al endpoint con los datos correo y contrasena, header json
-      final response = await dio.post(
-        _baseUrl,
+      // Realiza la solicitud POST usando _apiClient en lugar de dio directamente
+      final response = await _apiClient.client.post(
+        '/login', // Endpoint relativo
         data: data,
-        options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
-      // Si no hay errores
+      // Si autenticacion es exitosa guarda el token y devuelve el resultado
       if (response.statusCode == 200) {
         final token = response.data['token']; // Obtener token
         await _jwtService.saveToken(token); // Guardar el token
@@ -48,6 +49,7 @@ class AuthService {
         );
       }
     } catch (e) {
+      // Muestra el mensaje dependiendo si viene del backend, null o dio
       if (e is DioException && e.response != null) {
         final message = e.response?.data['message'] ?? 'Error desconocido';
         return AuthResponse(
