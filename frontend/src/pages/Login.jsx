@@ -10,8 +10,7 @@ const Login = () => {
   const { login } = useContext(AuthContext); // Acceder a funcion login desde AuthContext
 
   // manejar estado de correo y la contraseña
-  const [correo, setCorreo] = useState("");
-  const rut = correo
+  const [credencial, setCredencial] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -26,15 +25,13 @@ const Login = () => {
     
     try {
       // realiza POST al backend
-      console.log(typeof correo)
       const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          correo,
-          rut,
+          credencial,
           contrasena,
         }),
       });
@@ -81,10 +78,11 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
               {/* Campo de Correo */}
               <div className="mb-8">
-                <label className="block text-gray-700">Correo:</label>
+                <label className="block text-gray-700">Correo o RUT:</label>
                 <input
-                  name="correo"
-                  onChange={(e) => setCorreo(e.target.value)} // Maneja el cambio
+                  type="text"
+                  name="credencial"
+                  onChange={(e) => setCredencial(e.target.value)} // Maneja el cambio
                   className="w-full my-1 border-b-2 border-[#FF5100] outline-none"
                   placeholder="correo@ejemplo.com"
                 />

@@ -18,10 +18,10 @@ class AuthService {
       ApiClient(); // Reutiliza la instancia de ApiClient
   final JwtService _jwtService = JwtService(); // Instancia de JwtService
 
-  Future<AuthResponse> userLogin(String correo, String contrasena) async {
+  Future<AuthResponse> userLogin(String credencial, String contrasena) async {
     try {
       var data = {
-        "correo": correo,
+        "credencial": credencial,
         "contrasena": contrasena,
       };
 

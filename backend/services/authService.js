@@ -5,19 +5,18 @@ const errors = require('../utils/errors');
 
 // Este servicio autentica al usuario en el login
 
-const authUsuario = async (correo, rut, contrasena) => {
+const authUsuario = async (credencial, contrasena) => {
     const [rows] = await db.promise().query(`
         SELECT u.id_usuario, u.password_hash, u.nombre_usuario, r.nombre_rol
         FROM usuario u
         JOIN rol r ON u.id_rol = r.id_rol 
         WHERE (u.email = ? OR u.rut = ?)`,
-    [correo, rut]); 
-    console.log(correo,  rut, contrasena, "hola")
+        [credencial, credencial]); 
 
 
-    // Si no encuentra el correo
+    // Si no encuentra resultados
     if (rows.length === 0) {
-        throw errors.NotFoundError('Correo no registrado');
+        throw errors.NotFoundError('Correo o RUT no registrado');
     }
 
     // Obtener los valores de las columnas necesarias
