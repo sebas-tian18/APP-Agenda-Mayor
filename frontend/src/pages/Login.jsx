@@ -11,20 +11,22 @@ const Login = () => {
 
   // manejar estado de correo y la contraseña
   const [correo, setCorreo] = useState("");
+  const rut = correo
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate(); // Hook de navegación
 
-  // manejar envio de formulario
+  // manejar envio de formulariow
   const handleSubmit = async (e) => {
     e.preventDefault(); // evita que se recargue
   
     setLoading(true); // iniciar estado de carga
-  
+    
     try {
       // realiza POST al backend
+      console.log(typeof correo)
       const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
@@ -32,6 +34,7 @@ const Login = () => {
         },
         body: JSON.stringify({
           correo,
+          rut,
           contrasena,
         }),
       });
@@ -80,7 +83,6 @@ const Login = () => {
               <div className="mb-8">
                 <label className="block text-gray-700">Correo:</label>
                 <input
-                  type="email"
                   name="correo"
                   onChange={(e) => setCorreo(e.target.value)} // Maneja el cambio
                   className="w-full my-1 border-b-2 border-[#FF5100] outline-none"

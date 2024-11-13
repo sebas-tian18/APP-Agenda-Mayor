@@ -35,15 +35,15 @@ class UsuariosController{
     }
 
     async authUsuario(req,res){
-        const {correo,contrasena} = req.body;
+        const {correo, rut, contrasena} = req.body;
 
         // Verificar que el correo y contrasena son validos
-        if (!correo || !contrasena) {
+        if (!rut || !correo || !contrasena) {
             throw errors.BadRequestError('Correo y contraseña son requeridos');
         }
 
         // Ejecuta el servicio de autenticacion
-        const result = await authUsuario(correo, contrasena);
+        const result = await authUsuario(correo,rut , contrasena);
 
         // Enviar respuesta en caso de exito
         return res.status(200).json({
