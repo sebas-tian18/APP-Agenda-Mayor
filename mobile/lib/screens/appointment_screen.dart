@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:mobile/widgets/tab_item.dart';
 import 'package:mobile/widgets/appointment_item.dart';
 import 'package:mobile/colors.dart';
+import 'package:mobile/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/providers/citas_provider.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/models/cita.dart';
 
 class AppointmentScreen extends StatefulWidget {
+  final bool fromNavigationMenu;
+
+  const AppointmentScreen({super.key, this.fromNavigationMenu = false});
   @override
   AppointmentScreenState createState() => AppointmentScreenState();
 }
@@ -74,15 +78,9 @@ class AppointmentScreenState extends State<AppointmentScreen> {
       length: 3,
       initialIndex: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Agendado'),
-          actions: [
-            IconButton(
-              // Boton para borrar cita, falta crear el endpoint
-              icon: Icon(Icons.delete),
-              onPressed: () => setState(() => appointments = []),
-            ),
-          ],
+        appBar: CustomAppBar(
+          title: 'Citas Ajendadas',
+          showBackButton: widget.fromNavigationMenu,
         ),
         body: Column(
           children: [
