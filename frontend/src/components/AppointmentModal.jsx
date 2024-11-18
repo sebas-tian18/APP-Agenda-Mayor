@@ -31,6 +31,9 @@ function AppointmentModal({ service, onClose }) {
   }, [service.id])
 
   const handleAppointmentSelect = async (appointmentId) => {
+    const isConfirmed = window.confirm("¿Está seguro de que desea agendar esta cita?");
+    if (!isConfirmed) return;
+  
     try {
       const response = await fetch(`http://localhost:3000/api/citas/agendar/${appointmentId}`, {
         method: 'PATCH',
@@ -38,23 +41,24 @@ function AppointmentModal({ service, onClose }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-           id_usuario: userid
+          id_usuario: userid
         })
-      })
-
+      });
+  
       if (!response.ok) {
-        throw new Error('Error al agendar la cita')
+        throw new Error('Error al agendar la cita');
       }
-
-      const data = await response.json()
-      setSuccessMessage('Cita agendada con éxito')
-
-      // Aqui se maneja la actualizacion de la lista de citas
-      setAvailableAppointments(prev => prev.filter(appointment => appointment.id_cita !== appointmentId)) // Remover la cita agendada de la lista
+  
+      const data = await response.json();
+      setSuccessMessage('Cita agendada con éxito');
+  
+      // Actualiza la lista de citas
+      setAvailableAppointments(prev => prev.filter(appointment => appointment.id_cita !== appointmentId));
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
+  
 
   if (loading) return <div className="text-center">Cargando citas disponibles...</div>
   if (error) return <div className="text-center text-red-500">Error: {error}</div>
