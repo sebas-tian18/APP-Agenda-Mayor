@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:mobile/providers/citas_provider.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/models/cita.dart';
+// import 'package:mobile/screens/notification.dart';
 
 class AppointmentScreen extends StatefulWidget {
   final bool fromNavigationMenu;
@@ -71,6 +72,20 @@ class AppointmentScreenState extends State<AppointmentScreen> {
         .toList();
   }
 
+  // List<NotificationModel> getUpcomingNotifications() {
+  //   DateTime now = DateTime.now();
+  //   DateTime threeDaysFromNow = now.add(const Duration(days: 3));
+
+  //   return appointments
+  //       .where((cita) =>
+  //           cita.fecha.isAfter(now) && cita.fecha.isBefore(threeDaysFromNow))
+  //       .map((cita) => NotificationModel(
+  //             title: cita.nombreProfesional, // Ajustar según el modelo de Cita
+  //             timestamp: cita.fecha,
+  //           ))
+  //       .toList();
+  // }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -79,7 +94,7 @@ class AppointmentScreenState extends State<AppointmentScreen> {
       initialIndex: 2,
       child: Scaffold(
         appBar: CustomAppBar(
-          title: 'Citas Ajendadas',
+          title: 'Citas Agendadas',
           showBackButton: widget.fromNavigationMenu,
         ),
         body: Column(
@@ -88,7 +103,7 @@ class AppointmentScreenState extends State<AppointmentScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                height: size.height * 0.08, // Tamaño dinámico
+                height: size.height * 0.08,
                 margin: EdgeInsets.symmetric(horizontal: size.width * 0.04),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -108,7 +123,7 @@ class AppointmentScreenState extends State<AppointmentScreen> {
                   labelColor: Colors.white,
                   unselectedLabelColor: Colors.black54,
                   tabs: [
-                    TabItem(title: 'Expiro'),
+                    TabItem(title: 'Expiró'),
                     TabItem(title: 'Semanal'),
                     TabItem(title: 'Mensual'),
                   ],
@@ -119,7 +134,7 @@ class AppointmentScreenState extends State<AppointmentScreen> {
               child: TabBarView(
                 children: [
                   AppointmentItem(
-                    title: 'Expiro',
+                    title: 'Expiró',
                     appointments: getExpiredAppointments(),
                   ),
                   AppointmentItem(
@@ -127,7 +142,7 @@ class AppointmentScreenState extends State<AppointmentScreen> {
                     appointments: getThisWeekAppointments(),
                   ),
                   AppointmentItem(
-                    title: "Este mes",
+                    title: "Este Mes",
                     appointments: getCurrentMonthAppointments(),
                   ),
                 ],

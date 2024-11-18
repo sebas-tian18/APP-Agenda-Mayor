@@ -115,7 +115,7 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        _bookAppointment(appointment); // Guardar la cita
+                        _bookAppointment(appointment['id_cita']);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,

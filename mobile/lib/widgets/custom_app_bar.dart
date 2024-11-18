@@ -1,46 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Importar Provider
-import 'package:mobile/providers/theme_notifier.dart'; // Importar el ThemeNotifier
+import 'package:provider/provider.dart';
+import 'package:mobile/providers/citas_provider.dart';
+import 'package:mobile/screens/notification.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool showBackButton; // Controla si se muestra la campana o la flecha
+  final bool showBackButton;
 
-  const CustomAppBar(
-      {super.key, required this.title, this.showBackButton = false});
+  const CustomAppBar({
+    super.key,
+    required this.title,
+    this.showBackButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final themeNotifier =
-        Provider.of<ThemeNotifier>(context); // Obtener el estado del tema
+    final citasProvider = Provider.of<CitasProvider>(context);
+    final hasNotifications = citasProvider.citas.any((cita) {
+      final now = DateTime.now();
+      final oneWeekFromNow = now.add(const Duration(days: 7));
+      return cita.fecha.isAfter(now) && cita.fecha.isBefore(oneWeekFromNow);
+    });
+
     return AppBar(
-      title: Text(title),
-      backgroundColor: themeNotifier.isDarkMode // Cambiar color dinámicamente
-          ? Colors.grey.shade900
-          : Colors.grey.shade300,
-      automaticallyImplyLeading:
-          showBackButton, // Muestra el botón de retroceso si está habilitado
+      title: Text(
+        title,
+        style: const TextStyle(color: Colors.black),
+      ),
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: showBackButton,
       leading: showBackButton
           ? IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.pop(context); // Navegar hacia atrás
+                Navigator.pop(context);
               },
-              color: Colors.black,
             )
           : IconButton(
-              icon: const Icon(Icons
-                  .notifications), // Muestra la campana si no hay botón de retroceso
+              icon: Icon(
+                hasNotifications
+                    ? Icons.notifications_active
+                    : Icons.notifications,
+              ),
               onPressed: () {
-                // Acciones para la campana
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationScreen(
+                      appointments: citasProvider.citas,
+                    ),
+                  ),
+                );
               },
-              color: Colors.black,
             ),
       actions: [
         IconButton(
           icon: const Icon(Icons.account_circle),
-          onPressed: () {},
-          color: Colors.black,
+          onPressed: () {
+            // Acción para el botón de perfil
+          },
         ),
       ],
     );

@@ -19,7 +19,7 @@ dependencies:
   dio: ^5.7.0
   get: ^4.6.5
   iconsax: ^0.0.8
-  flutter_secure_storage: ^7.0.0
+  flutter_secure_storage: ^9.2.2
   async: ^2.11.0
   characters: 1.3.0 # Alineado con flutter_test
   collection: ^1.18.0
@@ -27,6 +27,10 @@ dependencies:
   meta: ^1.15.0
   path: ^1.9.0
   platform: ^3.1.6
+  # cupertino_icons: ^1.0.8
+  # awesome_notifications: ^0.10.0
+  timezone: ^0.9.4
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
