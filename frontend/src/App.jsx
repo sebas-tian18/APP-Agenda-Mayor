@@ -16,6 +16,7 @@ import EditarPerfil from "./pages/EditarPerfil";
 import Ajustes from "./pages/Ajustes";
 import Administrador from "./pages/Administrador";
 import ViewCitas from "./pages/ViewCitas";
+import ViewCalendar from "./pages/ViewCalendar";
 // Rutas
 import PrivateRoute from "./routes/PrivateRoute";
 import RedirectRoute from './routes/RedirectRoute';
@@ -37,6 +38,8 @@ function App() {
                 <Route path="/register" element={<RedirectRoute><Register /></RedirectRoute>} />
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 {/* Rutas privadas usuario adulto mayor*/}
+                <Route path="/ViewCalendar" element={<PrivateRoute><ViewCalendar /></PrivateRoute>} />
+
                 <Route path="/citas" 
                 element={
                   <PrivateRoute>

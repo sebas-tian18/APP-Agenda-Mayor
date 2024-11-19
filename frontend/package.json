@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@schedule-x/events-service": "^2.6.0",
+    "@schedule-x/react": "^2.5.0",
+    "@schedule-x/theme-default": "^2.6.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.451.0",
     "react": "^18.3.1",

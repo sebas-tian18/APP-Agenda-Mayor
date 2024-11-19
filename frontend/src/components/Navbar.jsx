@@ -35,6 +35,7 @@ function Navbar() {
                     <NavItem to="/calendario" icon={<Calendar size={20} />} text="Calendario" />
                     <NavItem to="/citas" icon={<CalendarCog size={20} />} text="Administrar" />
                     <NavItem to="/ajustes" icon={<Settings size={20} />} text="Ajustes" />
+                    <NavItem to= "/ViewCalendar" text="ViewCalendar" />
                   </>
                 )}
         
