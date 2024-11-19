@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import Servicios from "./pages/Servicios";
 import EditarPerfil from "./pages/EditarPerfil";
 import Ajustes from "./pages/Ajustes";
+import AjustesAdmin from "./pages/AjustesAdmin";
 import Administrador from "./pages/Administrador";
 import ViewCitas from "./pages/ViewCitas";
 import ViewCalendar from "./pages/ViewCalendar";
@@ -100,6 +101,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <Home />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/ajustes-admin"
+                  element={
+                    <PrivateRoute>
+                      <AjustesAdmin />
                     </PrivateRoute>
                   }
                 />
