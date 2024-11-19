@@ -69,9 +69,51 @@ class UsuariosController{
         res.status(200).json(rows[0]);
     }
     
-    async actualizarUsuario(req, res){
-        res.json({msg: 'Actualización de usuario'});
+    async actualizarUsuario(req, res) {
+        const {id_usuario} = req.params.id; // ID del usuario a actualizar
+        const {
+            nombre,
+            apellidoPaterno,
+            apellidoMaterno,
+            rut,
+            correo,
+            telefono,
+            sexo,
+            nacionalidad
+        } = req.body;
+    
+        const connection = db.promise();
+
+        try {
+            
+            const [result] = await connection.query(`
+                UPDATE usuario
+                SET
+                    nombre_usuario = ?,
+                    apellido_paterno = ?,
+                    apellido_materno = ?,
+                    rut = ?,
+                    email = ?,
+                    telefono = ?,
+                    sexo = ?,
+                    nacionalidad = ?
+                WHERE id_usuario = ?`,
+                [nombre, apellidoPaterno, apellidoMaterno, rut, correo, telefono, sexo, nacionalidad, id_usuario]
+            );
+
+            if (result.affectedRows === 0) {
+                throw errors.NotFoundError('Usuario no encontrado');
+            }
+            
+    
+            res.json({ msg: 'Usuario actualizado con éxito.' });
+        } catch (error) {
+            console.error('Error al actualizar el usuario:', error);
+            res.status(500).json({ msg: 'Error al actualizar el usuario.' });
+        }
     }
+    
+    
 
     async eliminarUsuario(req, res){
         const {id} = req.params;

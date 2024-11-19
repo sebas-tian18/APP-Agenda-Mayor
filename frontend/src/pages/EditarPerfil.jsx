@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Camera } from 'lucide-react'
+import { jwtDecode } from "jwt-decode"; // Asegúrate de instalar este paquete: npm install jsonwebtoken
 
 function Input({ label, name, type = 'text', value, onChange, placeholder }) {
   return (
@@ -44,6 +45,9 @@ function Select({ label, name, options, value, onChange }) {
 }
 
 function EditarPerfil() {
+  const token = sessionStorage.getItem("token");
+  const user = jwtDecode(token);
+  const userid = user.id_usuario;
   const [profile, setProfile] = useState({
     nombre: '',
     apellidoPaterno: '',
@@ -62,14 +66,34 @@ function EditarPerfil() {
   const handleChange = (e) => {
     const { name, value } = e.target
     let newValue = value
-
-
-    setProfile(prev => ({ ...prev, [name]: newValue }))
+    setProfile((prev) => ({ ...prev, [name]: newValue }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Perfil actualizado:', profile)
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/usuarios/${userid}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profile),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        alert(`Error: ${error.msg || 'No se pudo actualizar el perfil'}`)
+        return
+      }
+
+      const data = await response.json()
+      console.log('Perfil actualizado:', data)
+      alert('Perfil actualizado con éxito.')
+    } catch (error) {
+      console.error('Error al actualizar el perfil:', error)
+      alert('Ocurrió un error al actualizar el perfil.')
+    }
   }
 
   return (
@@ -82,11 +106,17 @@ function EditarPerfil() {
               <img src={profile.foto} alt="Foto de perfil" className="w-32 h-32 rounded-full object-cover" />
               <label htmlFor="foto" className="absolute bottom-0 right-0 bg-green-500 p-2 rounded-full cursor-pointer">
                 <Camera className="text-white" size={20} />
-                <input type="file" id="foto" name="foto" className="hidden" onChange={(e) => console.log(e.target.files)} />
+                <input
+                  type="file"
+                  id="foto"
+                  name="foto"
+                  className="hidden"
+                  onChange={(e) => console.log(e.target.files)}
+                />
               </label>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input label="Nombre" name="nombre" value={profile.nombre} onChange={handleChange} placeholder="Juan" />
             <Input label="Apellido Paterno" name="apellidoPaterno" value={profile.apellidoPaterno} onChange={handleChange} placeholder="Pérez" />
@@ -96,29 +126,29 @@ function EditarPerfil() {
             <Input label="Contraseña" name="contrasena" type="password" value={profile.contrasena} onChange={handleChange} placeholder="********" />
             <Input label="Teléfono" name="telefono" value={profile.telefono} onChange={handleChange} placeholder="+56912345678" />
             <Input label="Dirección" name="direccion" value={profile.direccion} onChange={handleChange} placeholder="Av. Principal 123, Ciudad" />
-            <Select 
-              label="Sexo" 
-              name="sexo" 
-              options={['Masculino', 'Femenino']} 
-              value={profile.sexo} 
-              onChange={handleChange} 
+            <Select
+              label="Sexo"
+              name="sexo"
+              options={['Masculino', 'Femenino']}
+              value={profile.sexo}
+              onChange={handleChange}
             />
-            <Select 
-              label="Nacionalidad" 
-              name="nacionalidad" 
-              options={['Chileno', 'Extranjero']} 
-              value={profile.nacionalidad} 
-              onChange={handleChange} 
+            <Select
+              label="Nacionalidad"
+              name="nacionalidad"
+              options={['Chileno', 'Extranjero']}
+              value={profile.nacionalidad}
+              onChange={handleChange}
             />
-            <Select 
-              label="Problemas de movilidad" 
-              name="problemasMovilidad" 
-              options={['Si', 'No']} 
-              value={profile.problemasMovilidad} 
-              onChange={handleChange} 
+            <Select
+              label="Problemas de movilidad"
+              name="problemasMovilidad"
+              options={['Si', 'No']}
+              value={profile.problemasMovilidad}
+              onChange={handleChange}
             />
           </div>
-          
+
           <div className="flex justify-end">
             <button
               type="submit"
