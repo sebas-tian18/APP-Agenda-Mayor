@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Calendar, Clipboard, Settings, CalendarCog, LogIn, UserPlus } from 'lucide-react';
+import { Calendar, Clipboard, Settings, CalendarCog, LogIn, UserPlus, UserRound,Mail } from 'lucide-react';
 import CerrarSesion from './Logout';
 import { AuthContext } from '../context/AuthContext';
 import { useContext} from 'react';
@@ -20,7 +20,9 @@ function Navbar() {
                 {/* Elementos visibles solo para usuarios autenticados segun rol */}
                 {userRole === 'admin' && (
                   <>
-                    {/*Elementos del admin*/}
+                    <NavItem to="/administrador" icon={<UserRound size={20} />} text="Validacion Usuarios" />
+                    <NavItem to="/ajustes-admin" icon={<Settings size={20} />} text="Administrador" />
+                    <NavItem to="/" icon={<Mail size={20} />} text="Solucitudes" />
                   </>
                 )}
                 {userRole === 'profesional' && (
