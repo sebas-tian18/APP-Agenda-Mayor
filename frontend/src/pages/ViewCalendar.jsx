@@ -19,8 +19,8 @@ function CalendarApp() {
       {
         id: '1',
         title: 'Event 1',
-        start: '2023-12-16',
-        end: '2023-12-16',
+        start: '2024-11-26',
+        end: '2024-11-27',
       },
     ],
   }, plugins)
