@@ -17,6 +17,7 @@ import Ajustes from "./pages/Ajustes";
 import Administrador from "./pages/Administrador";
 import ViewCitas from "./pages/ViewCitas";
 import ViewCalendar from "./pages/ViewCalendar";
+import ProCrearCita from "./pages/ProCrearCita";
 // Rutas
 import PrivateRoute from "./routes/PrivateRoute";
 import RedirectRoute from './routes/RedirectRoute';
@@ -105,6 +106,14 @@ function App() {
                 />
                 {/* Rutas privadas admin*/}
                 {/* Rutas privadas profesional*/}
+                <Route
+                  path="/crear-cita"
+                  element={
+                    <PrivateRoute>
+                      <ProCrearCita />
+                    </PrivateRoute>
+                  }></Route>
+                
               </Routes>
             </main>
             <Footer />

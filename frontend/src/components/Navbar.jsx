@@ -25,6 +25,9 @@ function Navbar() {
                 )}
                 {userRole === 'profesional' && (
                   <>
+                    <NavItem to= "/ViewCalendar" text="ViewCalendar" />
+                    <NavItem to="/crear-cita" icon={<Clipboard size={20} />} text="Crear Cita" />
+
                     {/*Elementos del profesional*/}
                   </>
                 )}
