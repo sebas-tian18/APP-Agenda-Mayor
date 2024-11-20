@@ -33,11 +33,11 @@ class ProfileListItem extends StatelessWidget {
       child: Container(
         height: size.height * 0.08,
         margin: EdgeInsets.symmetric(horizontal: size.width * 0.1).copyWith(
-          bottom: size.height * 0.03,
+          bottom: size.height * 0.02,
         ),
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(20),
           color: themeNotifier.isDarkMode
               ? AppColors.primaryColorDark
               : AppColors.primaryColor,

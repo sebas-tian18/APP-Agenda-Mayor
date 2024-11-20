@@ -56,8 +56,12 @@ class ProfileScreenState extends State<ProfileScreen> {
           child: Stack(
             children: <Widget>[
               CircleAvatar(
-                radius: size.width * 0.2,
-                // backgroundImage: AssetImage('assets/images/profile.jpg'),
+                radius: size.width * 0.2, // Ajustar el tamaño del avatar
+                child: Icon(
+                  Icons.person,
+                  size: size.width * 0.2, // Icono proporcionado al tamaño
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
@@ -99,10 +103,10 @@ class ProfileScreenState extends State<ProfileScreen> {
                 ),
                 ProfileListItem(
                   icon: Icons.person,
-                  text: 'Editar Perfil',
+                  text: 'Datos de Usuario',
                   onTap: () {
                     Navigator.pushNamed(
-                        context, '/editar-perfil'); // Navegar a editar perfil
+                        context, '/datos-perfil'); // Navegar a editar perfil
                   },
                 ),
                 ProfileListItem(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import necesario para fijar la orientación
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -10,11 +11,18 @@ import 'package:mobile/screens/configuation.dart';
 import 'package:mobile/screens/edit_profile.dart';
 import 'package:mobile/screens/help_support.dart';
 import 'package:mobile/screens/history.dart';
+import 'package:mobile/widgets/user_data.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Inicializacion del framework
+  WidgetsFlutterBinding.ensureInitialized(); // Inicialización del framework
+
+  // Fijar la orientación a vertical
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // Solo orientación vertical normal
+  ]);
+
   Intl.defaultLocale = 'es_ES'; // Idioma
-  await initializeDateFormatting('es_CL', null); // Configuracion regional
+  await initializeDateFormatting('es_CL', null); // Configuración regional
 
   runApp(
     MultiProvider(
@@ -56,6 +64,7 @@ class MyApp extends StatelessWidget {
           ),
           home: LoginScreen(), // Al entrar se muestra el login
           routes: {
+            '/datos-perfil': (context) => DataScreen(), // Pantalla de datos
             '/editar-perfil': (context) =>
                 EditProfileScreen(), // Pantalla de edición
             '/historial-citas': (context) =>
