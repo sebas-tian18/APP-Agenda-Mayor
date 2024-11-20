@@ -6,6 +6,10 @@ import 'package:mobile/providers/theme_notifier.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/providers/citas_provider.dart';
 import 'package:mobile/screens/login_screen.dart';
+import 'package:mobile/screens/configuation.dart';
+import 'package:mobile/screens/edit_profile.dart';
+import 'package:mobile/screens/help_support.dart';
+import 'package:mobile/screens/history.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Inicializacion del framework
@@ -47,12 +51,20 @@ class MyApp extends StatelessWidget {
               ),
             ),
             scaffoldBackgroundColor: themeNotifier.isDarkMode
-                ? Colors.black87
+                ? Color(0xFF121212)
                 : Colors.grey.shade200,
           ),
           home: LoginScreen(), // Al entrar se muestra el login
           routes: {
-            '/login': (context) => LoginScreen(), // Registrar la ruta /login
+            '/editar-perfil': (context) =>
+                EditProfileScreen(), // Pantalla de edición
+            '/historial-citas': (context) =>
+                HistoryScreen(), // Historial de citas
+            '/ayuda-soporte': (context) =>
+                HelpSupportScreen(), // Ayuda y soporte
+            '/configuracion': (context) =>
+                ConfiguationScreen(), // Configuración
+            '/login': (context) => LoginScreen(), // Pantalla de login
           },
         );
       },

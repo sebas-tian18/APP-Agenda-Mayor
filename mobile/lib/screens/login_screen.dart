@@ -5,6 +5,7 @@ import 'package:provider/provider.dart'; // Para acceder a AuthProvider
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/widgets/login_design.dart';
 import 'package:mobile/colors.dart';
+import 'package:mobile/providers/theme_notifier.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -73,6 +74,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -90,8 +92,11 @@ class LoginScreenState extends State<LoginScreen> {
                       child: Container(
                         width: double.infinity,
                         height: size.height * 0.4,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primaryColor,
+                        decoration: BoxDecoration(
+                          color: themeNotifier.isDarkMode
+                              ? AppColors
+                                  .primaryColorDark // Color para el modo oscuro
+                              : AppColors.primaryColor,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(1000),
                             bottomRight: Radius.circular(1000),
@@ -150,14 +155,20 @@ class LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      // Cambia dinámicamente entre blanco y negro según el tema
+                      color: themeNotifier.isDarkMode
+                          ? Color(0xFF1E1E1E)
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
                           offset: const Offset(1, 1),
                           blurRadius: 3,
                           spreadRadius: 1,
-                          color: Colors.black.withOpacity(.5),
+                          // Ajusta el color de la sombra según el tema
+                          color: themeNotifier.isDarkMode
+                              ? Colors.white.withOpacity(0.5)
+                              : Colors.black.withOpacity(0.5),
                         ),
                       ],
                     ),

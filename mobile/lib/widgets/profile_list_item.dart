@@ -1,43 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:mobile/providers/theme_notifier.dart';
 
 class ProfileListItem extends StatelessWidget {
   final IconData? icon;
   final String? text;
   final bool hasNavigation;
-  final VoidCallback? onTap; // Función onTap para manejar eventos de clic
+  final VoidCallback? onTap;
 
   const ProfileListItem({
     super.key,
     this.icon,
     this.text,
     this.hasNavigation = true,
-    this.onTap, // Añadir el parámetro onTap
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size; // Obtén el tamaño de la pantalla
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final size = MediaQuery.of(context).size;
 
     const TextStyle titleTextStyle = TextStyle(
-        fontSize: 16.0, fontWeight: FontWeight.w500, color: Colors.white);
+      fontSize: 16.0,
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
+    );
 
     return GestureDetector(
-      // Usar GestureDetector para detectar el tap
-      onTap: onTap, // Asignar la función onTap
+      onTap: onTap,
       child: Container(
         height: size.height * 0.08,
-        margin: EdgeInsets.symmetric(
-          horizontal: size.width * 0.1,
-        ).copyWith(
+        margin: EdgeInsets.symmetric(horizontal: size.width * 0.1).copyWith(
           bottom: size.height * 0.03,
         ),
-        padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.05,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: AppColors.primaryColor,
+          color: themeNotifier.isDarkMode
+              ? AppColors.primaryColorDark
+              : AppColors.primaryColor,
         ),
         child: Row(
           children: <Widget>[
@@ -50,9 +53,7 @@ class ProfileListItem extends StatelessWidget {
             if (text != null)
               Text(
                 text!,
-                style: titleTextStyle.copyWith(
-                  fontSize: size.width * 0.045,
-                ),
+                style: titleTextStyle.copyWith(fontSize: size.width * 0.045),
               ),
             Spacer(),
             if (hasNavigation)

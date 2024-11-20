@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:mobile/providers/theme_notifier.dart';
 
 class ServiceButton extends StatelessWidget {
   final IconData icon;
@@ -14,6 +16,7 @@ class ServiceButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Container(
       decoration: BoxDecoration(
         color: Colors.black,
@@ -29,7 +32,9 @@ class ServiceButton extends StatelessWidget {
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: themeNotifier.isDarkMode
+              ? AppColors.primaryColorDark
+              : AppColors.primaryColor,
           padding: EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),

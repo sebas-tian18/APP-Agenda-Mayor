@@ -35,7 +35,7 @@ class NavigationMenu extends StatelessWidget {
             elevation: 0,
             backgroundColor:
                 themeNotifier.isDarkMode // Cambiar color dinámicamente
-                    ? Colors.grey.shade900
+                    ? Color(0xFF1E1E1E)
                     : Colors.grey.shade300,
             selectedIndex: controller.selectedIndex.value,
             onDestinationSelected: (index) =>

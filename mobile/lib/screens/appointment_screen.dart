@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:mobile/providers/citas_provider.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/models/cita.dart';
+import 'package:mobile/providers/theme_notifier.dart';
 // import 'package:mobile/screens/notification.dart';
 
 class AppointmentScreen extends StatefulWidget {
@@ -88,6 +89,7 @@ class AppointmentScreenState extends State<AppointmentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     final size = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 3,
@@ -109,15 +111,18 @@ class AppointmentScreenState extends State<AppointmentScreen> {
                   borderRadius: BorderRadius.circular(10),
                   color: AppColors.secondaryColor,
                   border: Border.all(
-                    color: Colors.black,
+                    color:
+                        themeNotifier.isDarkMode ? Colors.white : Colors.black,
                     width: 1.0,
                   ),
                 ),
-                child: const TabBar(
+                child: TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
                   dividerColor: Colors.transparent,
                   indicator: BoxDecoration(
-                    color: AppColors.primaryColor,
+                    color: themeNotifier.isDarkMode
+                        ? AppColors.primaryColorDark
+                        : AppColors.primaryColor,
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   labelColor: Colors.white,

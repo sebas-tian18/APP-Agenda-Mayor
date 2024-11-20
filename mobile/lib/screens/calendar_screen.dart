@@ -6,6 +6,7 @@ import 'package:mobile/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/providers/citas_provider.dart';
 import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/providers/theme_notifier.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -106,6 +107,7 @@ class CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     final size = MediaQuery.of(context).size;
     // Establecer la localización en español
     Intl.defaultLocale = 'es_ES';
@@ -130,11 +132,14 @@ class CalendarScreenState extends State<CalendarScreen> {
                     width: 1.0,
                   ),
                 ),
-                child: const TabBar(
+                child: TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
                   dividerColor: Colors.transparent,
                   indicator: BoxDecoration(
-                    color: AppColors.primaryColor,
+                    color: themeNotifier.isDarkMode
+                        ? AppColors
+                            .primaryColorDark // Color para el modo oscuro
+                        : AppColors.primaryColor, // Color para el modo claro
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   labelColor: Colors.white,

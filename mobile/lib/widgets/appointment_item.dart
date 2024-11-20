@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/colors.dart';
 import 'package:mobile/models/cita.dart';
 import 'package:intl/intl.dart'; // Para manejar tiempo
+import 'package:provider/provider.dart';
+import 'package:mobile/providers/theme_notifier.dart';
 
 class AppointmentItem extends StatelessWidget {
   final String title;
@@ -17,6 +19,7 @@ class AppointmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
 
@@ -30,7 +33,9 @@ class AppointmentItem extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(size.width * 0.04),
               decoration: BoxDecoration(
-                color: AppColors.primaryColor,
+                color: themeNotifier.isDarkMode
+                    ? AppColors.primaryColorDark
+                    : AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
@@ -129,7 +134,7 @@ class AppointmentItem extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, color: Colors.green),
+                      Icon(Icons.calendar_today, color: AppColors.primaryColor),
                       SizedBox(width: 10),
                       Flexible(
                         child: Text(
@@ -147,7 +152,7 @@ class AppointmentItem extends StatelessWidget {
                   SizedBox(height: 10),
                   Row(
                     children: [
-                      Icon(Icons.access_time, color: Colors.green),
+                      Icon(Icons.access_time, color: AppColors.primaryColor),
                       SizedBox(width: 10),
                       Flexible(
                         child: Text(
@@ -165,7 +170,7 @@ class AppointmentItem extends StatelessWidget {
                   SizedBox(height: 10),
                   Row(
                     children: [
-                      Icon(Icons.person, color: Colors.green),
+                      Icon(Icons.person, color: AppColors.primaryColor),
                       SizedBox(width: 10),
                       Flexible(
                         child: Text(
@@ -183,7 +188,7 @@ class AppointmentItem extends StatelessWidget {
                   SizedBox(height: 10),
                   Row(
                     children: [
-                      Icon(Icons.check_circle, color: Colors.green),
+                      Icon(Icons.check_circle, color: AppColors.primaryColor),
                       SizedBox(width: 10),
                       Flexible(
                         child: Text(
