@@ -42,7 +42,7 @@ class CalendarScreenState extends State<CalendarScreen> {
           cita.fecha.day,
           int.parse(cita.horaInicio.split(":")[0]), // Hora de inicio
           int.parse(cita.horaInicio.split(":")[1]), // Minuto de inicio
-        );
+        ).toLocal();
 
         final DateTime fechaTermino = DateTime(
           cita.fecha.year,
@@ -60,8 +60,6 @@ class CalendarScreenState extends State<CalendarScreen> {
           false, // No es una cita de día completo
         );
       }).toList();
-
-      print(loadedMeetings);
 
       setState(() {
         meetings = loadedMeetings;
@@ -140,11 +138,11 @@ class CalendarScreenState extends State<CalendarScreen> {
                         ? AppColors
                             .primaryColorDark // Color para el modo oscuro
                         : AppColors.primaryColor, // Color para el modo claro
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
                   ),
                   labelColor: Colors.white,
                   unselectedLabelColor: Colors.black54,
-                  tabs: [
+                  tabs: const [
                     TabItem(title: 'Semanas'),
                     TabItem(title: 'Meses'),
                   ],
@@ -159,18 +157,18 @@ class CalendarScreenState extends State<CalendarScreen> {
                     view: CalendarView.week,
                     firstDayOfWeek: 1,
                     dataSource: MeetingDataSource(meetings),
-                    timeZone: 'America/Santiago',
+                    showNavigationArrow: true,
                     onTap: (CalendarTapDetails details) {
                       if (details.appointments != null &&
                           details.appointments!.isNotEmpty) {
                         mostrarDetallesCita(context, details.appointments!);
                       }
                     },
-                    timeSlotViewSettings: TimeSlotViewSettings(
+                    timeSlotViewSettings: const TimeSlotViewSettings(
                       dayFormat: 'EEE',
                       startHour: 8,
                       endHour: 24,
-                      timeInterval: const Duration(minutes: 30),
+                      timeInterval: Duration(minutes: 30),
                       timeFormat: 'HH:mm',
                     ),
                   ),
@@ -179,13 +177,14 @@ class CalendarScreenState extends State<CalendarScreen> {
                     view: CalendarView.month,
                     firstDayOfWeek: 1,
                     dataSource: MeetingDataSource(meetings),
+                    showNavigationArrow: true,
                     onTap: (CalendarTapDetails details) {
                       if (details.appointments != null &&
                           details.appointments!.isNotEmpty) {
                         mostrarDetallesCita(context, details.appointments!);
                       }
                     },
-                    monthViewSettings: MonthViewSettings(
+                    monthViewSettings: const MonthViewSettings(
                       appointmentDisplayMode:
                           MonthAppointmentDisplayMode.appointment,
                       agendaViewHeight: 150,
@@ -243,10 +242,4 @@ class Meeting {
   DateTime to;
   Color background;
   bool isAllDay;
-
-  // Sobrecargar el método toString() para mostrar información útil al imprimir
-  @override
-  String toString() {
-    return 'Meeting(eventName: $eventName, from: $from, to: $to, isAllDay: $isAllDay)';
-  }
 }
