@@ -43,44 +43,75 @@ class NotificationScreen extends StatelessWidget {
         title: const Text('Notificaciones'),
       ),
       body: ListView(
+        padding: const EdgeInsets.all(16.0),
         children: [
-          if (today.isNotEmpty) _buildSection("Hoy", today),
+          if (today.isNotEmpty) _buildSection("Hoy", today, context),
           if (inThreeDays.isNotEmpty)
-            _buildSection("En los próximos 3 días", inThreeDays),
+            _buildSection("En los próximos 3 días", inThreeDays, context),
           if (inOneWeek.isNotEmpty)
-            _buildSection("En la próxima semana", inOneWeek),
+            _buildSection("En la próxima semana", inOneWeek, context),
           if (today.isEmpty && inThreeDays.isEmpty && inOneWeek.isEmpty)
-            const Center(child: Text('No hay notificaciones disponibles')),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSection(String title, List<Cita> appointments) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 50.0),
+                child: Text(
+                  'No hay notificaciones disponibles',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
             ),
-          ),
-          ...appointments.map((cita) => _appointmentTile(cita)),
         ],
       ),
     );
   }
 
-  Widget _appointmentTile(Cita cita) {
+  Widget _buildSection(
+      String title, List<Cita> appointments, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        ...appointments.map((cita) => _appointmentCard(cita, context)),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _appointmentCard(Cita cita, BuildContext context) {
     final formattedDate = DateFormat('dd/MM/yyyy').format(cita.fecha);
-    return ListTile(
-      title: Text("Cita ${cita.idCita}"),
-      subtitle: Text(
-          "Fecha: $formattedDate, Hora: ${cita.horaInicio} - ${cita.horaTermino}"),
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Theme.of(context).primaryColor,
+          child: const Icon(Icons.calendar_today, color: Colors.white),
+        ),
+        title: Text(
+          "Cita ${cita.idCita}",
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Fecha: $formattedDate"),
+            Text("Hora: ${cita.horaInicio} - ${cita.horaTermino}"),
+          ],
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.more_vert),
+          onPressed: () {
+            // Puedes agregar un menú contextual aquí
+          },
+        ),
+      ),
     );
   }
 }

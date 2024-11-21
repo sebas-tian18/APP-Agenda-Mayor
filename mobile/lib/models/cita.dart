@@ -8,6 +8,7 @@ class Cita {
   final String nombreProfesional;
   final String nombreEstado;
   final String nombreResolucion;
+  bool vista; // Nueva propiedad para marcar como vista
 
   Cita({
     required this.idCita,
@@ -19,6 +20,7 @@ class Cita {
     required this.nombreProfesional,
     required this.nombreEstado,
     required this.nombreResolucion,
+    this.vista = false, // Por defecto no ha sido vista
   });
 
   // Mapear desde JSON
@@ -33,6 +35,7 @@ class Cita {
       nombreProfesional: json['nombre_profesional'],
       nombreEstado: json['nombre_estado'],
       nombreResolucion: json['nombre_resolucion'],
+      vista: json['vista'] ?? false, // Carga desde JSON, si existe
     );
   }
 }
