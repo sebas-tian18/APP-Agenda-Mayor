@@ -22,6 +22,7 @@ import ProCrearCita from "./pages/ProCrearCita";
 import UserTypeSelection from './components/UserTypeSelection';
 import AdminForm from './components/AdminForm';
 import ProfessionalForm from './components/ProfessionalForm';
+import UserList from "./components/UserList";
 // Rutas
 import PrivateRoute from "./routes/PrivateRoute";
 import RedirectRoute from './routes/RedirectRoute';
@@ -141,6 +142,15 @@ function App() {
                         </PrivateRoute>
                       }
                     ></Route>
+                    <Route
+                      path="/ver-usuarios"
+                      element={
+                        <PrivateRoute>
+                          <UserList />
+                        </PrivateRoute>
+                      }
+                    ></Route>
+
                 {/* Rutas privadas profesional*/}
                 <Route
                   path="/crear-cita"
