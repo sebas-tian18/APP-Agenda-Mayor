@@ -9,9 +9,11 @@ router.get('/adultoMayor', verifyToken, usuariosController.probarLogin); // Usar
 
 router.get("/:id/citas", usuariosController.consultarCitasPorUsuario); // Citas de usuario
 
+router.get("/lista", usuariosController.getUserList);
+
 router.route("/:id")
     .get(usuariosController.consultarUsuario)
     .put(usuariosController.actualizarUsuario)
-    .delete(usuariosController.eliminarUsuario)
+    .delete(usuariosController.deleteUser)
 
 module.exports = router;

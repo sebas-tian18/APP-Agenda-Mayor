@@ -58,6 +58,33 @@ class UsuariosController{
         res.status(200).json(rows);
     }
 
+
+    async getUserList(req, res) {
+        try {
+            const query = `
+            SELECT 
+                u.id_usuario AS id,
+                u.nombre_usuario AS nombreUsuario,
+                u.apellido_paterno AS apellidoPaterno,
+                u.apellido_materno AS apellidoMaterno,
+                u.rut,
+                r.nombre_rol AS tipo,
+                c.nombre_cargo AS nombreCargo
+            FROM usuario u
+            LEFT JOIN rol r ON u.id_rol = r.id_rol
+            LEFT JOIN administrador a ON u.id_usuario = a.id_usuario
+            LEFT JOIN cargo c ON a.id_cargo = c.id_cargo;
+            `;
+            const [users] = await db.promise().query(query);
+            res.status(200).json(users);
+        } catch (error) {
+            console.error('Error al ejecutar el query:', error.message);
+            res.status(500).json({ message: 'Error al obtener usuarios', error: error.message });
+          }
+    };
+
+
+
     async consultarUsuario(req, res){
         const {id} = req.params;
         const [rows] = await db.promise().query('SELECT * FROM usuario WHERE id_usuario = ?', [id]);
@@ -115,16 +142,50 @@ class UsuariosController{
     
     
 
-    async eliminarUsuario(req, res){
-        const {id} = req.params;
-        const [result] = await db.promise().query('DELETE FROM usuario WHERE id_usuario = ?', [id]);
-
-        if (result.affectedRows === 0) {
-            throw errors.NotFoundError('Usuario no encontrado');
+    async deleteUser(req, res){
+        const { id } = req.params;
+      
+        try {
+          // 1. Obtener el tipo de usuario
+          const [user] = await db.promise().query('SELECT id_rol FROM usuario WHERE id_usuario = ?', [id]);
+      
+          if (user.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+          }
+      
+          const userType = user[0].id_rol;
+      
+          // 2. Manejar eliminación de dependencias según el tipo de usuario
+          if (userType === 3) {
+            // Eliminar dependencias de adulto mayor
+            await db.promise().query('DELETE FROM adultos_mayores_organizaciones WHERE id_adulto_mayor = (SELECT id_adulto_mayor FROM adulto_mayor WHERE id_usuario = ?)', [id]);
+            await db.promise().query('DELETE FROM cita WHERE id_adulto_mayor = (SELECT id_adulto_mayor FROM adulto_mayor WHERE id_usuario = ?)', [id]);
+            await db.promise().query('DELETE FROM adulto_mayor WHERE id_usuario = ?', [id]);
+          } else if (userType === 2) {
+            // Eliminar dependencias de profesional
+            await db.promise().query('DELETE FROM profesionales_servicios WHERE id_profesional = (SELECT id_profesional FROM profesional WHERE id_usuario = ?)', [id]);
+            await db.promise().query('DELETE FROM cita WHERE id_profesional = (SELECT id_profesional FROM profesional WHERE id_usuario = ?)', [id]);
+            await db.promise().query('DELETE FROM profesional WHERE id_usuario = ?', [id]);
+          } else if (userType === 1) {
+            // Eliminar dependencias de administrador
+            await db.promise().query('DELETE FROM administrador WHERE id_usuario = ?', [id]);
+          }
+      
+          // 3. Eliminar el usuario
+          const [result] = await db.promise().query('DELETE FROM usuario WHERE id_usuario = ?', [id]);
+      
+          if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+          }
+      
+          res.status(200).json({ message: 'Usuario eliminado correctamente' });
+        } catch (error) {
+          console.error('Error al eliminar usuario:', error.message);
+          res.status(500).json({ message: 'Error al eliminar usuario', error: error.message });
         }
+      };
 
-        res.status(200).json({ message: 'Usuario eliminado' });
-    }
+      
 
     async probarLogin(req, res){
         res.status(200).json({ message: 'Bienvenido, Adulto Mayor' })
