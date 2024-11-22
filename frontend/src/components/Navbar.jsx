@@ -21,7 +21,7 @@ function Navbar() {
                 {userRole === 'admin' && (
                   <>
                     <NavItem to="/administrador" icon={<UserRound size={20} />} text="Validacion Usuarios" />
-                    <NavItem to="/ajustes-admin" icon={<Settings size={20} />} text="Administrador" />
+                    <NavItem to="/crear-usuario" icon={<Settings size={20} />} text="Crear Usuario" />
                     <NavItem to="/" icon={<Mail size={20} />} text="Solucitudes" />
                   </>
                 )}

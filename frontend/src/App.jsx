@@ -19,6 +19,9 @@ import Administrador from "./pages/Administrador";
 import ViewCitas from "./pages/ViewCitas";
 import ViewCalendar from "./pages/ViewCalendar";
 import ProCrearCita from "./pages/ProCrearCita";
+import UserTypeSelection from './components/UserTypeSelection';
+import AdminForm from './components/AdminForm';
+import ProfessionalForm from './components/ProfessionalForm';
 // Rutas
 import PrivateRoute from "./routes/PrivateRoute";
 import RedirectRoute from './routes/RedirectRoute';
@@ -114,6 +117,30 @@ function App() {
                   }
                 />
                 {/* Rutas privadas admin*/}
+                    <Route
+                      path="/crear-usuario"
+                      element={
+                        <PrivateRoute>
+                          <UserTypeSelection />
+                        </PrivateRoute>
+                      }
+                    ></Route>
+                    <Route
+                      path="/crear-admin"
+                      element={
+                        <PrivateRoute>
+                          <AdminForm />
+                        </PrivateRoute>
+                      }
+                    ></Route>
+                    <Route
+                      path="/crear-profesional"
+                      element={
+                        <PrivateRoute>
+                          <ProfessionalForm />
+                        </PrivateRoute>
+                      }
+                    ></Route>
                 {/* Rutas privadas profesional*/}
                 <Route
                   path="/crear-cita"
