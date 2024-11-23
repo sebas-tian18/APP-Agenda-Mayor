@@ -31,7 +31,7 @@ dependencies:
   path: ^1.9.0
   platform: ^3.1.6
   # cupertino_icons: ^1.0.8
-  # awesome_notifications: ^0.10.0
+  flutter_local_notifications: ^18.0.1
   timezone: ^0.9.4
   permission_handler: ^11.3.1
 

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mobile/providers/notification_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/providers/theme_notifier.dart';
 import 'package:mobile/providers/auth_provider.dart';
@@ -16,6 +17,7 @@ import 'package:mobile/widgets/user_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Inicialización del framework
+  await initNotifications();
 
   // Fijar la orientación a vertical
   await SystemChrome.setPreferredOrientations([

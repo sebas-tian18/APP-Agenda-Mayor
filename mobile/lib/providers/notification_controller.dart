@@ -1,22 +1,47 @@
-// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-// class NotificationController {
-//   /// Use this method to detect when a new notification or a schedule is created
-//   @pragma("vm:entry-point")
-//   static Future<void> onNotificationCreatedMethod(
-//       ReceivedNotification receivedNotification) async {}
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
-//   /// Use this method to detect every time that a new notification is displayed
-//   @pragma("vm:entry-point")
-//   static Future<void> onNotificationDisplayedMethod(
-//       ReceivedNotification receivedNotification) async {}
+Future<void> initNotifications() async {
+  // Permisos para Android 13+ (y versiones anteriores si es necesario)
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
 
-//   @pragma("vm:entry-point")
-//   static Future<void> onDismissActionReceivedMethod(
-//       ReceivedAction receivedAction) async {}
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings(
+          'icono_notificacion'); // Asegúrate de que este icono exista
 
-//   /// Use this method to detect when the user taps on a notification or action button
-//   @pragma("vm:entry-point")
-//   static Future<void> onActionReceivedMethod(
-//       ReceivedAction receivedAction) async {}
-// }
+  const DarwinInitializationSettings initializationSettingsIOS =
+      DarwinInitializationSettings();
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+Future<void> mostrarNotificacion() async {
+  const AndroidNotificationDetails androidNotificationDetails =
+      AndroidNotificationDetails(
+    "channel_id", // Un ID único para el canal
+    "Notificaciones", // Nombre del canal visible al usuario
+    importance: Importance.max,
+    priority: Priority.high,
+  );
+
+  const NotificationDetails notificationDetails = NotificationDetails(
+    android: androidNotificationDetails,
+  );
+
+  await flutterLocalNotificationsPlugin.show(
+    0, // ID único para cada notificación
+    "Título de la Notificación", // Título
+    "Este es el cuerpo de la notificación", // Cuerpo
+    notificationDetails,
+  );
+}
