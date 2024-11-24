@@ -11,6 +11,8 @@ router.get("/:id/citas", usuariosController.consultarCitasPorUsuario); // Citas 
 
 router.get("/lista", usuariosController.getUserList);
 
+router.get("/lista/:id", usuariosController.consultarIDProfesional);
+
 router.route("/:id")
     .get(usuariosController.consultarUsuario)
     .put(usuariosController.actualizarUsuario)

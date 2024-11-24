@@ -139,6 +139,28 @@ class CitasController {
             data: rows
         });
     } 
+    
+
+    async CitasProfesional(req, res) {
+        const { id } = req.params; // 'id' es el id_usuario del profesional
+    
+        try {
+            const query = `
+                SELECT * FROM cita WHERE id_profesional = ?`;
+    
+            const [rows] = await db.promise().query(query, [id]);
+    
+            if (rows.length === 0) {
+                return res.status(404).json({ message: 'No se encontraron citas para este profesional' });
+            }
+    
+            res.status(200).json(rows);
+        } catch (error) {
+            console.error('Error al consultar citas para el profesional:', error.message);
+            res.status(500).json({ message: 'Error al consultar citas para el profesional', error: error.message });
+        }
+    }
+    
 
     async agendarCita(req, res) {
         const connection = db.promise(); // Usar promesas para las querys a la BD

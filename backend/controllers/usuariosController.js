@@ -185,8 +185,17 @@ class UsuariosController{
         }
       };
 
-      
+    async consultarIDProfesional(req, res){
+        const {id} = req.params;
+        const [rows] = await db.promise().query('SELECT * FROM profesional WHERE id_usuario = ?', [id]);
 
+        if (rows.length === 0) {
+            throw errors.NotFoundError('Profesional no encontrado');
+        }
+
+        res.status(200).json(rows[0]);
+    }
+    
     async probarLogin(req, res){
         res.status(200).json({ message: 'Bienvenido, Adulto Mayor' })
     }
