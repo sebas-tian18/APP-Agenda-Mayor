@@ -5,8 +5,6 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 
 import { jwtDecode } from "jwt-decode";
 
-
-// Importar estilos
 function CalendarApp() {
   const token = sessionStorage.getItem("token");
   const user = jwtDecode(token);
@@ -83,6 +81,28 @@ function CalendarApp() {
           hour: "2-digit",
           minute: "2-digit",
           meridiem: false, // Mostrar hora en formato 24h
+        }}
+        eventContent={(eventInfo) => {
+          // Personalizar el contenido de los eventos
+          const start = new Date(eventInfo.event.start).toLocaleTimeString(
+            "es-ES",
+            { hour: "2-digit", minute: "2-digit" }
+          );
+          const end = new Date(eventInfo.event.end).toLocaleTimeString(
+            "es-ES",
+            { hour: "2-digit", minute: "2-digit" }
+          );
+
+          return (
+            <div className="flex-1">
+              <b>{eventInfo.event.title}</b>
+              
+              <div>
+
+                {start} - {end}
+              </div>
+            </div>
+          );
         }}
         dayMaxEventRows={true} // Permitir mostrar varias filas en un día
       />
