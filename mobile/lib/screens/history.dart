@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/providers/notification_controller.dart';
+// import 'package:mobile/providers/notification_controller.dart';
 
 class HistoryScreen extends StatelessWidget {
   final bool fromNavigationMenu;
@@ -21,7 +21,7 @@ class HistoryScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            mostrarNotificacion(); // Llama a la función para mostrar notificaciones
+            // mostrarNotificacion(); // Llama a la función para mostrar notificaciones
           },
           child: const Text("Mostrar Notificación"),
         ),

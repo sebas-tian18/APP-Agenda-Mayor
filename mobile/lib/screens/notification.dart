@@ -7,6 +7,7 @@ class NotificationScreen extends StatelessWidget {
 
   const NotificationScreen({super.key, required this.appointments});
 
+  // Citas para hoy
   List<Cita> getTodayAppointments() {
     DateTime now = DateTime.now();
     return appointments.where((cita) {
@@ -16,6 +17,7 @@ class NotificationScreen extends StatelessWidget {
     }).toList();
   }
 
+  // Citas en los próximos 3 días
   List<Cita> getAppointmentsInThreeDays() {
     DateTime now = DateTime.now();
     DateTime threeDaysFromNow = now.add(const Duration(days: 3));
@@ -24,6 +26,7 @@ class NotificationScreen extends StatelessWidget {
     }).toList();
   }
 
+  // Citas en la próxima semana
   List<Cita> getAppointmentsInOneWeek() {
     DateTime now = DateTime.now();
     DateTime oneWeekFromNow = now.add(const Duration(days: 7));
@@ -32,11 +35,20 @@ class NotificationScreen extends StatelessWidget {
     }).toList();
   }
 
+  // Citas expiradas
+  List<Cita> getExpiredAppointments() {
+    DateTime now = DateTime.now();
+    return appointments.where((cita) {
+      return cita.fecha.isBefore(now);
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final today = getTodayAppointments();
     final inThreeDays = getAppointmentsInThreeDays();
     final inOneWeek = getAppointmentsInOneWeek();
+    final expired = getExpiredAppointments();
 
     return Scaffold(
       appBar: AppBar(
@@ -50,7 +62,12 @@ class NotificationScreen extends StatelessWidget {
             _buildSection("En los próximos 3 días", inThreeDays, context),
           if (inOneWeek.isNotEmpty)
             _buildSection("En la próxima semana", inOneWeek, context),
-          if (today.isEmpty && inThreeDays.isEmpty && inOneWeek.isEmpty)
+          if (expired.isNotEmpty)
+            _buildSection("Citas expiradas", expired, context),
+          if (today.isEmpty &&
+              inThreeDays.isEmpty &&
+              inOneWeek.isEmpty &&
+              expired.isEmpty)
             const Center(
               child: Padding(
                 padding: EdgeInsets.only(top: 50.0),
