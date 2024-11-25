@@ -42,6 +42,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final citasProvider = Provider.of<CitasProvider>(context);
     return Consumer<ThemeNotifier>(
       builder: (context, themeNotifier, child) {
         return MaterialApp(
@@ -79,8 +80,9 @@ class MyApp extends StatelessWidget {
             '/datos-perfil': (context) => DataScreen(), // Pantalla de datos
             '/editar-perfil': (context) =>
                 EditProfileScreen(), // Pantalla de edición
-            '/historial-citas': (context) =>
-                HistoryScreen(), // Historial de citas
+            '/historial-citas': (context) => HistoryScreen(
+                  appointments: citasProvider.citas,
+                ), // Historial de citas
             '/ayuda-soporte': (context) =>
                 HelpSupportScreen(), // Ayuda y soporte
             '/configuracion': (context) =>
