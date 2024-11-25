@@ -6,19 +6,19 @@ class CitasController {
     constructor() {
     }
 
-    async crearCita(req, res){
+    async crearCita(req, res) {
         const connection = db.promise(); // Usar promesas para las querys a la BD
-        
-        try{
+
+        try {
             // Necesita id_profesional, id de adulto mayor es null
-            const { id_profesional, fecha, hora_inicio, hora_termino, atencion_a_domicilio, 
+            const { id_profesional, fecha, hora_inicio, hora_termino, atencion_a_domicilio,
                 id_adulto_mayor, id_servicio } = req.body;
 
             // Iniciar transaccion
             await connection.beginTransaction();
 
             // Constantes
-            const id_estado = 1 ;    // "Pendiente" por defecto
+            const id_estado = 1;    // "Pendiente" por defecto
             const id_resolucion = 1; // "No realizado" por defecto
             const asistencia = 0;    // No asiste por defecto
 
@@ -29,24 +29,24 @@ class CitasController {
                   asistencia, atencion_a_domicilio, id_adulto_mayor, id_servicio)
                 VALUES 
                   (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-                [ id_profesional, id_estado, id_resolucion, fecha, hora_inicio, hora_termino, 
-                  asistencia, atencion_a_domicilio, id_adulto_mayor, id_servicio ]);
+                [id_profesional, id_estado, id_resolucion, fecha, hora_inicio, hora_termino,
+                    asistencia, atencion_a_domicilio, id_adulto_mayor, id_servicio]);
 
             // Confirmar la transaccion
             await connection.commit();
-            res.status(201).json({ 
-                message: 'Cita creada exitosamente', 
-                id_cita: result.insertId 
+            res.status(201).json({
+                message: 'Cita creada exitosamente',
+                id_cita: result.insertId
             });
         } catch (err) {
             // Si ocurre error revertir transaccion
             await connection.rollback();
             throw error;
         }
-    } 
+    }
 
     // Se muestran las citas junto a los datos de profesional, centro, direccion, tipo de servicio
-    async consultarCitas(req, res){
+    async consultarCitas(req, res) {
         const [rows] = await db.promise().query(`
             SELECT 
                 c.id_cita,
@@ -82,7 +82,7 @@ class CitasController {
             message: 'Lista de citas obtenida exitosamente',
             data: rows
         });
-    } 
+    }
 
     async consultarCitasnotomadas(req, res) {
         const { id } = req.params;
@@ -114,7 +114,7 @@ class CitasController {
             AND esp.id_especialidad = ?;`,
             [id]
         );
-    
+
         if (rows.length === 0) {
             throw errors.NotFoundError(`No se encontraron citas no tomadas para la especialidad`);
         }
@@ -125,7 +125,7 @@ class CitasController {
         });
     }
 
-    async consultarEspecialidadesDisponibles(req, res){
+    async consultarEspecialidadesDisponibles(req, res) {
         const [rows] = await db.promise().query(`
             SELECT DISTINCT e.id_especialidad, e.nombre_especialidad
             FROM cita c
@@ -138,29 +138,29 @@ class CitasController {
             message: 'Lista de especialidades disponibles obtenida exitosamente',
             data: rows
         });
-    } 
-    
+    }
+
 
     async CitasProfesional(req, res) {
         const { id } = req.params; // 'id' es el id_usuario del profesional
-    
+
         try {
             const query = `
                 SELECT * FROM cita WHERE id_profesional = ?`;
-    
+
             const [rows] = await db.promise().query(query, [id]);
-    
+
             if (rows.length === 0) {
                 return res.status(404).json({ message: 'No se encontraron citas para este profesional' });
             }
-    
+
             res.status(200).json(rows);
         } catch (error) {
             console.error('Error al consultar citas para el profesional:', error.message);
             res.status(500).json({ message: 'Error al consultar citas para el profesional', error: error.message });
         }
     }
-    
+
 
     async agendarCita(req, res) {
         const connection = db.promise(); // Usar promesas para las querys a la BD
@@ -180,7 +180,7 @@ class CitasController {
                 SELECT am.id_adulto_mayor 
                 FROM usuario u
                 JOIN adulto_mayor am ON u.id_usuario = am.id_usuario 
-                WHERE u.id_usuario = ?;`, 
+                WHERE u.id_usuario = ?;`,
                 [id_usuario]
             );
 
@@ -192,7 +192,7 @@ class CitasController {
 
             // Verificar si la cita ya ha sido tomada o si existe
             const [citaExistente] = await connection.query(
-                'SELECT * FROM cita WHERE id_cita = ? AND id_adulto_mayor IS NULL', 
+                'SELECT * FROM cita WHERE id_cita = ? AND id_adulto_mayor IS NULL',
                 [id]
             );
 
@@ -202,7 +202,7 @@ class CitasController {
 
             // Actualizar la cita asignando el id_adulto_mayor
             const [result] = await connection.query(
-                'UPDATE cita SET id_adulto_mayor = ? WHERE id_cita = ?', 
+                'UPDATE cita SET id_adulto_mayor = ? WHERE id_cita = ?',
                 [id_adulto_mayor, id]
             );
 

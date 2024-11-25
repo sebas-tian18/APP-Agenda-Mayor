@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -58,7 +58,9 @@ function CalendarApp() {
   // Transformar las citas a formato FullCalendar
   const transformedCitas = citasInfo.map((cita) => ({
     id: cita.id_cita.toString(), // FullCalendar requiere que `id` sea string
-    title: `Cita con ID ${cita.id_cita}`,
+    title: `Cita con ID ${cita.id_cita} (${
+      cita.id_resolucion === 1 ? "ocupada" : "libre"
+    })`,
     start: `${cita.fecha.split("T")[0]}T${cita.hora_inicio.substring(0, 5)}`,
     end: `${cita.fecha.split("T")[0]}T${cita.hora_termino.substring(0, 5)}`,
   }));
@@ -96,9 +98,8 @@ function CalendarApp() {
           return (
             <div className="flex-1">
               <b>{eventInfo.event.title}</b>
-              
-              <div>
 
+              <div>
                 {start} - {end}
               </div>
             </div>
