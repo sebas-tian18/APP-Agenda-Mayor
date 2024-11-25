@@ -2,11 +2,12 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { FontSizeContext } from "../components/FontSizeContext.jsx";
 import { toast } from "sonner";
-import { Link, useNavigate } from "react-router-dom";  // Importa useNavigate
+import { Link, useNavigate } from "react-router-dom"; // Importa useNavigate
 import Spinner from "../components/Spinner.jsx"; // Spinner de carga :)
 
 const Login = () => {
-  const { fontSize, increaseFontSize, decreaseFontSize } = useContext(FontSizeContext);
+  const { fontSize, increaseFontSize, decreaseFontSize } =
+    useContext(FontSizeContext);
   const { login } = useContext(AuthContext); // Acceder a funcion login desde AuthContext
 
   // manejar estado de correo y la contraseña
@@ -20,12 +21,12 @@ const Login = () => {
   // manejar envio de formulariow
   const handleSubmit = async (e) => {
     e.preventDefault(); // evita que se recargue
-  
+
     setLoading(true); // iniciar estado de carga
-    
+
     try {
       // realiza POST al backend
-      const response = await fetch("http://45.236.130.139:3000/api/login", {
+      const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,11 +50,9 @@ const Login = () => {
       }
     } catch (err) {
       toast.error(err.message || "Error al Autenticar.");
-
     } finally {
       setLoading(false); // Termina carga
     }
-
   };
 
   return (
