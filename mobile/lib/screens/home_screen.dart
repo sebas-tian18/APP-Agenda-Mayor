@@ -58,6 +58,21 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                   ServiceButton(
+                    icon: Icons.hearing,
+                    label: 'fonoaudiólogo',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ServiceDetailScreen(
+                            serviceId: 1,
+                            label: 'fonoaudiólogo',
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  ServiceButton(
                     icon: Icons.local_hospital,
                     label: 'Dentista',
                     onPressed: () {
@@ -65,23 +80,8 @@ class HomeScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ServiceDetailScreen(
-                            serviceId: 1,
-                            label: 'Dentista',
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  ServiceButton(
-                    icon: Icons.gavel,
-                    label: 'Abogado',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ServiceDetailScreen(
                             serviceId: 4,
-                            label: 'Abogado',
+                            label: 'Dentista',
                           ),
                         ),
                       );

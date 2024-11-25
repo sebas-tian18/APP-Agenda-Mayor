@@ -40,13 +40,22 @@ class ServiceButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        onPressed: onPressed, // Llama al callback cuando se presiona el botón
+        onPressed: onPressed,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 80, color: Colors.white),
             SizedBox(height: 10),
-            Text(label, style: TextStyle(color: Colors.white, fontSize: 23)),
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(color: Colors.white, fontSize: 20),
+                textAlign: TextAlign.center,
+                maxLines: 1, // Limitar el texto a una sola línea
+                overflow: TextOverflow
+                    .ellipsis, // Mostrar "..." si el texto es muy largo
+              ),
+            ),
           ],
         ),
       ),

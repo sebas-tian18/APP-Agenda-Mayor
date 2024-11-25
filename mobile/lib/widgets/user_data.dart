@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Necesario para usar Consumer
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart'; // Importar para el manejo de fechas
-import 'package:mobile/widgets/custom_app_bar.dart';
+// import 'package:mobile/widgets/custom_app_bar.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/providers/theme_notifier.dart';
 
@@ -62,9 +62,8 @@ class DataScreenState extends State<DataScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Datos de Usuario',
-        showBackButton: widget.fromNavigationMenu,
+      appBar: AppBar(
+        title: const Text('Datos Del usuario'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

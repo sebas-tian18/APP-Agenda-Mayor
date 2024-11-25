@@ -3,89 +3,115 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/models/cita.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mobile/models/cita.dart';
 
-// Inicialización del plugin de notificaciones
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-final FlutterSecureStorage storage =
-    FlutterSecureStorage(); // Para guardar notificaciones vistas
+class NotificationService {
+  NotificationService._privateConstructor();
 
-// Inicializar notificaciones
-Future<void> initNotifications() async {
-  // Inicializar zonas horarias
-  tz.initializeTimeZones();
+  static final NotificationService _instance =
+      NotificationService._privateConstructor();
+  static final FlutterLocalNotificationsPlugin
+      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final FlutterSecureStorage _storage = FlutterSecureStorage();
 
-  // Solicitar permisos para notificaciones
-  if (await Permission.notification.isDenied) {
-    await Permission.notification.request();
+  factory NotificationService() => _instance;
+
+  Future<void> initialize() async {
+    tz.initializeTimeZones();
+
+    // Solicitar permisos para notificaciones
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('icono_notificacion');
+
+    const DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings();
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        print('Notificación recibida con ID: ${response.id}');
+      },
+    );
   }
 
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings(
-          'icono_notificacion'); // Icono de notificación
+  // Método para resetear los estados (usado en pruebas)
+  Future<void> resetAllNotifications() async {
+    await _storage
+        .deleteAll(); // Borra todas las claves en el almacenamiento seguro
+    print("Todos los estados de notificaciones fueron reseteados.");
+  }
 
-  const DarwinInitializationSettings initializationSettingsIOS =
-      DarwinInitializationSettings();
+  Future<void> programNotifications(List<Cita> citas) async {
+    final DateTime now = DateTime.now();
 
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: initializationSettingsIOS,
-  );
+    for (var cita in citas) {
+      String? notificationKey =
+          await _storage.read(key: 'notification_cita_${cita.idCita}');
+      if (notificationKey == 'scheduled') {
+        // La notificación ya está programada para esta cita
+        continue;
+      }
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-}
+      String fecha = DateFormat('dd/MM/yyyy').format(cita.fecha);
+      String hora = "${cita.horaInicio} - ${cita.horaTermino}";
+      String titulo = "Cita ${cita.idCita}";
 
-// Programar notificaciones para una lista de citas
-Future<void> programarNotificaciones(List<Cita> citas) async {
-  DateTime now = DateTime.now();
+      // Mostrar notificación inmediata si la cita ha expirado
+      if (cita.fecha.isBefore(now)) {
+        await _showImmediateNotification(cita.idCita, "$titulo - Expirada",
+            "La cita programada para el $fecha a las $hora ha expirado.");
+      }
 
-  for (var cita in citas) {
-    String fecha = DateFormat('dd/MM/yyyy').format(cita.fecha);
-    String hora = "${cita.horaInicio} - ${cita.horaTermino}";
-    String titulo = "Cita ${cita.idCita}";
-    // String mensaje = "Fecha: $fecha\nHora: $hora";
-
-    if (cita.fecha.isBefore(now)) {
-      // Manejar citas expiradas mostrando una notificación inmediata
-      await _mostrarNotificacionInmediata(cita.idCita, "$titulo - Expirada",
-          "La cita programada para el $fecha a las $hora ha expirado.");
-    } else {
-      // Comprobar si la notificación ya fue vista
-      bool notificacionVista = await _notificacionYaVista(cita.idCita);
-
-      if (!notificacionVista) {
-        // Programar notificaciones a intervalos específicos antes de la cita
-        await _programarNotificacionEnIntervalo(
+      // Programar notificaciones para citas futuras
+      if (!cita.fecha.isBefore(now)) {
+        await _scheduleNotification(
             cita, Duration(days: 7), "Falta 1 semana para tu cita");
-        await _programarNotificacionEnIntervalo(
+        await _scheduleNotification(
             cita, Duration(days: 3), "Faltan 3 días para tu cita");
-        await _programarNotificacionEnIntervalo(
+        await _scheduleNotification(
             cita, Duration(days: 0), "Hoy es el día de tu cita");
+
+        // Marcar notificaciones como programadas para esta cita
+        await _storage.write(
+            key: 'notification_cita_${cita.idCita}', value: 'scheduled');
       }
     }
   }
-}
 
-// Función auxiliar para programar notificaciones en intervalos
-Future<void> _programarNotificacionEnIntervalo(
-    Cita cita, Duration intervalo, String mensajePersonalizado) async {
-  DateTime fechaNotificacion = cita.fecha.subtract(intervalo);
+  Future<void> _scheduleNotification(
+      Cita cita, Duration interval, String message) async {
+    final DateTime now = DateTime.now();
+    final DateTime scheduledDate = cita.fecha.subtract(interval);
 
-  // Solo programar si la fecha de notificación es futura
-  if (fechaNotificacion.isAfter(DateTime.now())) {
+    print("Intentando programar notificación para cita ${cita.idCita}");
+    print("Fecha programada: $scheduledDate, Fecha actual: $now");
+
+    if (scheduledDate.isBefore(now)) {
+      print("La fecha programada ya pasó para la cita ${cita.idCita}.");
+      return;
+    }
+
     try {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        cita.idCita, // ID único para la notificación
-        "Cita ${cita.idCita}", // Título de la notificación
-        "$mensajePersonalizado el ${DateFormat('dd/MM/yyyy').format(cita.fecha)} a las ${cita.horaInicio}", // Cuerpo de la notificación
-        _convertToTZDateTime(
-            fechaNotificacion), // Fecha y hora de la notificación
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        cita.idCita,
+        "Cita ${cita.idCita}",
+        "$message el ${DateFormat('dd/MM/yyyy').format(cita.fecha)} a las ${cita.horaInicio}",
+        _toTZDateTime(scheduledDate),
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            "channel_id", // ID del canal
-            "Notificaciones", // Nombre visible para el canal
+            "channel_id",
+            "Notificaciones",
             importance: Importance.max,
             priority: Priority.high,
           ),
@@ -94,53 +120,52 @@ Future<void> _programarNotificacionEnIntervalo(
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
       );
+      print("Notificación programada correctamente para cita ${cita.idCita}");
     } catch (e) {
-      print("Error al programar notificación para ${cita.idCita}: $e");
+      print("Error programando notificación para ${cita.idCita}: $e");
     }
   }
-}
 
-// Mostrar una notificación inmediata
-Future<void> _mostrarNotificacionInmediata(
-    int id, String titulo, String mensaje) async {
-  await flutterLocalNotificationsPlugin.show(
-    id,
-    titulo,
-    mensaje,
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        "expired_channel_id", // Canal para notificaciones inmediatas
-        "Citas Expiradas", // Nombre del canal
-        importance: Importance.max,
-        priority: Priority.high,
-      ),
-    ),
-  );
+  Future<void> _showImmediateNotification(
+      int id, String title, String message) async {
+    bool alreadyNotified = await _isNotificationSeen(id);
+    if (!alreadyNotified) {
+      await _flutterLocalNotificationsPlugin.show(
+        id,
+        title,
+        message,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            "expired_channel_id",
+            "Citas Expiradas",
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
+        ),
+      );
+      await _markNotificationAsSeen(id);
+    } else {
+      print("Notificación inmediata ya vista: ID $id");
+    }
+  }
 
-  // Marcar la notificación como vista
-  await _marcarNotificacionComoVista(id);
-}
+  tz.TZDateTime _toTZDateTime(DateTime date) {
+    return tz.TZDateTime(
+      tz.local,
+      date.year,
+      date.month,
+      date.day,
+      date.hour,
+      date.minute,
+    );
+  }
 
-// Convertir una fecha a una zona horaria local
-tz.TZDateTime _convertToTZDateTime(DateTime fecha) {
-  return tz.TZDateTime(
-    tz.local,
-    fecha.year,
-    fecha.month,
-    fecha.day,
-    fecha.hour,
-    fecha.minute,
-  );
-}
+  Future<void> _markNotificationAsSeen(int id) async {
+    await _storage.write(key: 'notification_$id', value: 'seen');
+  }
 
-// Función para marcar una notificación como vista
-Future<void> _marcarNotificacionComoVista(int idCita) async {
-  await storage.write(key: 'notificacion_$idCita', value: 'vista');
+  Future<bool> _isNotificationSeen(int id) async {
+    String? state = await _storage.read(key: 'notification_$id');
+    return state == 'seen';
+  }
 }
-
-// Función para comprobar si una notificación ya fue vista
-Future<bool> _notificacionYaVista(int idCita) async {
-  String? estado = await storage.read(key: 'notificacion_$idCita');
-  return estado == 'vista';
-}
-// ###

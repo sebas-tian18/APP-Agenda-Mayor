@@ -17,7 +17,7 @@ import 'package:mobile/widgets/user_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Inicialización del framework
-  await initNotifications();
+  await NotificationService().initialize();
 
   // Fijar la orientación a vertical
   await SystemChrome.setPreferredOrientations([
@@ -43,6 +43,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final citasProvider = Provider.of<CitasProvider>(context);
+
+    // Programar notificaciones una vez cargadas las citas
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await NotificationService().initialize();
+
+      // Borra los estados para garantizar nuevas notificaciones
+      await NotificationService().resetAllNotifications();
+
+      if (citasProvider.citas.isNotEmpty) {
+        await NotificationService().programNotifications(citasProvider.citas);
+      }
+    });
+
     return Consumer<ThemeNotifier>(
       builder: (context, themeNotifier, child) {
         return MaterialApp(
@@ -75,19 +88,16 @@ class MyApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: LoginScreen(), // Al entrar se muestra el login
+          home: LoginScreen(),
           routes: {
-            '/datos-perfil': (context) => DataScreen(), // Pantalla de datos
-            '/editar-perfil': (context) =>
-                EditProfileScreen(), // Pantalla de edición
+            '/datos-perfil': (context) => DataScreen(),
+            '/editar-perfil': (context) => EditProfileScreen(),
             '/historial-citas': (context) => HistoryScreen(
                   appointments: citasProvider.citas,
-                ), // Historial de citas
-            '/ayuda-soporte': (context) =>
-                HelpSupportScreen(), // Ayuda y soporte
-            '/configuracion': (context) =>
-                ConfiguationScreen(), // Configuración
-            '/login': (context) => LoginScreen(), // Pantalla de login
+                ),
+            '/ayuda-soporte': (context) => HelpSupportScreen(),
+            '/configuracion': (context) => ConfiguationScreen(),
+            '/login': (context) => LoginScreen(),
           },
         );
       },
