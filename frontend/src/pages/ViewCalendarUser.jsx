@@ -59,9 +59,7 @@ function CalendarApp() {
   // Transformar las citas a formato FullCalendar
   const transformedCitas = citasInfo.map((cita) => ({
     id: cita.id_cita.toString(), // FullCalendar requiere que `id` sea string
-    title: `Cita con ID ${cita.id_cita} (${
-      cita.id_resolucion === 1 ? "ocupada" : "libre"
-    })`,
+    title: `Cita con ID ${cita.id_cita} `,
     start: `${cita.fecha.split("T")[0]}T${cita.hora_inicio.substring(0, 5)}`,
     end: `${cita.fecha.split("T")[0]}T${cita.hora_termino.substring(0, 5)}`,
   }));
