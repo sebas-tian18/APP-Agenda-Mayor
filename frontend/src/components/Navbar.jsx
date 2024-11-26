@@ -57,31 +57,8 @@ function Navbar() {
               </>
             )}
           </div>
-
-          {/* Botones para cambiar tamaño de la letra */}
-          <div className="flex items-center space-x-2">
-              <span className="font-medium">Cambiar tamaño de la letra:</span>
-              <button
-                className="bg-sky-800 text-white px-3 py-1 rounded-full hover:bg-blue-700 focus:outline-none transition duration-150 ease-in-out"
-                onClick={decreaseFontSize}
-              >
-                A
-              </button>
-              <button
-                className="bg-sky-800 text-white px-3 py-1 rounded-full text-lg hover:bg-blue-700 focus:outline-none transition duration-150 ease-in-out"
-                onClick={midsetFontsize}
-              >
-                A
-              </button>
-              <button
-                className="bg-sky-800 text-white px-3 py-1 rounded-full text-xl hover:bg-blue-700 focus:outline-none transition duration-150 ease-in-out"
-                onClick={increaseFontSize}
-              >
-                A
-              </button>
             </div>
         </div>
-      </div>
     </nav>
   );
 }
