@@ -19,6 +19,7 @@ import Administrador from "./pages/Administrador";
 import ViewCitas from "./pages/ViewCitas";
 import ViewCalendar from "./pages/ViewCalendar";
 import ProCrearCita from "./pages/ProCrearCita";
+import AdministrarGoogle from './pages/AdminGoogle';
 import UserTypeSelection from './components/UserTypeSelection';
 import AdminForm from './components/AdminForm';
 import ProfessionalForm from './components/ProfessionalForm';
@@ -82,6 +83,14 @@ function App() {
                       <EditarPerfil />
                     </PrivateRoute>
                   }
+                />
+                <Route 
+                  path="/administrar-google" 
+                  element={
+                    <PrivateRoute>
+                      <AdministrarGoogle />
+                    </PrivateRoute>
+                  } 
                 />
                 <Route
                   path="/ajustes"

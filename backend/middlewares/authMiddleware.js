@@ -14,7 +14,7 @@ function verifyToken(req, res, next) {
   
     try {
         const payload = verificarToken(token); // Verificar el token
-        req.username = payload; // Guardar payload en req
+        req.user = payload; // Guardar payload en req
         next(); // Continuar al siguiente middleware o controlador
     } catch (error) {
         switch (error.name) {

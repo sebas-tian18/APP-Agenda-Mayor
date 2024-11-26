@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [userId, setUserId] = useState(null); 
 
   useEffect(() => {
     const token = sessionStorage.getItem('token'); // Obtener el token desde session
@@ -18,6 +19,7 @@ export function AuthProvider({ children }) {
         } else {
           setIsAuthenticated(true);
           setUserRole(user.nombre_rol); // Obtener el rol desde el token decodificado
+          setUserId(user.id_usuario); // Obtener id usuario
         }
       } catch (error) {
         console.error("Error al decodificar el token:", error);
@@ -32,10 +34,12 @@ export function AuthProvider({ children }) {
     // Decodificar el token para obtener la informacion del usuario
     const decodedToken = jwtDecode(token);
     const role = decodedToken.nombre_rol; // Obtener rol
+    const user_id = decodedToken.id_usuario;
 
-    // Configurar el estado global de autenticacion y el rol
+    // Configurar el estado global de autenticacion, el rol e id
     setIsAuthenticated(true);
     setUserRole(role);
+    setUserId(user_id);
   };
 
   const logout = () => {
@@ -45,7 +49,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userRole, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, userRole, userId, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
