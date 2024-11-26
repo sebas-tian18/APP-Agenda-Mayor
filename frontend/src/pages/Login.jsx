@@ -129,22 +129,6 @@ const Login = () => {
                 </button>
               </div>
             </form>
-
-            {/* Botones para aumentar y disminuir el tamaño de la fuente */}
-            <div className="flex justify-center mt-6 space-x-4">
-              <button
-                className="bg-gray-200 p-2 rounded-lg hover:bg-gray-300"
-                onClick={decreaseFontSize}
-              >
-                -
-              </button>
-              <button
-                className="bg-gray-200 p-2 rounded-lg hover:bg-gray-300"
-                onClick={increaseFontSize}
-              >
-                +
-              </button>
-            </div>
           </div>
         </div>
       </div>

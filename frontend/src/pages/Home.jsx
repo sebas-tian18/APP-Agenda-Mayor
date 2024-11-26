@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-green-50">
       <h1 className="text-4xl font-bold mb-8">
-        Bienvenido(a){username ? `, ${username}` : 'Iniciar sesión denuevo'} a la página principal
+        Bienvenido(a){username ? `, ${username}` : 'Iniciar sesión de nuevo'} a la página principal
       </h1>
     </div>
   );

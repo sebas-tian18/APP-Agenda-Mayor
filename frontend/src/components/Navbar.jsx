@@ -1,117 +1,85 @@
-import { Link } from "react-router-dom";
-import {
-  Calendar,
-  Clipboard,
-  Settings,
-  CalendarCog,
-  LogIn,
-  UserPlus,
-  UserRound,
-  Mail,
-  UserRoundPlus,
-  UserRoundCheck,
-} from "lucide-react";
-import CerrarSesion from "./Logout";
-import { AuthContext } from "../context/AuthContext";
-import { useContext } from "react";
+import { Link } from 'react-router-dom';
+import { Calendar, Clipboard, Settings, CalendarCog, LogIn, UserPlus, UserRound, Mail, UserRoundPlus, UserRoundCheck } from 'lucide-react';
+import CerrarSesion from './Logout';
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
+import { FontSizeContext } from "../components/FontSizeContext.jsx";
+import logo from '../images/Logo2.png'; // Importa tu imagen (ajusta el nombre y la ruta según corresponda)
 
 function Navbar() {
-  const { isAuthenticated, userRole } = useContext(AuthContext); // Obtener estados globales
+  const { isAuthenticated, userRole } = useContext(AuthContext);
+  const { fontSize, increaseFontSize, decreaseFontSize, midsetFontsize } = useContext(FontSizeContext);
 
   return (
     <nav className="bg-green-600 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+          {/* Logo con redirección */}
           <div className="flex items-center">
-            <span className="font-bold text-xl">MiApp</span>
+            <a href="https://www.temuco.cl" target="_blank" rel="noopener noreferrer">
+              <img src={logo} alt="Logo Municipalidad de Temuco" className="w-20 h-auto" />
+            </a>
           </div>
+
           <div className="flex">
             {isAuthenticated ? (
               <>
-                {/* Elementos visibles solo para usuarios autenticados segun rol */}
-                {userRole === "admin" && (
+                {userRole === 'admin' && (
                   <>
-                    <NavItem
-                      to="/ver-usuarios"
-                      icon={<UserRound size={20} />}
-                      text="Ver Usuarios"
-                    />
-                    <NavItem
-                      to="/administrador"
-                      icon={<UserRoundCheck size={20} />}
-                      text="Validacion Usuarios"
-                    />
-                    <NavItem
-                      to="/crear-usuario"
-                      icon={<UserRoundPlus size={20} />}
-                      text="Crear Usuario"
-                    />
-                    <NavItem
-                      to="/"
-                      icon={<Mail size={20} />}
-                      text="Solucitudes"
-                    />
+                    <NavItem to="/ver-usuarios" icon={<UserRound size={20} />} text="Ver Usuarios" />
+                    <NavItem to="/administrador" icon={<UserRoundCheck size={20} />} text="Validación Usuarios" />
+                    <NavItem to="/crear-usuario" icon={<UserRoundPlus size={20} />} text="Crear Usuario" />
+                    <NavItem to="/" icon={<Mail size={20} />} text="Solicitudes" />
                   </>
                 )}
                 {userRole === "profesional" && (
                   <>
-                    <NavItem
-                      to="/ViewCalendar"
-                      icon={<Calendar size={20} />}
-                      text="Calendario"
-                    />
-                    <NavItem
-                      to="/crear-cita"
-                      icon={<Clipboard size={20} />}
-                      text="Crear Cita"
-                    />
-                    {/*Elementos del profesional*/}
+                    <NavItem to="/ViewCalendar" text="ViewCalendar" />
+                    <NavItem to="/crear-cita" icon={<Clipboard size={20} />} text="Crear Cita" />
                   </>
                 )}
                 {userRole === "adulto mayor" && (
                   <>
-                    {/*Elementos del adulto mayor*/}
-                    <NavItem
-                      to="/servicios"
-                      icon={<Clipboard size={20} />}
-                      text="Citas"
-                    />
-                    <NavItem
-                      to="/calendario"
-                      icon={<Calendar size={20} />}
-                      text="Calendario"
-                    />
-                    <NavItem
-                      to="/citas"
-                      icon={<CalendarCog size={20} />}
-                      text="Administrar"
-                    />
-                    <NavItem
-                      to="/ajustes"
-                      icon={<Settings size={20} />}
-                      text="Ajustes"
-                    />
+                    <NavItem to="/servicios" icon={<Clipboard size={20} />} text="Citas" />
+                    <NavItem to="/calendario" icon={<Calendar size={20} />} text="Calendario" />
+                    <NavItem to="/citas" icon={<CalendarCog size={20} />} text="Administrar" />
+                    <NavItem to="/ajustes" icon={<Settings size={20} />} text="Ajustes" />
+                    <NavItem to="/ViewCalendar" text="ViewCalendar" />
                   </>
                 )}
-                {/* Boton de cierre de sesion para todos los roles */}
+
                 <CerrarSesion />
               </>
             ) : (
               <>
-                {/* Elementos visibles solo para usuarios no autenticados */}
-                <NavItem
-                  to="/register"
-                  icon={<UserPlus size={20} />}
-                  text="Registrarse"
-                />
-                <NavItem
-                  to="/login"
-                  icon={<LogIn size={20} />}
-                  text="Acceder"
-                />
+                <NavItem to="/register" icon={<UserPlus size={20} />} text="Registrarse" />
+                <NavItem to="/login" icon={<LogIn size={20} />} text="Acceder" />
               </>
             )}
           </div>
+
+          {/* Botones para cambiar tamaño de la letra */}
+          <div className="flex items-center space-x-2">
+              <span className="font-medium">Cambiar tamaño de la letra:</span>
+              <button
+                className="bg-sky-800 text-white px-3 py-1 rounded-full hover:bg-blue-700 focus:outline-none transition duration-150 ease-in-out"
+                onClick={decreaseFontSize}
+              >
+                A
+              </button>
+              <button
+                className="bg-sky-800 text-white px-3 py-1 rounded-full text-lg hover:bg-blue-700 focus:outline-none transition duration-150 ease-in-out"
+                onClick={midsetFontsize}
+              >
+                A
+              </button>
+              <button
+                className="bg-sky-800 text-white px-3 py-1 rounded-full text-xl hover:bg-blue-700 focus:outline-none transition duration-150 ease-in-out"
+                onClick={increaseFontSize}
+              >
+                A
+              </button>
+            </div>
         </div>
       </div>
     </nav>
@@ -119,6 +87,8 @@ function Navbar() {
 }
 
 function NavItem({ to, icon, text }) {
+  const { fontSize } = useContext(FontSizeContext);
+
   return (
     <Link
       to={to}
@@ -126,7 +96,7 @@ function NavItem({ to, icon, text }) {
       transition duration-150 ease-in-out"
     >
       {icon}
-      <span className="ml-1">{text}</span>
+      <span className="ml-1" style={{ fontSize: `${fontSize}px` }}>{text}</span>
     </Link>
   );
 }

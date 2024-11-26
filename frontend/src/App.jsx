@@ -29,15 +29,21 @@ import PrivateRoute from "./routes/PrivateRoute";
 import RedirectRoute from "./routes/RedirectRoute";
 import { AuthProvider } from "./context/AuthContext";
 
+import { useContext} from 'react';
+import { FontSizeContext } from "./components/FontSizeContext.jsx";
+
+
 function App() {
+  const hola = FontSizeContext;
+  console.log(hola)
   return (
     <AuthProvider>
       <FontSizeProvider>
-        <div className="App min-h-screen flex flex-col">
+        <div className="App min-h-screen flex flex-col"  > 
           <Toaster richColors duration={3000} />
           <Router>
             <Navbar />
-            <main className="flex-grow">
+            <main className="flex-grow" style={{ fontSize: `${hola}px`  }}> 
               <Routes>
                 {/* Rutas públicas (redirecciona si esta autenticado)*/}
                 <Route

@@ -15,11 +15,12 @@ export const FontSizeProvider = ({ children }) => {
     localStorage.setItem('fontSize', fontSize);
   }, [fontSize]);
   // Se hará del 36 el máximo y del 20 el minimo
-  const increaseFontSize = () => setFontSize((prevSize) => Math.min(prevSize + 2, 36));
-  const decreaseFontSize = () => setFontSize((prevSize) => Math.max(prevSize - 2, 20));
+  const increaseFontSize = () => setFontSize((prevSize) => Math.min( 40, 40));
+  const decreaseFontSize = () => setFontSize((prevSize) => Math.max( 25, 25));
+  const midsetFontsize = () => setFontSize(() => 30)
 
   return (
-    <FontSizeContext.Provider value={{ fontSize, increaseFontSize, decreaseFontSize }}>
+    <FontSizeContext.Provider value={{ fontSize, increaseFontSize, decreaseFontSize, midsetFontsize }}>
       {children}
     </FontSizeContext.Provider>
   );
