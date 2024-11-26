@@ -11,12 +11,68 @@ function AdminForm() {
     password: '',
     sexo: '',
     nacionalidad: '',
+    email: '', 
     nombreCargo: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Datos del administrador:', formData);
+
+    // Crear objeto para enviar al backend (transformando nombres si es necesario)
+    const payload = {
+      nombre_usuario: formData.nombreUsuario,
+      apellido_paterno: formData.apellidoPaterno,
+      apellido_materno: formData.apellidoMaterno,
+      rut: formData.rut,
+      fecha_nacimiento: formData.fechaNacimiento,
+      telefono: formData.telefono,
+      contrasena: formData.password,
+      sexo: formData.sexo,
+      nacionalidad: formData.nacionalidad,
+      email: formData.email,
+      id_cargo: formData.nombreCargo 
+    };
+
+    try {
+      // Realizar petición al backend
+      const response = await fetch('http://localhost:3000/api/register/admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // Validar la respuesta
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al registrar el administrador');
+      }
+
+      const result = await response.json();
+      console.log('Administrador registrado exitosamente:', result);
+
+      // Limpia el formulario o redirige según sea necesario
+      setFormData({
+        nombreUsuario: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        rut: '',
+        fechaNacimiento: '',
+        telefono: '',
+        password: '',
+        sexo: '',
+        nacionalidad: '',
+        email: '',
+        nombreCargo: ''
+      });
+
+      alert('Administrador registrado exitosamente.');
+
+    } catch (error) {
+      console.error('Error al registrar el administrador:', error);
+      alert('Hubo un error al registrar el administrador. Por favor, inténtalo nuevamente.');
+    }
   };
 
   const handleChange = (e) => {
@@ -120,9 +176,8 @@ function AdminForm() {
               required
             >
               <option value="">Seleccionar</option>
-              <option value="masculino">Masculino</option>
-              <option value="femenino">Femenino</option>
-              <option value="otro">Otro</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
             </select>
           </div>
           <div>
@@ -138,10 +193,30 @@ function AdminForm() {
           </div>
           <div>
             <label className="block text-sm font-medium text-green-700">Nombre del Cargo</label>
-            <input
-              type="text"
+            <select
               name="nombreCargo"
               value={formData.nombreCargo}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-green-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200"
+              required
+            >
+              <option value="">Seleccionar</option>
+              <option value="1">Director General</option>
+              <option value="2">Jefe Departamento</option>
+              <option value="3">Supervisor de Area</option>
+              <option value="4">Coordinador</option>
+              <option value="5">Analista</option>
+              <option value="6">Asistente Administrador</option>
+              <option value="7">Tecnico Operativo</option>
+              <option value="8">Inspector Municipal</option>
+            </select>
+          </div>
+        <div>
+            <label className="block text-sm font-medium text-green-700">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-green-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200"
               required
