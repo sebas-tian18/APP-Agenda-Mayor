@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { FontSizeProvider } from "./components/FontSizeContext";
 import { Toaster } from "sonner";
 import "./App.css";
-// Componentes 
+// Componentes
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 // Paginas Publicas
@@ -19,39 +19,69 @@ import Administrador from "./pages/Administrador";
 import ViewCitas from "./pages/ViewCitas";
 import ViewCalendar from "./pages/ViewCalendar";
 import ProCrearCita from "./pages/ProCrearCita";
-import UserTypeSelection from './components/UserTypeSelection';
-import AdminForm from './components/AdminForm';
-import ProfessionalForm from './components/ProfessionalForm';
+import UserTypeSelection from "./components/UserTypeSelection";
+import AdminForm from "./components/AdminForm";
+import ProfessionalForm from "./components/ProfessionalForm";
 import UserList from "./components/UserList";
+import ViewCalendarUser from "./pages/ViewCalendarUser";
 // Rutas
 import PrivateRoute from "./routes/PrivateRoute";
-import RedirectRoute from './routes/RedirectRoute';
+import RedirectRoute from "./routes/RedirectRoute";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <AuthProvider>
       <FontSizeProvider>
-        <div className="App min-h-screen flex flex-col" > 
+        <div className="App min-h-screen flex flex-col">
           <Toaster richColors duration={3000} />
           <Router>
             <Navbar />
-            <main className="flex-grow"> 
+            <main className="flex-grow">
               <Routes>
                 {/* Rutas públicas (redirecciona si esta autenticado)*/}
-                <Route path="/" element={<RedirectRoute><Login /></RedirectRoute>} />
-                <Route path="/login" element={<RedirectRoute><Login /></RedirectRoute>} /> 
-                <Route path="/register" element={<RedirectRoute><Register /></RedirectRoute>} />
+                <Route
+                  path="/"
+                  element={
+                    <RedirectRoute>
+                      <Login />
+                    </RedirectRoute>
+                  }
+                />
+                <Route
+                  path="/login"
+                  element={
+                    <RedirectRoute>
+                      <Login />
+                    </RedirectRoute>
+                  }
+                />
+                <Route
+                  path="/register"
+                  element={
+                    <RedirectRoute>
+                      <Register />
+                    </RedirectRoute>
+                  }
+                />
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 {/* Rutas privadas usuario adulto mayor*/}
-                <Route path="/ViewCalendar" element={<PrivateRoute><ViewCalendar /></PrivateRoute>} />
+                <Route
+                  path="/ViewCalendar"
+                  element={
+                    <PrivateRoute>
+                      <ViewCalendar />
+                    </PrivateRoute>
+                  }
+                />
 
-                <Route path="/citas" 
-                element={
-                  <PrivateRoute>
-                    <ViewCitas />
-                  </PrivateRoute>  
-                  } 
+                <Route
+                  path="/citas"
+                  element={
+                    <PrivateRoute>
+                      <ViewCitas />
+                    </PrivateRoute>
+                  }
                 />
                 <Route
                   path="/administrador"
@@ -97,7 +127,7 @@ function App() {
                   path="/calendario"
                   element={
                     <PrivateRoute>
-                      <Home />
+                      <ViewCalendarUser />
                     </PrivateRoute>
                   }
                 />
@@ -118,38 +148,38 @@ function App() {
                   }
                 />
                 {/* Rutas privadas admin*/}
-                    <Route
-                      path="/crear-usuario"
-                      element={
-                        <PrivateRoute>
-                          <UserTypeSelection />
-                        </PrivateRoute>
-                      }
-                    ></Route>
-                    <Route
-                      path="/crear-admin"
-                      element={
-                        <PrivateRoute>
-                          <AdminForm />
-                        </PrivateRoute>
-                      }
-                    ></Route>
-                    <Route
-                      path="/crear-profesional"
-                      element={
-                        <PrivateRoute>
-                          <ProfessionalForm />
-                        </PrivateRoute>
-                      }
-                    ></Route>
-                    <Route
-                      path="/ver-usuarios"
-                      element={
-                        <PrivateRoute>
-                          <UserList />
-                        </PrivateRoute>
-                      }
-                    ></Route>
+                <Route
+                  path="/crear-usuario"
+                  element={
+                    <PrivateRoute>
+                      <UserTypeSelection />
+                    </PrivateRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/crear-admin"
+                  element={
+                    <PrivateRoute>
+                      <AdminForm />
+                    </PrivateRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/crear-profesional"
+                  element={
+                    <PrivateRoute>
+                      <ProfessionalForm />
+                    </PrivateRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/ver-usuarios"
+                  element={
+                    <PrivateRoute>
+                      <UserList />
+                    </PrivateRoute>
+                  }
+                ></Route>
 
                 {/* Rutas privadas profesional*/}
                 <Route
@@ -158,8 +188,8 @@ function App() {
                     <PrivateRoute>
                       <ProCrearCita />
                     </PrivateRoute>
-                  }></Route>
-                
+                  }
+                ></Route>
               </Routes>
             </main>
             <Footer />

@@ -13,6 +13,12 @@ router.get("/lista", usuariosController.getUserList);
 
 router.get("/lista/:id", usuariosController.consultarIDProfesional);
 
+router.get("/lista/adultomayor/:id", usuariosController.HallarAdultoMayor);
+router.get("/lista/Citaadultomayor/:id", usuariosController.HallarCitaAdultoMayor
+);
+
+
+
 router.route("/:id")
     .get(usuariosController.consultarUsuario)
     .put(usuariosController.actualizarUsuario)
