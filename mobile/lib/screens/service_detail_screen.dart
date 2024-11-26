@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/services/appointment_service.dart';
 import 'package:mobile/colors.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/widgets/navigation_bar.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
   final String label;
@@ -35,17 +36,53 @@ class ServiceDetailScreenState extends State<ServiceDetailScreen> {
       // Verificar si el widget sigue montado antes de actualizar el estado
       if (!mounted) return;
 
+      // Mostrar ventana flotante con mensaje de éxito
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('¡Éxito!'),
+            content: const Text('Cita agendada con éxito'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cierra el diálogo
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => NavigationMenu(),
+                  ));
+                },
+                child: const Text('Aceptar'),
+              ),
+            ],
+          );
+        },
+      );
+
+      // Actualizar la lista de citas
       setState(() {
-        _successMessage = 'Cita agendada con éxito';
-        // Actualizar la lista de citas después de agendar
         _appointmentsFuture =
             _appointmentService.getAvailableAppointments(widget.serviceId);
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error al agendar la cita: $e'),
-        ));
+        // Mostrar ventana flotante con mensaje de error
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: Text('Error al agendar la cita: $e'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cierra el diálogo
+                  },
+                  child: const Text('Cerrar'),
+                ),
+              ],
+            );
+          },
+        );
       }
     }
   }

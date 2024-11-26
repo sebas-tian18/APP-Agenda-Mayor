@@ -112,7 +112,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             size: iconSize, // Aplica el tamaño del ícono
           ),
           onPressed: () {
-            // Acción para el botón de perfil
+            Navigator.pushNamed(
+                context, '/datos-perfil'); // Navega a la ruta especificada
           },
         ),
       ],

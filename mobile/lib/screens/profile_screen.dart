@@ -137,15 +137,94 @@ class ProfileScreenState extends State<ProfileScreen> {
                   icon: Icons.logout,
                   text: 'Cerrar Sesión',
                   hasNavigation: false,
-                  onTap: () async {
-                    await Provider.of<AuthProvider>(context, listen: false)
-                        .logout(); // Llamar a la funcion de cierre de sesion
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        final size = MediaQuery.of(context)
+                            .size; // Obtener tamaño de la pantalla
 
-                    // Verificar si el contexto sigue montado
-                    if (context.mounted) {
-                      Navigator.pushReplacementNamed(context,
-                          '/login'); // Redirigir a la pantalla de login
-                    }
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                15.0), // Bordes redondeados
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Cerrar Sesión',
+                                  style: TextStyle(
+                                    fontSize: size.width * 0.06,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  '¿Está seguro de que desea cerrar su sesión?',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: size.width * 0.05),
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Cerrar el diálogo
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors
+                                            .grey, // Botón "Cancelar" gris
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: size.width * 0.1,
+                                          vertical: size.height * 0.015,
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Cancelar',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        Navigator.of(context)
+                                            .pop(); // Cerrar el diálogo
+                                        await Provider.of<AuthProvider>(context,
+                                                listen: false)
+                                            .logout(); // Cerrar sesión
+                                        if (context.mounted) {
+                                          Navigator.pushReplacementNamed(
+                                              context, '/login');
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: size.width * 0.1,
+                                          vertical: size.height * 0.015,
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Aceptar',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
               ],
