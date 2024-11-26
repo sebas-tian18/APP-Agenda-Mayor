@@ -35,7 +35,7 @@ function AdminForm() {
 
     try {
       // Realizar petición al backend
-      const response = await fetch('http://localhost:3000/api/register/admin', {
+      const response = await fetch('http://45.236.130.139:3000/api/register/admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
