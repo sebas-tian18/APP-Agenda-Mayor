@@ -18,7 +18,7 @@ function CalendarApp() {
     const fetchUserDetails = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/usuarios/lista/${userid}`
+          `http://45.236.130.139:3000/api/usuarios/lista/${userid}`
         );
         if (!response.ok) {
           throw new Error("Error al cargar los detalles del usuario");
@@ -39,7 +39,7 @@ function CalendarApp() {
     const fetchCitasInfo = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/citas/${userproid}/profesionales`
+          `http://45.236.130.139:3000/api/citas/${userproid}/profesionales`
         );
         if (!response.ok) {
           throw new Error("Error al cargar las citas");

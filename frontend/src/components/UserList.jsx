@@ -12,7 +12,7 @@ function UserList() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/usuarios/lista'); // Cambia la URL según tu configuración
+        const response = await fetch('http://45.236.130.139:3000/api/usuarios/lista'); // Cambia la URL según tu configuración
         const data = await response.json();
         setUsers(data);
       } catch (error) {
@@ -31,7 +31,7 @@ function UserList() {
     if (!userToDelete) return;
   
     try {
-      const response = await fetch(`http://localhost:3000/api/usuarios/${userToDelete.id}`, {
+      const response = await fetch(`http://45.236.130.139:3000/api/usuarios/${userToDelete.id}`, {
         method: 'DELETE',
       });
   

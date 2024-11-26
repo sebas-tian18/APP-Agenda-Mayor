@@ -14,7 +14,7 @@ function AppointmentModal({ service, onClose }) {
     const fetchAvailableAppointments = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`http://localhost:3000/api/citas/${service.id}/noagendadas`)
+        const response = await fetch(`http://45.236.130.139:3000/api/citas/${service.id}/noagendadas`)
         if (!response.ok) {
           throw new Error('No se pudieron obtener las citas disponibles')
         }
@@ -35,7 +35,7 @@ function AppointmentModal({ service, onClose }) {
     if (!isConfirmed) return;
   
     try {
-      const response = await fetch(`http://localhost:3000/api/citas/agendar/${appointmentId}`, {
+      const response = await fetch(`http://45.236.130.139:3000/api/citas/agendar/${appointmentId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

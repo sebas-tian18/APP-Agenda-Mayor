@@ -15,7 +15,7 @@ function ViewCitas() {
     const fetchUserDetails = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/usuarios/${userid}/citas`
+          `http://45.236.130.139:3000/api/usuarios/${userid}/citas`
         );
         if (!response.ok) {
           throw new Error("Error al cargar los detalles del usuario");

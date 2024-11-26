@@ -73,7 +73,7 @@ function EditarPerfil() {
     e.preventDefault()
 
     try {
-      const response = await fetch(`http://localhost:3000/api/usuarios/${userid}`, {
+      const response = await fetch(`http://45.236.130.139:3000/api/usuarios/${userid}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

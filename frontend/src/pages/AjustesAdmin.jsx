@@ -64,7 +64,7 @@ function EditarPerfil() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch('https://localhost:3000/api/perfil', {
+        const response = await fetch('https://45.236.130.139:3000/api/perfil', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -90,7 +90,7 @@ function EditarPerfil() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch('https://localhost:3000/api/perfil', {
+      const response = await fetch('https://45.236.130.139:3000/api/perfil', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

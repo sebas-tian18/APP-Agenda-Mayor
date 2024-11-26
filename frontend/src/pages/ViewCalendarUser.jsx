@@ -18,7 +18,7 @@ function CalendarApp() {
     const fetchIdAdultoMayor = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/usuarios/lista/adultomayor/${userid}`
+          `http://45.236.130.139:3000/api/usuarios/lista/adultomayor/${userid}`
         );
         if (!response.ok) {
           throw new Error("Error al cargar el ID del adulto mayor");
@@ -38,7 +38,7 @@ function CalendarApp() {
     const fetchCitasInfo = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/usuarios/lista/Citaadultomayor/${idAdultoMayor}`
+          `http://45.236.130.139:3000/api/usuarios/lista/Citaadultomayor/${idAdultoMayor}`
         );
         if (!response.ok) {
           throw new Error("Error al cargar las citas del adulto mayor");
